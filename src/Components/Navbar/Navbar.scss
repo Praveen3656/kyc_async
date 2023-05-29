@@ -1,0 +1,60 @@
+.MuiBox-root {
+  .MuiPaper-root {
+    // background-color: #6264a7;
+    background-color: #19050a;
+  }
+}
+
+.logo-ctn {
+  width: 20%;
+  font-family: OpenSans-Bold;
+  color: #fff;
+  font-size: 16px;
+}
+
+.actions-list {
+  width: 80%;
+  justify-content: flex-end;
+  display: inline-flex;
+  .nav-link {
+    position: relative;
+    margin-right: 40px;
+    line-height: 20px;
+    text-decoration: none;
+    font-family: OpenSans-Bold;
+    color: #fff;
+    font-size: 16px;
+  }
+
+  .active {
+    color: #eed49f;
+  }
+  a:hover {
+    color: #eed49f;
+    background-color: transparent;
+    text-decoration: underline;
+  }
+}
+
+.logout {
+  font-family: OpenSans-Bold;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 720px) {
+  .logo-ctn {
+    width: 40%;
+    font-size: 13px;
+  }
+  .actions-list {
+    width: 60%;
+    .nav-link {
+      font-size: 13px;
+    }
+  }
+  .logout {
+    font-size: 13px;
+  }
+}

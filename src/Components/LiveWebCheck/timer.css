@@ -1,0 +1,11 @@
+.counter{
+    font-size: 21px;
+    height: 43px;
+    width: 50px;
+    background: #00000014;
+    border-radius: 43px;
+    text-align: center;
+    margin: 0;
+    padding-top: 10px;
+    border: 1px solid #3333;
+}

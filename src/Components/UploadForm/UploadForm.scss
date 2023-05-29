@@ -1,0 +1,71 @@
+.uploadId-ctn {
+    padding: 2px;
+    margin-top: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .capture_id{
+        text-align: center;
+        width: auto;
+        padding: 10px;
+    }
+
+    .u-title {
+        font-size: 18px;
+        font-family: OpenSans-Bold;
+    }
+    .sample-type {
+            width: 160px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            padding: 5px;;
+    }
+    .sample-type img{
+        width: 100%;
+    }
+
+    .country{
+        width: 100%;
+    }
+    .noboader{
+        border: none !important;
+    }
+    .flag{
+        width: 40px;
+    }
+    .sub-t {
+        margin-top: 10px;
+        font-size: 12px;
+        font-family: OpenSans-Regular;
+    }
+  
+    .input-file {
+        margin-top: 10px;
+    }
+    .upload-btn {
+        width: 10%;
+        font-family: OpenSans-Bold;
+        font-size: 16px;
+        margin-top: 15px;
+        padding: 15px;
+        background: #fff;
+        border-radius: 20px;
+        border: 1px solid #D4D3E8;
+        color: black;
+        box-shadow: 0px 2px 2px #5C5696;
+        cursor: pointer;
+
+    }
+    .qrcode{
+        float: left;
+    }
+   
+
+   
+
+}
+
+
+

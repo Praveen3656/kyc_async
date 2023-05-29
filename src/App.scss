@@ -1,0 +1,37 @@
+// Light 300
+@font-face {
+  font-family: OpenSans-Light;
+  src: url(./Assets/fonts/OpenSans-Light.ttf) format("opentype");
+}
+//  Regular 400
+@font-face {
+  font-family: OpenSans-Regular;
+  src: url(./Assets/fonts/OpenSans-Regular.ttf) format("opentype");
+}
+// Medium 500
+@font-face {
+  font-family: OpenSans-Medium;
+  src: url(./Assets/fonts/OpenSans-Medium.ttf) format("opentype");
+}
+
+//SemiBold 600
+@font-face {
+  font-family: OpenSans-SemiBold;
+  src: url(./Assets/fonts/OpenSans-SemiBold.ttf) format("opentype");
+}
+
+//  Bold 700
+@font-face {
+  font-family: OpenSans-Bold;
+  src: url(./Assets/fonts/OpenSans-Bold.ttf) format("opentype");
+}
+
+// ExtraBold 800
+@font-face {
+  font-family: OpenSans-ExtraBold;
+  src: url(./Assets/fonts/OpenSans-ExtraBold.ttf) format("opentype");
+}
+
+.m-0 {
+  margin: 0 0 0 0;
+}

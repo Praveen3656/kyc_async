@@ -1,0 +1,30 @@
+.type-ctn {
+    // width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    select{
+        background-color: #fff;
+    }
+    .selectcountryborder{
+        padding: 10px !important;
+    }
+    
+    .ant-select-selector{
+            border: none !important;
+    }
+    .u-title {
+        font-size: 20px;
+        font-family: OpenSans-Bold;
+    }
+    .selectcountry{
+        font-size: 14px;
+        border: 1px solid #ccc;
+        padding: 15px;
+        width: 298px;
+        text-transform: capitalize;
+    }
+}
