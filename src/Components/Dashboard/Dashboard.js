@@ -101,6 +101,7 @@ export default function Dashboard() {
 
   const [camcheck, setCamcheck] = useState(2);
 
+  const [taskstatus,setTaskstatus] = useState();
   const URL = "https://api.idverify.click";
 
   //const URL = "http://13.232.107.224:8088";
@@ -169,6 +170,21 @@ export default function Dashboard() {
     }
   }
 
+
+  const gettaskid = localStorage.getItem("taskid");
+
+  console.log("gettaskid",gettaskid);
+  useEffect(() => {
+    fetch(`https://api.idverify.click/id_verify/check_progress/${gettaskid}`, {
+      method: "post",
+    })
+      .then((response) => response.json())
+      .then((json) => setTaskstatus(json.status));
+  }, [0]);
+
+  console.log("taskstatus",taskstatus);
+
+
   useEffect(() => {
     var formdata = new FormData();
     formdata.append("uid", uid);
@@ -182,31 +198,70 @@ export default function Dashboard() {
       .then((result) => setGetstepid(result));
 
     console.log(getstepid);
+    // if(taskstatus === null || taskstatus === undefined){
+    //   if (getstepid._id === true) {
+    //     setActiveStep(2);
+    //   }
+    //   if (getstepid.verified_face === true) {
+    //     setActiveStep(3);
+    //   }
+  
+    //   if (getstepid.verified_name === true && getstepid.verified_face === false) {
+    //     setActiveStep(2);
+    //   }
+  
+    //   if (
+    //     getstepid._id === true &&
+    //     getstepid.selfie === true &&
+    //     getstepid.verified_face === true &&
+    //     getstepid.verified_id_selfie === true
+    //   ) {
+    //     setActiveStep(4);
+    //     setNewtemplate(true);
+    //     setSuccesstemplete(true);
+    //     //  console.log(newtemplate);
+    //   }
+    //   setNewid(getstepid.type_of_id);
+    //   setCountrynew(getstepid.country);
+    // }
 
-    if (getstepid._id === true) {
-      setActiveStep(2);
-    }
-    if (getstepid.verified_face === true) {
-      setActiveStep(3);
+    if(gettaskid === null){
+      console.log("taskstatus---------------",taskstatus);
     }
 
-    if (getstepid.verified_name === true && getstepid.verified_face === false) {
-      setActiveStep(2);
-    }
-
-    if (
-      getstepid._id === true &&
-      getstepid.selfie === true &&
-      getstepid.verified_face === true &&
-      getstepid.verified_id_selfie === true
-    ) {
+    if(taskstatus === 'PENDING' && gettaskid != null){
       setActiveStep(4);
-      setNewtemplate(true);
-      setSuccesstemplete(true);
-      //  console.log(newtemplate);
+      setIderror(true);
+      setMessage("Your Verification is under Process..");
+    }else{
+      if (getstepid._id === true) {
+        setActiveStep(2);
+      }
+      if (getstepid.verified_face === true) {
+        setActiveStep(3);
+      }
+  
+      if (getstepid.verified_name === true && getstepid.verified_face === false) {
+        setActiveStep(2);
+      }
+  
+      if (
+        getstepid._id === true &&
+        getstepid.selfie === true &&
+        getstepid.verified_face === true &&
+        getstepid.verified_id_selfie === true
+      ) {
+        setActiveStep(4);
+        setNewtemplate(true);
+        setSuccesstemplete(true);
+        //  console.log(newtemplate);
+      }
+      setNewid(getstepid.type_of_id);
+      setCountrynew(getstepid.country);
     }
-    setNewid(getstepid.type_of_id);
-    setCountrynew(getstepid.country);
+    
+
+   
   }, [getstepid.id, getstepid.selfie, getstepid.verified]);
 
   //console.log(getstepid);
@@ -311,9 +366,7 @@ export default function Dashboard() {
             });
         });
     } catch (err) {
-<<<<<<< HEAD
       console.log("Err", err);
-=======
       setActiveStep(1);
       setCamcheck(0);
       console.log("ERROR", err);
@@ -331,7 +384,6 @@ export default function Dashboard() {
       setRedirect(false);
 
       setIderrormessage(true);
->>>>>>> e1a6f9dc31e723b908f58677224bf3d8a0ec25d9
     }
   };
 
@@ -640,7 +692,8 @@ export default function Dashboard() {
         setScore(false);
         setActiveStep(4);
         setIderror(true);
-
+        localStorage.clear();
+        localStorage.setItem("taskid",verify_api.data.id)
         setMessage("Your Verification is under Process..");
       }
     } catch (err) {
@@ -829,7 +882,7 @@ export default function Dashboard() {
 
             {iduploadid ? (
               <p className="error">
-                <b>ID verification failed</b>
+                
               </p>
             ) : (
               ""

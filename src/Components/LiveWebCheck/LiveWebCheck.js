@@ -190,7 +190,7 @@ const LiveWebCheck = ({
         var Y = PT_58 - PT_52;
         var X = PT_55 - PT_49;
 
-       /// console.log("LOOKUP", LOOKUP);
+       // console.log("OPENMOUTH", Y);
 
         ///console.log("BOTTOM",'---',BOTTOM,"TOP",TOP);
         //console.log("RIGHT", RIGHT, "--------", "LEFT", LEFT);
@@ -358,7 +358,7 @@ const LiveWebCheck = ({
           getitem = localStorage.getItem("state");
           if (getitem === "OPENMOUTH") {
             //setTimeout(capture_three, 500);
-            if (Y > 0.2) {
+            if (Y > 0.1) {
               console.log(Y);
               let index = faceactionstwo.indexOf(getitem);
               faceactionstwo.splice(index, 1);
@@ -395,52 +395,6 @@ const LiveWebCheck = ({
           setAddclass(false);
           setMessage("Come close to camera");
         }
-
-        // if (actionstatenew === "OPENMOUTH") {
-        //   if (Y > 0.2) {
-        //     console.log(actionstatenew);
-        //     console.log(Y);
-        //     let index = faceactionstwo.indexOf(actionstatenew);
-        //     faceactionstwo.splice(index, 1);
-
-        //     const randomIndextwo = Math.floor(
-        //       Math.random() * faceactionstwo.length
-        //     );
-        //     const removevalue = faceactionstwo[randomIndextwo];
-        //     actionstatenew = removevalue;
-        //     setActions(actionstatenew)
-        //   }
-        // }
-
-        //   // if (TURNRIGHT < 0.2) {
-        //   //   setMessage("Turn Left");
-        //   // }
-        //   // if (TURNLEFT > 0.8) {
-        //   //   setMessage("Open Mouth");
-        //   // }
-        //   const PT_49 = landmarks[0].x; //49 Left lip
-        //   const PT_55 = landmarks[17].x; // 55 Right lip
-        //   const PT_52 = landmarks[0].y; // 52 Upper lip
-        //   const PT_58 = landmarks[17].y; // 58 Lower Lip
-
-        //   var Y = PT_58 - PT_52;
-        //   var X = PT_55 - PT_49;
-        // } else {
-        //   setMessage("Come closer to camera");
-        //   setTimeoutmessage(false);
-        //   setTimeoutmessage("");
-        // }
-
-        // setTimeoutmessage(false);
-        // setCapturebnt(false);
-        // setTimeout(capture, 700);
-        // setMessage("keep your face in frame & click Capture");
-        // setCanvasshow(false);
-        // setShowovalcanvas(false);
-        // setShowoval(false);
-        // setShowbnt(true);
-        // setCapturebnt(true);
-        // setImageshow(true);
         connect(canvasCtx, landmarks, Facemesh.FACEMESH_TESSELATION, {
           color: "#fff0",
           lineWidth: 1,

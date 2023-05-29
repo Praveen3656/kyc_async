@@ -35,15 +35,6 @@ const UploadForm = ({ updateDocument }) => {
     updateDocument(event.target.files[0]);
   };
 
-  const capture = React.useCallback(() => {
-    const imageSrc = webcamRef.current.getScreenshot();
-    urltoFile(imageSrc, "user.txt", "text/plain").then(function (file) {
-      updateDocument(file);
-    });
-    setImgSrc(imageSrc);
-    updateDocument(imageSrc);
-    console.log(imageSrc);
-  }, [webcamRef, setImgSrc]);
 
   const gettdtype = localStorage.getItem("uploadtype");
 
@@ -52,23 +43,8 @@ const UploadForm = ({ updateDocument }) => {
   return (
     <>
       <div className="uploadId-ctn">
-        <div className="u-title">Capture your ID</div><br/>
-        {/* <Webcam
-          className="live-web-cam_two"
-          height={350}
-          width={600}
-          audio={false}
-          ref={webcamRef}
-          imageSmoothing={false}
-          screenshotFormat="image/jpeg"
-          screenshotQuality={1}
-          videoConstraints={{ video: true, facingMode: "user" }}
-        />
-        <center>
-          <button className="capture capture_id" onClick={capture}>
-            Capture ID
-          </button>
-        </center> */}
+        <div className="u-title">Upload your ID</div><br/>
+
         <div className="input-file">
           <input
             className="input-id"
