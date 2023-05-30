@@ -101,7 +101,9 @@ export default function Dashboard() {
 
   const [camcheck, setCamcheck] = useState(2);
 
-  const [taskstatus,setTaskstatus] = useState();
+  const [finalcheck, setFinalcheck] = useState(false);
+
+  const [taskstatus, setTaskstatus] = useState();
   const URL = "https://api.idverify.click";
 
   //const URL = "http://13.232.107.224:8088";
@@ -170,10 +172,9 @@ export default function Dashboard() {
     }
   }
 
-
   const gettaskid = localStorage.getItem("taskid");
 
-  console.log("gettaskid",gettaskid);
+  // console.log("gettaskid",gettaskid);
   useEffect(() => {
     fetch(`https://api.idverify.click/id_verify/check_progress/${gettaskid}`, {
       method: "post",
@@ -182,8 +183,7 @@ export default function Dashboard() {
       .then((json) => setTaskstatus(json.status));
   }, [0]);
 
-  console.log("taskstatus",taskstatus);
-
+  // console.log("taskstatus",taskstatus);
 
   useEffect(() => {
     var formdata = new FormData();
@@ -197,54 +197,30 @@ export default function Dashboard() {
       .then((response) => response.json())
       .then((result) => setGetstepid(result));
 
-    console.log(getstepid);
-    // if(taskstatus === null || taskstatus === undefined){
-    //   if (getstepid._id === true) {
-    //     setActiveStep(2);
-    //   }
-    //   if (getstepid.verified_face === true) {
-    //     setActiveStep(3);
-    //   }
-  
-    //   if (getstepid.verified_name === true && getstepid.verified_face === false) {
-    //     setActiveStep(2);
-    //   }
-  
-    //   if (
-    //     getstepid._id === true &&
-    //     getstepid.selfie === true &&
-    //     getstepid.verified_face === true &&
-    //     getstepid.verified_id_selfie === true
-    //   ) {
-    //     setActiveStep(4);
-    //     setNewtemplate(true);
-    //     setSuccesstemplete(true);
-    //     //  console.log(newtemplate);
-    //   }
-    //   setNewid(getstepid.type_of_id);
-    //   setCountrynew(getstepid.country);
-    // }
-
-    if(gettaskid === null){
-      console.log("taskstatus---------------",taskstatus);
+    //console.log(getstepid);
+    if (gettaskid === null) {
+      // console.log("taskstatus---------------",taskstatus);
     }
-
-    if(taskstatus === 'PENDING' && gettaskid != null){
+    if (taskstatus === "PENDING" && gettaskid != null) {
       setActiveStep(4);
-      setIderror(true);
-      setMessage("Your Verification is under Process..");
-    }else{
+      setFinalcheck(true);
+      // setIderror(true);
+      // setMessage("Your Verification is under Process..");
+    } else {
       if (getstepid._id === true) {
         setActiveStep(2);
       }
       if (getstepid.verified_face === true) {
         setActiveStep(3);
       }
-  
-      if (getstepid.verified_name === true && getstepid.verified_face === false) {
+
+      if (
+        getstepid.verified_name === true &&
+        getstepid.verified_face === false
+      ) {
         setActiveStep(2);
       }
-  
+
       if (
         getstepid._id === true &&
         getstepid.selfie === true &&
@@ -254,14 +230,12 @@ export default function Dashboard() {
         setActiveStep(4);
         setNewtemplate(true);
         setSuccesstemplete(true);
+
         //  console.log(newtemplate);
       }
       setNewid(getstepid.type_of_id);
       setCountrynew(getstepid.country);
     }
-    
-
-   
   }, [getstepid.id, getstepid.selfie, getstepid.verified]);
 
   //console.log(getstepid);
@@ -693,8 +667,9 @@ export default function Dashboard() {
         setActiveStep(4);
         setIderror(true);
         localStorage.clear();
-        localStorage.setItem("taskid",verify_api.data.id)
-        setMessage("Your Verification is under Process..");
+        localStorage.setItem("taskid", verify_api.data.id);
+        setFinalcheck(true);
+        // setMessage("Your Verification is under Process..");
       }
     } catch (err) {
       console.log(err);
@@ -848,9 +823,25 @@ export default function Dashboard() {
                 </div>
               </div>
             ) : (
-              <p></p>
+              ""
             )}
           </p>
+
+          {finalcheck ? (
+            <>
+              <p className="success">
+                <b>Your Verification is under Process...</b>
+              </p>
+              <center>
+                <CircularProgress />
+              </center>
+              <button className="reloadbnt" onClick={reload}>
+                Retry
+              </button>
+            </>
+          ) : (
+            ""
+          )}
 
           {redirect ? (
             <div className="spinner_two">
@@ -880,13 +871,7 @@ export default function Dashboard() {
               ""
             )}
 
-            {iduploadid ? (
-              <p className="error">
-                
-              </p>
-            ) : (
-              ""
-            )}
+            {iduploadid ? <p className="error"></p> : ""}
 
             {iderror ? (
               <p className="success">

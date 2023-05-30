@@ -93,9 +93,9 @@
 
   .output_canvas{
     z-index: 999999;
-    width: 55%;
-    height: 75% ;
-    padding-top: 2px;
+    width: 45%;
+    height: 55% ;
+ 
   }
 
   .dot{
@@ -108,9 +108,11 @@
   }
 .green{
   color: green;
+  font-size: 12px;
 }
 .red{
   color: red;
+  font-size: 12px;
 }
 #green{
   border: 2px solid  green;
