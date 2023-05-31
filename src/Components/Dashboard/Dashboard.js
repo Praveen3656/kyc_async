@@ -104,9 +104,13 @@ export default function Dashboard() {
   const [finalcheck, setFinalcheck] = useState(false);
 
   const [taskstatus, setTaskstatus] = useState();
-  const URL = "https://api.idverify.click";
 
-  //const URL = "http://13.232.107.224:8088";
+  // const [token,setToken] = useState();
+
+  //const URL = "https://api.idverify.click";
+
+  const URL =
+    "http://a13043adf608c48c4971f1e26e40058c-1973029828.ap-south-1.elb.amazonaws.com";
 
   useEffect(() => {
     if (!uid) {
@@ -173,11 +177,15 @@ export default function Dashboard() {
   }
 
   const gettaskid = localStorage.getItem("taskid");
-
-  // console.log("gettaskid",gettaskid);
+  let token = "";
+  //console.log("gettaskid",gettaskid);
   useEffect(() => {
     fetch(`https://api.idverify.click/id_verify/check_progress/${gettaskid}`, {
       method: "post",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((response) => response.json())
       .then((json) => setTaskstatus(json.status));
@@ -263,22 +271,51 @@ export default function Dashboard() {
   };
 
   const uploadid = async (activeStep) => {
-    setIderrormessage(false);
-    setRedirect(true);
-    setCounter(0);
-    setErrorimage(false);
-    setMessage("");
+    // setIderrormessage(false);
+    // setRedirect(true);
+    // setCounter(0);
+    // setErrorimage(false);
+    // setMessage("");
+    localStorage.clear();
+
+    let tokendata = new FormData();
+    tokendata.append("username", "admin");
+    tokendata.append("password", "sw0rdpass");
+
+    try {
+      const tokenapi = await axios.post(`${URL}/token/`, tokendata, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+      console.log("token", tokenapi.data.access_token);
+
+      localStorage.setItem("settoken", tokenapi.data.access_token);
+
+      //setToken(tokenapi.data.access_token);
+    } catch (err) {}
+
+    token = localStorage.getItem("settoken");
 
     try {
       var geturlformdata = new FormData();
       geturlformdata.append("uid", uid);
       geturlformdata.append("type", "original_id");
 
+      const myHeaders = {
+        "Content-Type": "multipart/form-data;",
+        Authorization: `Bearer ${token}`,
+      };
+
       var requestOptions = {
         method: "POST",
         body: geturlformdata,
         redirect: "follow",
+        headers: myHeaders,
       };
+
+      console.log("requestOptions", requestOptions);
 
       fetch(
         `${URL}/id_verify/get_url?uid=${uid}&type=original_id`,
@@ -300,10 +337,16 @@ export default function Dashboard() {
           formdata.append("x-amz-signature", result.fields["x-amz-signature"]);
           formdata.append("file", document);
 
+          const myHeaders = {
+            "Content-Type": "multipart/form-data;",
+            Authorization: `Bearer ${token}`,
+          };
+
           var requestOptions = {
             method: "POST",
             body: formdata,
             redirect: "follow",
+            headers: myHeaders,
           };
 
           fetch(
@@ -394,6 +437,7 @@ export default function Dashboard() {
         faceData.append("sub_type", state);
       }
     }
+    token = localStorage.getItem("settoken");
     try {
       const save_selfie_id = await axios.post(
         `${URL}/id_verify/save_id_image/`,
@@ -402,6 +446,7 @@ export default function Dashboard() {
           method: "POST",
           headers: {
             "Content-Type": "multipart/form-data;",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -453,16 +498,21 @@ export default function Dashboard() {
     setIdselfieerror(false);
 
     console.log("SELFIE_API_REQUEST");
-
+    token = localStorage.getItem("settoken");
     try {
       var geturlformdata = new FormData();
       geturlformdata.append("uid", uid);
       geturlformdata.append("type", "selfie");
 
+      const myHeaders = {
+        "Content-Type": "multipart/form-data;",
+        Authorization: `Bearer ${token}`,
+      };
       var requestOptions = {
         method: "POST",
         body: geturlformdata,
         redirect: "follow",
+        headers: myHeaders,
       };
 
       fetch(`${URL}/id_verify/get_url?uid=${uid}&type=selfie`, requestOptions)
@@ -482,10 +532,16 @@ export default function Dashboard() {
           formdata.append("x-amz-signature", result.fields["x-amz-signature"]);
           formdata.append("file", webImage);
 
+          const myHeaders = {
+            "Content-Type": "multipart/form-data;",
+            Authorization: `Bearer ${token}`,
+          };
+
           var requestOptions = {
             method: "POST",
             body: formdata,
             redirect: "follow",
+            headers: myHeaders,
           };
 
           fetch(
@@ -543,16 +599,22 @@ export default function Dashboard() {
     setErrorimage(false);
     setIdselfieerror(false);
     setRedirect(true);
-
+    token = localStorage.getItem("settoken");
     try {
       var geturlformdata = new FormData();
       geturlformdata.append("uid", uid);
       geturlformdata.append("type", "id_selfie");
 
+      const myHeaders = {
+        "Content-Type": "multipart/form-data;",
+        Authorization: `Bearer ${token}`,
+      };
+
       var requestOptions = {
         method: "POST",
         body: geturlformdata,
         redirect: "follow",
+        headers: myHeaders,
       };
 
       fetch(
@@ -575,10 +637,16 @@ export default function Dashboard() {
           formdata.append("x-amz-signature", result.fields["x-amz-signature"]);
           formdata.append("file", webImageid);
 
+          const myHeaders = {
+            "Content-Type": "multipart/form-data;",
+            Authorization: `Bearer ${token}`,
+          };
+
           var requestOptions = {
             method: "POST",
             body: formdata,
             redirect: "follow",
+            headers: myHeaders,
           };
 
           fetch(
@@ -646,7 +714,7 @@ export default function Dashboard() {
 
     verify_name.append("uid", uid);
     verify_name.append("name", formdata.username[0]);
-
+    token = localStorage.getItem("settoken");
     try {
       const verify_api = await axios.post(
         `${URL}/id_verify/verify/`,
@@ -654,6 +722,7 @@ export default function Dashboard() {
         {
           headers: {
             "Content-Type": "multipart/form-data;",
+            Authorization: `Bearer ${token}`,
           },
         }
       );

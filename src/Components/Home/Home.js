@@ -23,9 +23,9 @@ function Home() {
     <>
       <div className="home-page-ctn">
         <div className="home-page-layer">
-          <div className="kyc-img-ctn">
+          {/* <div className="kyc-img-ctn">
             <img className="kyc-img" src={kycImage3} alt=""></img>
-          </div>
+          </div> */}
           <div className="home-page-title">Welcome to E-KyC Verification!</div>
           <div className="start-btn-ctn" onClick={openLogin}>
             Get Started

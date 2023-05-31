@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [formdata, setformData] = useState({});
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(0);
   const [document, setDocumnet] = useState("");
   const [idtype, setIdType] = useState("");
   const [country, setCountry] = useState("");
@@ -96,8 +96,11 @@ export default function Dashboard() {
   const [countrynew, setCountrynew] = useState();
 
   const [camcheck, setCamcheck] = useState(2);
+  const [token,setToken] = useState('');
 
-  const URL = "https://api.idverify.click";
+  //const URL = "https://api.idverify.click";
+
+  const URL = "http://a13043adf608c48c4971f1e26e40058c-1973029828.ap-south-1.elb.amazonaws.com";
 
   //const URL = "http://13.232.107.224:8088";
 
@@ -229,6 +232,34 @@ export default function Dashboard() {
   };
 
   const uploadid = async (activeStep) => {
+
+
+    let tokendata = new FormData();
+    tokendata.append("username", "admin");
+    tokendata.append("password", "sw0rdpass");
+
+    try{
+      const tokenapi = await axios.post(
+        `${URL}/token/`,
+        tokendata,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "multipart/form-data;",
+          },
+        }
+      );
+      console.log("token", tokenapi.data.access_token);
+      setToken(tokenapi.data.access_token);
+
+      console.log("gettoken",token);
+
+    }catch(err){
+
+    }
+
+    
+
     setIderrormessage(false);
     setRedirect(true);
     setCounter(0);
@@ -265,6 +296,7 @@ export default function Dashboard() {
           method: "POST",
           headers: {
             "Content-Type": "multipart/form-data;",
+            'Authorization': `Bearer ${token}`
           },
         }
       );

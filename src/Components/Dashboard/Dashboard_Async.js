@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [formdata, setformData] = useState({});
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(0);
   const [document, setDocumnet] = useState("");
   const [idtype, setIdType] = useState("");
   const [country, setCountry] = useState("");
@@ -49,6 +49,8 @@ export default function Dashboard() {
   const [timeresult, setTimeresult] = useState(false);
   const [counter, setCounter] = useState(0);
   const [result, setResult] = useState("");
+
+  const [geturldata, setGeturldata] = useState({});
 
   let navigate = useNavigate();
   const { data } = useParams();
@@ -77,6 +79,8 @@ export default function Dashboard() {
   const [iderrormessage, setIderrormessage] = useState(false);
   const [getuserdetails, setGetuserdetails] = useState({});
 
+  const [awssaveimgres, setAwssaveimgres] = useState();
+
   const [processcount, setProcesscount] = useState(0);
   const [arraydata, setArraydata] = useState([]);
   const [processtext, setProcesstext] = useState("uploading image");
@@ -97,6 +101,9 @@ export default function Dashboard() {
 
   const [camcheck, setCamcheck] = useState(2);
 
+  const [finalcheck, setFinalcheck] = useState(false);
+
+  const [taskstatus, setTaskstatus] = useState();
   const URL = "https://api.idverify.click";
 
   //const URL = "http://13.232.107.224:8088";
@@ -165,6 +172,19 @@ export default function Dashboard() {
     }
   }
 
+  const gettaskid = localStorage.getItem("taskid");
+
+  console.log("gettaskid",gettaskid);
+  useEffect(() => {
+    fetch(`https://api.idverify.click/id_verify/check_progress/${gettaskid}`, {
+      method: "post",
+    })
+      .then((response) => response.json())
+      .then((json) => setTaskstatus(json.status));
+  }, [0]);
+
+   console.log("taskstatus",taskstatus);
+
   useEffect(() => {
     var formdata = new FormData();
     formdata.append("uid", uid);
@@ -177,29 +197,45 @@ export default function Dashboard() {
       .then((response) => response.json())
       .then((result) => setGetstepid(result));
 
-    if (getstepid.id === true) {
-      setActiveStep(2);
+    //console.log(getstepid);
+    if (gettaskid === null) {
+      // console.log("taskstatus---------------",taskstatus);
     }
-    if (getstepid.verified_face === true) {
-      setActiveStep(3);
-    }
-    if (getstepid.verified_name === true && getstepid.verified_face === false) {
-      setActiveStep(2);
-    }
-
-    if (
-      getstepid.id === true &&
-      getstepid.selfie === true &&
-      getstepid.verified_face === true &&
-      getstepid.verified_name === true
-    ) {
+    if (taskstatus === "PENDING" && gettaskid != null) {
       setActiveStep(4);
-      setNewtemplate(true);
-      setSuccesstemplete(true);
-      //  console.log(newtemplate);
+      setFinalcheck(true);
+      // setIderror(true);
+      // setMessage("Your Verification is under Process..");
+    } else {
+      if (getstepid._id === true) {
+        setActiveStep(2);
+      }
+      if (getstepid.verified_face === true) {
+        setActiveStep(3);
+      }
+
+      if (
+        getstepid.verified_name === true &&
+        getstepid.verified_face === false
+      ) {
+        setActiveStep(2);
+      }
+
+      if (
+        getstepid._id === true &&
+        getstepid.selfie === true &&
+        getstepid.verified_face === true &&
+        getstepid.verified_id_selfie === true
+      ) {
+        setActiveStep(4);
+        setNewtemplate(true);
+        setSuccesstemplete(true);
+
+        //  console.log(newtemplate);
+      }
+      setNewid(getstepid.type_of_id);
+      setCountrynew(getstepid.country);
     }
-    setNewid(getstepid.type_of_id);
-    setCountrynew(getstepid.country);
   }, [getstepid.id, getstepid.selfie, getstepid.verified]);
 
   //console.log(getstepid);
@@ -222,9 +258,7 @@ export default function Dashboard() {
     setformData({ ...formdata, [e.target.name]: [e.target.value] });
     setKey(e.target.name);
     setValue(e.target.value);
-
     getuserdetails[key] = value;
-
     console.log("valeo", e.target.value);
   };
 
@@ -236,65 +270,85 @@ export default function Dashboard() {
     setMessage("");
 
     try {
-      const getcountry = localStorage.getItem("country");
-      console.log("ID_API_REQUEST");
-      let formData = new FormData();
-      formData.append("id_image", document);
-      formData.append("uid", uid);
-      formData.append("type_of_id", idtype);
-      formData.append("country", country);
+      var geturlformdata = new FormData();
+      geturlformdata.append("uid", uid);
+      geturlformdata.append("type", "original_id");
 
-      console.log("country---", country, "--- tdype", idtype, uid);
+      var requestOptions = {
+        method: "POST",
+        body: geturlformdata,
+        redirect: "follow",
+      };
 
-      if (idtype === "drivers_license") {
-        if (state === undefined) {
-          formData.append("sub_type", "");
-        } else {
-          formData.append("sub_type", state);
-        }
-      }
+      fetch(
+        `${URL}/id_verify/get_url?uid=${uid}&type=original_id`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+          setGeturldata(result);
+          var formdata = new FormData();
+          formdata.append("key", result.fields["key"]);
+          formdata.append("x-amz-algorithm", result.fields["x-amz-algorithm"]);
+          formdata.append(
+            "x-amz-credential",
+            result.fields["x-amz-credential"]
+          );
+          formdata.append("x-amz-date", result.fields["x-amz-date"]);
+          formdata.append("policy", result.fields["policy"]);
+          formdata.append("x-amz-signature", result.fields["x-amz-signature"]);
+          formdata.append("file", document);
 
-      if (idtype === "" || idtype === undefined) {
-        formData.append("type_of_id", newid);
-      }
+          var requestOptions = {
+            method: "POST",
+            body: formdata,
+            redirect: "follow",
+          };
 
-      const save_id_image = await axios.post(
-        `${URL}/id_verify/save_id_image/`,
-        formData,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "multipart/form-data;",
-          },
-        }
-      );
-      console.log("ID_RESPONSE", save_id_image);
+          fetch(
+            "https://awone-id-verification.s3.amazonaws.com/",
+            requestOptions
+          )
+            .then((response) => {
+              if (response.status === 204) {
+                checkuploadsaveid();
+              } else {
+                setLoading(false);
+                setRedirect(false);
+                setUploadid(true);
+                setActiveStep(1);
+                setCamcheck(0);
+                setCamcheck(0);
+                setIderrormessage(true);
+                setMessage("Please try again");
+              }
+            })
 
-      if (save_id_image.data.status === "DONE") {
-        setRedirect(false);
-        setScore(true);
-        setMessage("Template Score " + save_id_image.data.score);
-        setActiveStep(2);
-        setLoading(false);
-        setIderrormessage(false);
-      } else {
-        setLoading(false);
-        setRedirect(false);
-        setUploadid(true);
-        setActiveStep(1);
-        setCamcheck(0);
-      }
+            .catch((error) => {
+              setLoading(false);
+              setRedirect(false);
+              setUploadid(true);
+              setActiveStep(1);
+              setCamcheck(0);
+              setLoading(false);
+              setRedirect(false);
+              setActiveStep(1);
+              setCamcheck(0);
+              setIderrormessage(true);
+              setMessage("Please try again");
+            });
+        });
     } catch (err) {
-      setLoading(false);
-      setRedirect(false);
+      console.log("Err", err);
       setActiveStep(1);
       setCamcheck(0);
-      setIderrormessage(true);
-      setMessage("Please try again");
       console.log("ERROR", err);
+
       setMessage("Template Mismatch");
+
       if (err.response.status === 503 || err.response.status === 504) {
-        setMessage("Forged Image detected");
+        setMessage("Please upload a non-rotated aadhar card");
       }
       if (err.response.status === 502) {
         setMessage("Template Mismatch");
@@ -307,96 +361,12 @@ export default function Dashboard() {
     }
   };
 
-  const Uploadselfie = async (activeStep) => {
-    setIderrormessage(false);
-    setTimeresult(false);
-    setNameMatch(false);
-    setTimeresult(false);
-    setIderrormessage(false);
-    setMessage();
-    setErrorimage(false);
-    localStorage.removeItem("setseconds");
-    setCounter(0);
-    setProcesscount(0);
-
-    setFakeface(false);
-    setRedirect(true);
-    setIdselfieerror(false);
-
-    console.log("SELFIE_API_REQUEST");
-
-    let faceData = new FormData();
-    faceData.append("selfie_image", webImage);
-    faceData.append("uid", uid);
-    //faceData.append("type_of_id", idtype);
-
-    if (idtype === "" || idtype === undefined) {
-      faceData.append("type_of_id", newid);
-    }
-
-    try {
-      const save_selfie = await axios.post(
-        `${URL}/id_verify/save_selfie/`,
-        faceData,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "multipart/form-data;",
-          },
-        }
-      );
-      console.log("SELFIE_RESPONSE", save_selfie.data);
-
-      if (save_selfie.data.status === "DONE") {
-        setRedirect(false);
-        setFaceMatch(true);
-        setActiveStep(3);
-        setCounter(0);
-        localStorage.removeItem("setseconds");
-        setCounter(0);
-        setProcesscount(0);
-      } else {
-        console.log("SELFIE_RESPONSE FAILED");
-        setRedirect(false);
-        setFaceMatch(false);
-        setFakeface(true);
-        setActiveStep(2);
-        localStorage.removeItem("setseconds");
-        setCounter(0);
-        setProcesscount(0);
-      }
-    } catch (err) {
-      console.log("SELFIE_RESPONSE FAILED");
-      setRedirect(false);
-      setFaceMatch(false);
-      setFakeface(true);
-      setActiveStep(2);
-      localStorage.removeItem("setseconds");
-      setCounter(0);
-      setProcesscount(0);
-    }
-  };
-
-  const uploadselfiid = async (activeStep) => {
-    setScore(false);
-    setMessage("");
-    setErrorimage(false);
-    setIderrormessage(false);
-    setTimeresult(false);
-    setNameMatch(false);
-    localStorage.removeItem("setseconds");
-    setCounter(0);
-    setProcesscount(0);
-    setCounter(0);
-    setErrorimage(false);
-    setIdselfieerror(false);
-    setRedirect(true);
-
+  const checkuploadsaveid = async () => {
+    console.log("checkuploadsaveid");
     let faceData = new FormData();
     const idcountry = localStorage.setItem("idcountry", country);
     const id_type = localStorage.setItem("id_type", idtype);
 
-    faceData.append("id_image", webImageid);
     faceData.append("uid", uid);
     faceData.append("type_of_id", idtype);
     faceData.append("country", country);
@@ -424,22 +394,9 @@ export default function Dashboard() {
         faceData.append("sub_type", state);
       }
     }
-
-    let newdata = new FormData();
-    newdata.append("uid", uid);
-    const getuser = await axios.post(`${URL}/id_verify/key_values`, newdata, {
-      method: "POST",
-      headers: {
-        "Content-Type": "multipart/form-data;",
-      },
-    });
-
-    console.log("GET_USER_DATA", getuser.data.fields);
-    setGetuserdetails(getuser.data.fields);
-
     try {
       const save_selfie_id = await axios.post(
-        `${URL}/id_verify/save_id_selfie/`,
+        `${URL}/id_verify/save_id_image/`,
         faceData,
         {
           method: "POST",
@@ -449,39 +406,226 @@ export default function Dashboard() {
         }
       );
 
-      console.log("ID_SELFIE_RESPONSE", save_selfie_id);
-      if (save_selfie_id.data.status === "SUCCESS") {
+      console.log("ID_SELFIE_RESPONSE", save_selfie_id.status);
+      if (save_selfie_id.status === 200) {
+        console.log("UPLOAD_ID", save_selfie_id.status);
         setRedirect(false);
-        setFaceMatch(true);
-        setActiveStep(4);
-        setEditusersection(true);
-        setCounter(0);
-        localStorage.removeItem("setseconds");
-        setCounter(0);
-        setProcesscount(0);
+        setScore(true);
+        setActiveStep(2);
+        setLoading(false);
+        setIderrormessage(false);
       } else {
+        setLoading(false);
         setRedirect(false);
-        setFaceMatch(true);
-        setActiveStep(3);
-        setEditusersection(false);
-        setCounter(0);
-        localStorage.removeItem("setseconds");
-        setCounter(0);
-        setProcesscount(0);
-        setIdselfieerror(true);
+        setUploadid(true);
+        setActiveStep(1);
+        setCamcheck(0);
+        setCamcheck(0);
+        setIderrormessage(true);
+        setMessage("Please try again");
       }
     } catch (err) {
       console.log(err);
+      setLoading(false);
       setRedirect(false);
-      setFaceMatch(true);
-      setActiveStep(3);
-      setEditusersection(false);
-      setCounter(0);
-      localStorage.removeItem("setseconds");
-      setCounter(0);
-      setProcesscount(0);
-      setIdselfieerror(true);
+      setUploadid(true);
+      setActiveStep(1);
+      setCamcheck(0);
+      setCamcheck(0);
+      setIderrormessage(true);
+      setMessage("Please try again");
     }
+  };
+
+  const Uploadselfie = async (activeStep) => {
+    setIderrormessage(false);
+    setTimeresult(false);
+    setNameMatch(false);
+    setTimeresult(false);
+    setIderrormessage(false);
+    setMessage();
+    setErrorimage(false);
+    localStorage.removeItem("setseconds");
+    setCounter(0);
+    setProcesscount(0);
+    setFakeface(false);
+    setRedirect(true);
+    setIdselfieerror(false);
+
+    console.log("SELFIE_API_REQUEST");
+
+    try {
+      var geturlformdata = new FormData();
+      geturlformdata.append("uid", uid);
+      geturlformdata.append("type", "selfie");
+
+      var requestOptions = {
+        method: "POST",
+        body: geturlformdata,
+        redirect: "follow",
+      };
+
+      fetch(`${URL}/id_verify/get_url?uid=${uid}&type=selfie`, requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+          setGeturldata(result);
+          var formdata = new FormData();
+          formdata.append("key", result.fields["key"]);
+          formdata.append("x-amz-algorithm", result.fields["x-amz-algorithm"]);
+          formdata.append(
+            "x-amz-credential",
+            result.fields["x-amz-credential"]
+          );
+          formdata.append("x-amz-date", result.fields["x-amz-date"]);
+          formdata.append("policy", result.fields["policy"]);
+          formdata.append("x-amz-signature", result.fields["x-amz-signature"]);
+          formdata.append("file", webImage);
+
+          var requestOptions = {
+            method: "POST",
+            body: formdata,
+            redirect: "follow",
+          };
+
+          fetch(
+            "https://awone-id-verification.s3.amazonaws.com/",
+            requestOptions
+          )
+            .then((response) => {
+              if (response.status === 204) {
+                console.log("SELFIE_RESPONSE", response.status);
+                setRedirect(false);
+                setFaceMatch(true);
+                setActiveStep(3);
+                setCounter(0);
+                setCounter(0);
+                setProcesscount(0);
+              } else {
+                console.log("SELFIE_RESPONSE FAILED");
+                setRedirect(false);
+                setFaceMatch(false);
+                setFakeface(true);
+                setActiveStep(2);
+                setCounter(0);
+                setProcesscount(0);
+              }
+            })
+
+            .catch((error) => {
+              console.log("SELFIE_RESPONSE FAILED");
+              setRedirect(false);
+              setFaceMatch(false);
+              setFakeface(true);
+              setActiveStep(2);
+              setCounter(0);
+              setProcesscount(0);
+              setIderrormessage(true);
+              setMessage("Please try again");
+            });
+        });
+
+      console.log(geturldata.url);
+    } catch (error) {}
+  };
+
+  const uploadselfiid = async (activeStep) => {
+    setScore(false);
+    setMessage("");
+    setErrorimage(false);
+    setIderrormessage(false);
+    setTimeresult(false);
+    setNameMatch(false);
+    localStorage.removeItem("setseconds");
+    setCounter(0);
+    setProcesscount(0);
+    setCounter(0);
+    setErrorimage(false);
+    setIdselfieerror(false);
+    setRedirect(true);
+
+    try {
+      var geturlformdata = new FormData();
+      geturlformdata.append("uid", uid);
+      geturlformdata.append("type", "id_selfie");
+
+      var requestOptions = {
+        method: "POST",
+        body: geturlformdata,
+        redirect: "follow",
+      };
+
+      fetch(
+        `${URL}/id_verify/get_url?uid=${uid}&type=id_selfie`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+          setGeturldata(result);
+          var formdata = new FormData();
+          formdata.append("key", result.fields["key"]);
+          formdata.append("x-amz-algorithm", result.fields["x-amz-algorithm"]);
+          formdata.append(
+            "x-amz-credential",
+            result.fields["x-amz-credential"]
+          );
+          formdata.append("x-amz-date", result.fields["x-amz-date"]);
+          formdata.append("policy", result.fields["policy"]);
+          formdata.append("x-amz-signature", result.fields["x-amz-signature"]);
+          formdata.append("file", webImageid);
+
+          var requestOptions = {
+            method: "POST",
+            body: formdata,
+            redirect: "follow",
+          };
+
+          fetch(
+            "https://awone-id-verification.s3.amazonaws.com/",
+            requestOptions
+          )
+            .then((response) => {
+              if (response.status === 204) {
+                console.log("saveidimage", response.status);
+                setRedirect(false);
+                setFaceMatch(true);
+                setActiveStep(4);
+                setEditusersection(true);
+                setCounter(0);
+                localStorage.removeItem("setseconds");
+                setCounter(0);
+                setProcesscount(0);
+              } else {
+                setRedirect(false);
+                setFaceMatch(true);
+                setActiveStep(3);
+                setEditusersection(false);
+                setCounter(0);
+                setProcesscount(0);
+                setIdselfieerror(true);
+
+                setCounter(0);
+              }
+            })
+
+            .catch((error) => {
+              setRedirect(false);
+              setFaceMatch(true);
+              setActiveStep(3);
+              setEditusersection(false);
+              setCounter(0);
+              setProcesscount(0);
+              setIdselfieerror(true);
+
+              setCounter(0);
+              setIderrormessage(true);
+              setMessage("please try again");
+            });
+        });
+
+      console.log(geturldata.url);
+    } catch (error) {}
   };
 
   const finalsteps = async (activeStep) => {
@@ -490,122 +634,50 @@ export default function Dashboard() {
     setIderrormessage(false);
     setTimeresult(false);
     setNameMatch(false);
-    localStorage.removeItem("setseconds");
-
     setCounter(0);
     setProcesscount(0);
-
     setCounter(0);
     setErrorimage(false);
     setLoading(true);
     setTimeresult(false);
     setIdselfieerror(false);
-    console.log("VERIFY_IMAGE__API_REQUEST");
-    const verify_image_data = new FormData();
-    verify_image_data.append("uid", uid);
+
+    const verify_name = new FormData();
+
+    verify_name.append("uid", uid);
+    verify_name.append("name", formdata.username[0]);
 
     try {
-      const verify_image = await axios.post(
-        `${URL}/id_verify/verify_image/`,
-        verify_image_data,
+      const verify_api = await axios.post(
+        `${URL}/id_verify/verify/`,
+        verify_name,
         {
           headers: {
             "Content-Type": "multipart/form-data;",
           },
         }
       );
-      console.log("verify_image", verify_image.data.verified);
+      console.log("verify_api", verify_api);
 
-      if (verify_image.data.verified === true) {
-        verfiyname();
+      if (verify_api.status === 200) {
+        console.log("verify_api", verify_api.status);
         setLoading(false);
-        setScore(true);
-        setMessage();
-        setMessage("Selfi Score" + " " + Math.round(verify_image.data.score));
-      } else {
-        setLoading(false);
-        setErrorimage(true);
-        setActiveStep(2);
-        setCounter(0);
         setEditusersection(false);
+        setScore(false);
+        setActiveStep(4);
+        setIderror(true);
+        localStorage.clear();
+        localStorage.setItem("taskid", verify_api.data.id);
+        setFinalcheck(true);
+        // setMessage("Your Verification is under Process..");
       }
     } catch (err) {
-      setLoading(false);
-      setErrorimage(true);
-      setActiveStep(2);
-      setCounter(0);
-      setCounter(0);
-      setEditusersection(false);
+      console.log(err);
     }
   };
 
   const reload = () => {
     window.location.reload();
-  };
-
-  const verfiyname = async (activeStep) => {
-    setErrorname(false);
-    setLoading(true);
-    setScore(false);
-    setMessage();
-    console.log("NAME_API_REQUEST");
-
-    const sendrequest = {
-      uid: uid,
-      fields: getuserdetails,
-    };
-    console.log("sendEditrequest", sendrequest);
-
-    try {
-      const verify_name = await axios.post(
-        `${URL}/id_verify/verify_fields/`,
-        sendrequest,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(
-        "VERIFY_NAME_RESPOSNE",
-        verify_name,
-        "-----",
-        verify_name.data
-      );
-
-      if (verify_name.data.first_name === true) {
-        setLoading(false);
-        setNameMatch(true);
-        setImageverify(true);
-        setFaceMatch(true);
-        setImageverify(true);
-        setEditusersection(false);
-        setTimeresult(true);
-        setScore(false);
-        setMessage();
-        setActiveStep(4);
-        setResult(JSON.parse(localStorage.getItem("count")));
-        setSuccesstemplete(true);
-        setTimeout(reload, 1000);
-      } else {
-        setCounter(0);
-        setLoading(false);
-        setActiveStep(4);
-        setErrorname(true);
-        setEditusersection(true);
-        setTime(false);
-        setResult(JSON.parse(localStorage.getItem("count")));
-        setTimeresult(true);
-      }
-    } catch (err) {
-      setLoading(false);
-      setActiveStep(3);
-      setErrorname(true);
-      setEditusersection(true);
-      setTime(false);
-      setCounter(0);
-      setResult(JSON.parse(localStorage.getItem("count")));
-    }
   };
 
   const handleNext = () => {
@@ -751,9 +823,25 @@ export default function Dashboard() {
                 </div>
               </div>
             ) : (
-              <p></p>
+              ""
             )}
           </p>
+
+          {finalcheck ? (
+            <>
+              <p className="success">
+                <b>Your Verification is under Process...</b>
+              </p>
+              <center>
+                <CircularProgress />
+              </center>
+              <button className="reloadbnt" onClick={reload}>
+                Retry
+              </button>
+            </>
+          ) : (
+            ""
+          )}
 
           {redirect ? (
             <div className="spinner_two">
@@ -783,17 +871,11 @@ export default function Dashboard() {
               ""
             )}
 
-            {iduploadid ? (
-              <p className="error">
-                <b>ID verification failed</b>
-              </p>
-            ) : (
-              ""
-            )}
+            {iduploadid ? <p className="error"></p> : ""}
 
             {iderror ? (
               <p className="success">
-                <b>Your ID verification failed</b>
+                <b>{message}</b>
               </p>
             ) : (
               ""
@@ -860,27 +942,17 @@ export default function Dashboard() {
           </div>
           {editusersection ? (
             <div className="usersection">
-              {Object.entries(getuserdetails).map((k, v) => {
-                return (
-                  <div className="userdetails">
-                    <div className="box" id={k[0]}>
-                      {k[0]}
-                    </div>
-                    <div className="box" id={k[0]}>
-                      <span>
-                        <input
-                          type="text"
-                          placeholder={k[1]}
-                          className="editinput"
-                          name={k[0]}
-                          onChange={getformdetails}
-                          autocomplete="off"
-                        ></input>
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
+              <div className="username">
+                <p>Enter your name as per upload ID</p>
+                <input
+                  type="text"
+                  className="usernameenter"
+                  name="username"
+                  placeholder="Enter name here.."
+                  onChange={getformdetails}
+                  autoComplete="off"
+                ></input>
+              </div>
             </div>
           ) : (
             ""
