@@ -18,7 +18,7 @@ export default function Navbar() {
  
   ];
   const logout = () => {
-    window.location = "https://awone.idverify.click/index.html#/";
+    window.location = "https://o-kyc-dev.onpassive.com/";
    
   };
   return (

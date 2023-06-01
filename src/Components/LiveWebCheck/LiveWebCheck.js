@@ -474,7 +474,6 @@ const LiveWebCheck = ({
                   {tag ? <> {`${actions} with in 5 Seconds`}</> : ""}
                 </b>
                 <br />
-
                 {/* {showcount ? <b>{count} seconds left</b> : ""}  </p> */}
             </div>
             <div className="picture">
