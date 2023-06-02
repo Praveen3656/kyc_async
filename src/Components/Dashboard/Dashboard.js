@@ -323,11 +323,6 @@ export default function Dashboard() {
       console.log("ERROR",err)
       setIderrormessage(true);
       setMessage(err.response.data);
-    
-      // if (err.response.status === 503 || err.response.status === 504) {
-      //   setMessage("Forged Image detected");
-      // }
-
       setRedirect(false);
       setLoading(false);
       setRedirect(false);

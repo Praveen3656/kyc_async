@@ -357,7 +357,6 @@ const LiveWebCheck = ({
               setShowactionmessage(false);
             }
             if (Y > 0.1) {
-           
               let index = faceactionstwo.indexOf(getitem);
               faceactionstwo.splice(index, 1);
               console.log(faceactionstwo);
