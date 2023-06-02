@@ -72,6 +72,7 @@ export default function Dashboard() {
   const [firstname, setFirstname] = useState();
   const [lastname, setLastname] = useState();
   const [error, setError] = useState(false);
+  const [statusshow, setStatusshow] = useState(false);
 
   const [errormessage, setErrormessage] = useState();
 
@@ -91,6 +92,7 @@ export default function Dashboard() {
 
   const [state, setState] = useState();
 
+  const [showretrybnt, setShowretrybnt] = useState(true);
   const [idselfieerror, setIdselfieerror] = useState(false);
 
   const [showid, setShowid] = useState(false);
@@ -104,9 +106,11 @@ export default function Dashboard() {
   const [finalcheck, setFinalcheck] = useState(false);
 
   const [taskstatus, setTaskstatus] = useState();
-  const URL = "https://api.idverify.click";
+  const [statusmessage, setStatusmessage] = useState();
 
-  //const URL = "http://13.232.107.224:8088";
+  const [showstatus, setShowstatus] = useState(false);
+
+  const URL = "https://o-kycapi-dev.onpassive.com";
 
   useEffect(() => {
     if (!uid) {
@@ -172,35 +176,75 @@ export default function Dashboard() {
     }
   }
 
-  const gettaskid = localStorage.getItem("taskid");
+  const gettaskid = sessionStorage.getItem("taskid");
 
-  console.log("gettaskid",gettaskid);
+  // console.log("gettaskid", gettaskid);
+  let token = "";
   useEffect(() => {
-    fetch(`https://api.idverify.click/id_verify/check_progress/${gettaskid}`, {
+    const fetchToken = async () => {
+      console.log("gettoken");
+      let tokendata = new FormData();
+      tokendata.append("username", "admin");
+      tokendata.append("password", "sw0rdpass");
+
+      try {
+        const tokenapi = await axios.post(`${URL}/token`, tokendata, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        });
+        console.log("GETTOKEN", tokenapi.data.access_token);
+        localStorage.setItem("settoken", tokenapi.data.access_token);
+      } catch (err) {}
+    };
+    fetchToken();
+  }, [0]);
+
+  useEffect(() => {
+    token = localStorage.getItem("settoken");
+    fetch(`${URL}/id_verify/check_progress/${gettaskid}`, {
       method: "post",
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((response) => response.json())
       .then((json) => setTaskstatus(json.status));
-  }, [0]);
+  }, []);
 
-   console.log("taskstatus",taskstatus);
-
+  // console.log("taskstatus", taskstatus);
+  token = localStorage.getItem("settoken");
   useEffect(() => {
-    var formdata = new FormData();
+    var formdata = new URLSearchParams();
     formdata.append("uid", uid);
+
+    const myHeaders = {
+      accept: "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: `Bearer ${token}`,
+    };
+
+    // console.log("status", myHeaders);
+
     var requestOptions = {
       method: "POST",
       body: formdata,
       redirect: "follow",
+      headers: myHeaders,
     };
-    fetch(`${URL}/id_verify/status/`, requestOptions)
+    fetch(`${URL}/id_verify/status`, requestOptions)
       .then((response) => response.json())
       .then((result) => setGetstepid(result));
 
-    //console.log(getstepid);
+    console.log(getstepid);
+
     if (gettaskid === null) {
       // console.log("taskstatus---------------",taskstatus);
     }
+
     if (taskstatus === "PENDING" && gettaskid != null) {
       setActiveStep(4);
       setFinalcheck(true);
@@ -259,7 +303,7 @@ export default function Dashboard() {
     setKey(e.target.name);
     setValue(e.target.value);
     getuserdetails[key] = value;
-    console.log("valeo", e.target.value);
+    console.log("value", e.target.value);
   };
 
   const uploadid = async (activeStep) => {
@@ -268,25 +312,51 @@ export default function Dashboard() {
     setCounter(0);
     setErrorimage(false);
     setMessage("");
+    let tokendata = new FormData();
+    tokendata.append("username", "admin");
+    tokendata.append("password", "sw0rdpass");
 
     try {
-      var geturlformdata = new FormData();
-      geturlformdata.append("uid", uid);
-      geturlformdata.append("type", "original_id");
+      const tokenapi = await axios.post(`${URL}/token`, tokendata, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+      console.log("token", tokenapi.data.access_token);
+      localStorage.setItem("settoken", tokenapi.data.access_token);
+    } catch (err) {}
+
+    token = localStorage.getItem("settoken");
+
+    try {
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("uid", uid);
+      urlencoded.append("type", "original_id");
+
+      const myHeaders = {
+        accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Bearer ${token}`,
+      };
 
       var requestOptions = {
         method: "POST",
-        body: geturlformdata,
+        body: urlencoded,
         redirect: "follow",
+        headers: myHeaders,
       };
+
+      console.log("requestOptions", requestOptions);
 
       fetch(
         `${URL}/id_verify/get_url?uid=${uid}&type=original_id`,
         requestOptions
       )
         .then((response) => response.json())
+
         .then((result) => {
-          console.log(result);
+          console.log("get_url", result);
           setGeturldata(result);
           var formdata = new FormData();
           formdata.append("key", result.fields["key"]);
@@ -299,6 +369,7 @@ export default function Dashboard() {
           formdata.append("policy", result.fields["policy"]);
           formdata.append("x-amz-signature", result.fields["x-amz-signature"]);
           formdata.append("file", document);
+          console.log(document);
 
           var requestOptions = {
             method: "POST",
@@ -306,11 +377,11 @@ export default function Dashboard() {
             redirect: "follow",
           };
 
-          fetch(
-            "https://awone-id-verification.s3.amazonaws.com/",
-            requestOptions
-          )
+          /// console.log("GETURL", requestOptions);
+
+          fetch(result.url, requestOptions)
             .then((response) => {
+              console.log("aws url", response);
               if (response.status === 204) {
                 checkuploadsaveid();
               } else {
@@ -363,7 +434,8 @@ export default function Dashboard() {
 
   const checkuploadsaveid = async () => {
     console.log("checkuploadsaveid");
-    let faceData = new FormData();
+    let faceData = new URLSearchParams();
+
     const idcountry = localStorage.setItem("idcountry", country);
     const id_type = localStorage.setItem("id_type", idtype);
 
@@ -394,19 +466,28 @@ export default function Dashboard() {
         faceData.append("sub_type", state);
       }
     }
+    token = localStorage.getItem("settoken");
+
+    const myHeaders = {
+      accept: "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: `Bearer ${token}`,
+    };
+
+    console.log("checkuploadsaveid", myHeaders);
     try {
       const save_selfie_id = await axios.post(
-        `${URL}/id_verify/save_id_image/`,
+        `${URL}/id_verify/save_id_image`,
         faceData,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "multipart/form-data;",
-          },
+          headers: myHeaders,
+          redirect: "follow",
         }
       );
 
-      console.log("ID_SELFIE_RESPONSE", save_selfie_id.status);
+      console.log("ID_SELFIE_RESPONSE", save_selfie_id);
+
       if (save_selfie_id.status === 200) {
         console.log("UPLOAD_ID", save_selfie_id.status);
         setRedirect(false);
@@ -422,10 +503,10 @@ export default function Dashboard() {
         setCamcheck(0);
         setCamcheck(0);
         setIderrormessage(true);
-        setMessage("Please try again");
+        setMessage();
       }
     } catch (err) {
-      console.log(err);
+      console.log("errr", err);
       setLoading(false);
       setRedirect(false);
       setUploadid(true);
@@ -453,16 +534,22 @@ export default function Dashboard() {
     setIdselfieerror(false);
 
     console.log("SELFIE_API_REQUEST");
-
+    token = localStorage.getItem("settoken");
     try {
-      var geturlformdata = new FormData();
+      var geturlformdata = new URLSearchParams();
       geturlformdata.append("uid", uid);
       geturlformdata.append("type", "selfie");
 
+      const myHeaders = {
+        accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Bearer ${token}`,
+      };
       var requestOptions = {
         method: "POST",
         body: geturlformdata,
         redirect: "follow",
+        headers: myHeaders,
       };
 
       fetch(`${URL}/id_verify/get_url?uid=${uid}&type=selfie`, requestOptions)
@@ -488,10 +575,7 @@ export default function Dashboard() {
             redirect: "follow",
           };
 
-          fetch(
-            "https://awone-id-verification.s3.amazonaws.com/",
-            requestOptions
-          )
+          fetch(result.url, requestOptions)
             .then((response) => {
               if (response.status === 204) {
                 console.log("SELFIE_RESPONSE", response.status);
@@ -543,16 +627,23 @@ export default function Dashboard() {
     setErrorimage(false);
     setIdselfieerror(false);
     setRedirect(true);
-
+    token = localStorage.getItem("settoken");
     try {
-      var geturlformdata = new FormData();
+      var geturlformdata = new URLSearchParams();
       geturlformdata.append("uid", uid);
       geturlformdata.append("type", "id_selfie");
+
+      const myHeaders = {
+        accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Bearer ${token}`,
+      };
 
       var requestOptions = {
         method: "POST",
         body: geturlformdata,
         redirect: "follow",
+        headers: myHeaders,
       };
 
       fetch(
@@ -581,10 +672,7 @@ export default function Dashboard() {
             redirect: "follow",
           };
 
-          fetch(
-            "https://awone-id-verification.s3.amazonaws.com/",
-            requestOptions
-          )
+          fetch(result.url, requestOptions)
             .then((response) => {
               if (response.status === 204) {
                 console.log("saveidimage", response.status);
@@ -642,18 +730,21 @@ export default function Dashboard() {
     setTimeresult(false);
     setIdselfieerror(false);
 
-    const verify_name = new FormData();
+    const verify_name = new URLSearchParams();
 
     verify_name.append("uid", uid);
     verify_name.append("name", formdata.username[0]);
+    token = localStorage.getItem("settoken");
 
     try {
       const verify_api = await axios.post(
-        `${URL}/id_verify/verify/`,
+        `${URL}/id_verify/verify`,
         verify_name,
         {
           headers: {
-            "Content-Type": "multipart/form-data;",
+            accept: "application/json",
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -666,9 +757,10 @@ export default function Dashboard() {
         setScore(false);
         setActiveStep(4);
         setIderror(true);
-        localStorage.clear();
-        localStorage.setItem("taskid", verify_api.data.id);
+        sessionStorage.clear();
+        sessionStorage.setItem("taskid", verify_api.data.id);
         setFinalcheck(true);
+        setShowstatus(true);
         // setMessage("Your Verification is under Process..");
       }
     } catch (err) {
@@ -792,6 +884,7 @@ export default function Dashboard() {
     setProcesscount(processcount + 1);
     setsec = localStorage.setItem("setseconds", processcount);
   };
+
   setTimeout(timer, 4000);
   const getsec = localStorage.getItem("setseconds");
   return (
@@ -835,11 +928,57 @@ export default function Dashboard() {
               <center>
                 <CircularProgress />
               </center>
-              
+              <button className="reloadbnt" onClick={reload}>
+                Reload
+              </button>
             </>
           ) : (
             ""
           )}
+
+          {/* {taskstatus === "PENDING"  && taskstatus!= null && taskstatus != undefined  ? (
+            <>
+              <p className="success">
+                <b>Your Verification is under Process...</b>
+              </p>
+              {
+                <small>
+                  <span>
+                    <b>Status: </b> {taskstatus}..
+                  </span>
+                </small>
+              }
+              <br /> <br />
+              <center>
+                <CircularProgress />
+              </center>
+            </>
+          ) : (
+            ""
+          )} */}
+
+          {/* {taskstatus === "SUCEESS" ? (
+            <>
+              <p className="error">
+                <br />
+                <b>{statusmessage}</b>
+                <br />
+              </p>
+
+              {showretrybnt ? (
+                <>
+                  <br />
+                  <button className="reloadbnt" onClick={reload}>
+                    Retry
+                  </button>
+                </>
+              ) : (
+                ""
+              )}
+            </>
+          ) : (
+            ""
+          )} */}
 
           {redirect ? (
             <div className="spinner_two">
