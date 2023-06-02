@@ -96,11 +96,9 @@ export default function Dashboard() {
   const [countrynew, setCountrynew] = useState();
 
   const [camcheck, setCamcheck] = useState(2);
-  const [token,setToken] = useState('');
+  const [token, setToken] = useState("");
 
   const URL = "https://api.idverify.click";
-
-
 
   useEffect(() => {
     if (!uid) {
@@ -230,33 +228,22 @@ export default function Dashboard() {
   };
 
   const uploadid = async (activeStep) => {
-
-
     let tokendata = new FormData();
     tokendata.append("username", "admin");
     tokendata.append("password", "sw0rdpass");
 
-    try{
-      const tokenapi = await axios.post(
-        `${URL}/token/`,
-        tokendata,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "multipart/form-data;",
-          },
-        }
-      );
+    try {
+      const tokenapi = await axios.post(`${URL}/token/`, tokendata, {
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data;",
+        },
+      });
       console.log("token", tokenapi.data.access_token);
       setToken(tokenapi.data.access_token);
 
-      console.log("gettoken",token);
-
-    }catch(err){
-
-    }
-
-    
+      console.log("gettoken", token);
+    } catch (err) {}
 
     setIderrormessage(false);
     setRedirect(true);
@@ -294,7 +281,7 @@ export default function Dashboard() {
           method: "POST",
           headers: {
             "Content-Type": "multipart/form-data;",
-            'Authorization': `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -313,20 +300,20 @@ export default function Dashboard() {
         setUploadid(true);
         setActiveStep(1);
         setCamcheck(0);
-        setMessage()
+        setMessage();
       }
     } catch (err) {
       setLoading(false);
       setRedirect(false);
       setActiveStep(1);
       setCamcheck(0);
-      console.log("ERROR",err)
+      console.log("ERROR", err.message);
       setIderrormessage(true);
+      setMessage(err.message);
       setMessage(err.response.data);
       setRedirect(false);
       setLoading(false);
       setRedirect(false);
-
       setIderrormessage(true);
     }
   };
@@ -398,6 +385,7 @@ export default function Dashboard() {
       localStorage.removeItem("setseconds");
       setCounter(0);
       setProcesscount(0);
+      setMessage(err.response.data);
     }
   };
 
@@ -505,6 +493,7 @@ export default function Dashboard() {
       setCounter(0);
       setProcesscount(0);
       setIdselfieerror(true);
+      setMessage(err.response.data);
     }
   };
 
@@ -825,7 +814,7 @@ export default function Dashboard() {
 
             {idselfieerror ? (
               <p className="error">
-                <b>Type of ID couldnt be verified</b>
+                <b>{message}</b>
               </p>
             ) : (
               ""

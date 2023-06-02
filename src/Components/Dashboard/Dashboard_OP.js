@@ -503,7 +503,7 @@ export default function Dashboard() {
         setCamcheck(0);
         setCamcheck(0);
         setIderrormessage(true);
-        setMessage();
+        
       }
     } catch (err) {
       console.log("errr", err);
@@ -514,7 +514,7 @@ export default function Dashboard() {
       setCamcheck(0);
       setCamcheck(0);
       setIderrormessage(true);
-      setMessage("Please try again");
+      setMessage(err.response.data);
     }
   };
 
@@ -605,7 +605,8 @@ export default function Dashboard() {
               setCounter(0);
               setProcesscount(0);
               setIderrormessage(true);
-              setMessage("Please try again");
+              setMessage(err.message);
+              setMessage(err.response.data);
             });
         });
 
@@ -705,10 +706,9 @@ export default function Dashboard() {
               setCounter(0);
               setProcesscount(0);
               setIdselfieerror(true);
-
               setCounter(0);
               setIderrormessage(true);
-              setMessage("please try again");
+              setMessage(err.response.data);
             });
         });
 
@@ -943,7 +943,7 @@ export default function Dashboard() {
               <center>
                 <CircularProgress />
               </center>
-            
+              <br/>
               <small>
                 <span>
                   <b>Status: </b> {taskstatus}..
@@ -1042,7 +1042,7 @@ export default function Dashboard() {
 
             {idselfieerror ? (
               <p className="error">
-                <b>Type of ID couldnt be verified</b>
+                <b>{message}</b>
               </p>
             ) : (
               ""

@@ -18,8 +18,9 @@ export default function Navbar() {
   ];
   
   const logout = () => {
-    window.location = "/";
+    window.location = "https://awone.idverify.click/index.html#/";
   };
+  
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">

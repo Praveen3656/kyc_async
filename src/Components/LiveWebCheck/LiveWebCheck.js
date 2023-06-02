@@ -245,7 +245,7 @@ const LiveWebCheck = ({
             
               let index = faceactionstwo.indexOf(getitem);
               faceactionstwo.splice(index, 1);
-              console.log(faceactionstwo);
+        
               const randomIndextwo = Math.floor(
                 Math.random() * faceactionstwo.length
               );
@@ -273,7 +273,7 @@ const LiveWebCheck = ({
               
               let index = faceactionstwo.indexOf(getitem);
               faceactionstwo.splice(index, 1);
-              console.log(faceactionstwo);
+             
               const randomIndextwo = Math.floor(
                 Math.random() * faceactionstwo.length
               );
@@ -290,7 +290,7 @@ const LiveWebCheck = ({
           getitem = localStorage.getItem("state");
           if (getitem === "TURNRIGHT") {
             const actioncount = localStorage.getItem("countaction");
-            console.log("actioncount", actioncount);
+          
             if (actioncount > 2) {
               setTimeout(capture);
               shouldExecuteSetTimeout = false;
@@ -302,7 +302,7 @@ const LiveWebCheck = ({
 
               let index = faceactionstwo.indexOf(getitem);
               faceactionstwo.splice(index, 1);
-              console.log(faceactionstwo);
+             
               const randomIndextwo = Math.floor(
                 Math.random() * faceactionstwo.length
               );
@@ -331,7 +331,7 @@ const LiveWebCheck = ({
               
               let index = faceactionstwo.indexOf(getitem);
               faceactionstwo.splice(index, 1);
-              console.log(faceactionstwo);
+             
               const randomIndextwo = Math.floor(
                 Math.random() * faceactionstwo.length
               );
@@ -343,7 +343,7 @@ const LiveWebCheck = ({
               const uniqueValues = [...new Set(setstate)];
 
               localStorage.setItem("countaction", uniqueValues.length);
-              console.log("actioncount", actioncount);
+              
             }
           }
 
@@ -359,7 +359,7 @@ const LiveWebCheck = ({
             if (Y > 0.1) {
               let index = faceactionstwo.indexOf(getitem);
               faceactionstwo.splice(index, 1);
-              console.log(faceactionstwo);
+           
               const randomIndextwo = Math.floor(
                 Math.random() * faceactionstwo.length
               );

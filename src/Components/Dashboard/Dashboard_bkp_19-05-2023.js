@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [formdata, setformData] = useState({});
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(0);
   const [document, setDocumnet] = useState("");
   const [idtype, setIdType] = useState("");
   const [country, setCountry] = useState("");
@@ -96,10 +96,9 @@ export default function Dashboard() {
   const [countrynew, setCountrynew] = useState();
 
   const [camcheck, setCamcheck] = useState(2);
+  const [token, setToken] = useState("");
 
   const URL = "https://api.idverify.click";
-
-  //const URL = "http://13.232.107.224:8088";
 
   useEffect(() => {
     if (!uid) {
@@ -229,6 +228,23 @@ export default function Dashboard() {
   };
 
   const uploadid = async (activeStep) => {
+    let tokendata = new FormData();
+    tokendata.append("username", "admin");
+    tokendata.append("password", "sw0rdpass");
+
+    try {
+      const tokenapi = await axios.post(`${URL}/token/`, tokendata, {
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data;",
+        },
+      });
+      console.log("token", tokenapi.data.access_token);
+      setToken(tokenapi.data.access_token);
+
+      console.log("gettoken", token);
+    } catch (err) {}
+
     setIderrormessage(false);
     setRedirect(true);
     setCounter(0);
@@ -265,6 +281,7 @@ export default function Dashboard() {
           method: "POST",
           headers: {
             "Content-Type": "multipart/form-data;",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -283,26 +300,20 @@ export default function Dashboard() {
         setUploadid(true);
         setActiveStep(1);
         setCamcheck(0);
+        setMessage();
       }
     } catch (err) {
       setLoading(false);
       setRedirect(false);
       setActiveStep(1);
       setCamcheck(0);
+      console.log("ERROR", err.message);
       setIderrormessage(true);
-      setMessage("Please try again");
-      console.log("ERROR", err);
-      setMessage("Template Mismatch");
-      if (err.response.status === 503 || err.response.status === 504) {
-        setMessage("Forged Image detected");
-      }
-      if (err.response.status === 502) {
-        setMessage("Template Mismatch");
-      }
+      setMessage(err.message);
+      setMessage(err.response.data);
       setRedirect(false);
       setLoading(false);
       setRedirect(false);
-
       setIderrormessage(true);
     }
   };
@@ -374,6 +385,7 @@ export default function Dashboard() {
       localStorage.removeItem("setseconds");
       setCounter(0);
       setProcesscount(0);
+      setMessage(err.response.data);
     }
   };
 
@@ -481,6 +493,7 @@ export default function Dashboard() {
       setCounter(0);
       setProcesscount(0);
       setIdselfieerror(true);
+      setMessage(err.response.data);
     }
   };
 
@@ -801,7 +814,7 @@ export default function Dashboard() {
 
             {idselfieerror ? (
               <p className="error">
-                <b>Type of ID couldnt be verified</b>
+                <b>{message}</b>
               </p>
             ) : (
               ""
