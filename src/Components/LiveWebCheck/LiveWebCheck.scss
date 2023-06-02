@@ -93,9 +93,9 @@
 
   .output_canvas{
     z-index: 999999;
-    width: 45%;
-    height: 55% ;
- 
+    width: 40%;
+    height: 50% ;
+
   }
 
   .dot{
@@ -106,21 +106,21 @@
   .clicknext{
     color: #000 !important;
   }
-// .green{
-//   color: green;
-//   font-size: 12px;
-// }
-// .red{
-//   color: red;
-//   font-size: 12px;
-// }
+.green{
+  color: green;
+  font-size: 12px;
+}
+.red{
+  color: red;
+  font-size: 12px;
+  
+}
 #green{
   border: 2px solid  green;
 }
 #red{
   border: 2px solid red;
 }
-
   .ovalback{
     width: 191px;
     height: 241px;

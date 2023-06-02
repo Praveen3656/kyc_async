@@ -48,7 +48,7 @@ const LiveWebCheck = ({
   var camera = null;
   const [verified, setVerified] = useState(false);
   const [message, setMessage] = useState(
-    "come close to camera and open your mouth"
+    "Please approach the camera with your face in the center"
   );
   const [showovalcanvas, setShowovalcanvas] = useState(false);
   const [timeoutmessage, setTimeoutmessage] = useState(false);
@@ -69,25 +69,12 @@ const LiveWebCheck = ({
       });
   };
 
-  // const capture_two = React.useCallback(() => {
-  //   const imageSrctwo = webcamRef.current.getScreenshot();
-  //   urltoFile(imageSrctwo, "user.txt", "text/plain").then(function (file) {
-  //     updateWebImagetwo(file);
-  //   });
-  //   setImgSrctwo(imageSrctwo);
-  //   updateWebImagetwo(imageSrctwo);
-  // }, [webcamRef, setImgSrc]);
-
-  // const capture_three = React.useCallback(() => {
-  //   const imageSrcthree = webcamRef.current.getScreenshot();
-  //   urltoFile(imageSrcthree, "user.txt", "text/plain").then(function (file) {
-  //     updateWebImagethree(file);
-  //   });
-  //   setImgSrcthree(imageSrcthree);
-  //   updateWebImagethree(imageSrcthree);
-  // }, [webcamRef, setImgSrc]);
-
   const capture = React.useCallback(() => {
+    shouldExecuteSetTimeout = false;
+    setTimeout(takephotonew, 1000);
+  }, [webcamRef, setImgSrc]);
+
+  const takephotonew = React.useCallback(() => {
     setShowactionmessage(false);
     const imageSrc = webcamRef.current.getScreenshot();
     urltoFile(imageSrc, "user.txt", "text/plain").then(function (file) {
@@ -120,8 +107,8 @@ const LiveWebCheck = ({
     const faceactions = [
       "LOOKUP",
       "LOOKDOWN",
-      "TURNRIGHT",
       "TURNLEFT",
+      "TURNRIGHT",
       "OPENMOUTH",
     ];
     const randomIndex = Math.floor(Math.random() * faceactions.length);
@@ -137,8 +124,8 @@ const LiveWebCheck = ({
   const faceactionstwo = [
     "LOOKUP",
     "LOOKDOWN",
-    "TURNRIGHT",
     "TURNLEFT",
+    "TURNRIGHT",
     "OPENMOUTH",
   ];
   const setstate = [];
@@ -160,6 +147,11 @@ const LiveWebCheck = ({
       setTimeoutmesg(true);
     }
   };
+
+  window.addEventListener("beforeunload", function () {
+    localStorage.removeItem("countaction");
+  });
+
   function onResults(results) {
     let getitem = localStorage.getItem("state");
     localStorage.setItem("counter", 0);
@@ -208,185 +200,185 @@ const LiveWebCheck = ({
         var Y = PT_58 - PT_52;
         var X = PT_55 - PT_49;
 
-        if (Y > 0.12) {
-          setCapturebnt(true);
-          setMessage("keep your face in frame & click Capture");
-          setCanvasshow(false);
-          setShowovalcanvas(false);
-          setShowoval(false);
-          setShowbnt(true);
-          setTimeout(capture, 800);
-        }
-        //console.log("LOOKDOWN", LOOKDOWN);
-
-        ///console.log("BOTTOM",'---',BOTTOM,"TOP",TOP);
-        //console.log("RIGHT", RIGHT, "--------", "LEFT", LEFT);
-
-        // getitem = localStorage.getItem("state");
-        // if (
-        //   facedifference > 0.5 &&
-        //   TOP > 0 &&
-        //   BOTTOM < 0.99 &&
-        //   LEFT > -0 &&
-        //   RIGHT < 0.99
-        // ) {
-        //   setShowmessage(false);
-
-        //   setAddclass(true);
-        //   setChecktime(false);
-
-        //   const timeoutId = setTimeout(() => {
-        //     settimeout();
-        //   }, 15000);
-
-   
-
-          
-
-        //   // if (getitem === "LOOKUP") {
-        //   //   setShowactionmessage(true);
-        //   //   //setTimeout(capture_three, 500);
-        //   //   if (LOOKUP < 0.5) {
-        //   //     let index = faceactionstwo.indexOf(getitem);
-        //   //     faceactionstwo.splice(index, 1);
-        //   //     console.log(faceactionstwo);
-        //   //     const randomIndextwo = Math.floor(
-        //   //       Math.random() * faceactionstwo.length
-        //   //     );
-        //   //     const removevalue = faceactionstwo[randomIndextwo];
-        //   //     localStorage.clear();
-        //   //     localStorage.setItem("state", removevalue);
-        //   //     setActions(removevalue);
-        //   //     setstate.push(getitem);
-        //   //     const uniqueValues = [...new Set(setstate)];
-
-        //   //     if (uniqueValues.length >= 3) {
-        //   //       shouldExecuteSetTimeout = false;
-        //   //       setTimeout(capture, 1000);
-        //   //       setCapturebnt(false);
-        //   //       setShowactionmessage(false);
-        //   //     }
-        //   //   }
-        //   // }
-
-        //   // getitem = localStorage.getItem("state");
-        //   // if (getitem === "LOOKDOWN") {
-        //   //   setShowactionmessage(true);
-        //   //   //// setTimeout(capture_three, 500);
-        //   //   if (LOOKDOWN > 0.75) {
-        //   //     let index = faceactionstwo.indexOf(getitem);
-        //   //     faceactionstwo.splice(index, 1);
-        //   //     console.log(faceactionstwo);
-        //   //     const randomIndextwo = Math.floor(
-        //   //       Math.random() * faceactionstwo.length
-        //   //     );
-        //   //     const removevalue = faceactionstwo[randomIndextwo];
-        //   //     localStorage.clear();
-        //   //     localStorage.setItem("state", removevalue);
-        //   //     setActions(removevalue);
-        //   //     setstate.push(getitem);
-        //   //     const uniqueValues = [...new Set(setstate)];
-        //   //     if (uniqueValues.length >= 3) {
-        //   //       shouldExecuteSetTimeout = false;
-        //   //       setTimeout(capture, 1000);
-        //   //       setCapturebnt(false);
-        //   //       setShowactionmessage(false);
-        //   //     }
-        //   //   }
-
-        //   //   // setTimeout(settimeout, 10000);
-        //   // }
-
-        //   // getitem = localStorage.getItem("state");
-        //   // if (getitem === "TURNRIGHT") {
-        //   //   setShowactionmessage(true);
-        //   //   // setTimeout(capture_two, 500);
-        //   //   if (TURNRIGHT <= 0.3) {
-        //   //     let index = faceactionstwo.indexOf(getitem);
-        //   //     faceactionstwo.splice(index, 1);
-        //   //     console.log(faceactionstwo);
-        //   //     const randomIndextwo = Math.floor(
-        //   //       Math.random() * faceactionstwo.length
-        //   //     );
-        //   //     const removevalue = faceactionstwo[randomIndextwo];
-        //   //     localStorage.clear();
-        //   //     localStorage.setItem("state", removevalue);
-        //   //     setActions(removevalue);
-        //   //     setstate.push(getitem);
-
-        //   //     const uniqueValues = [...new Set(setstate)];
-
-        //   //     if (uniqueValues.length >= 3) {
-        //   //       shouldExecuteSetTimeout = false;
-        //   //       setTimeout(capture, 1000);
-        //   //       setCapturebnt(false);
-        //   //       setShowactionmessage(false);
-        //   //     }
-        //   //   }
-        //   // }
-
-        //   // //console.log("setaction", localStorage.getItem("state"));
-        //   // getitem = localStorage.getItem("state");
-        //   // if (getitem === "TURNLEFT") {
-        //   //   setShowactionmessage(true);
-        //   //   // setTimeout(capture_two, 500);
-        //   //   if (TURNLEFT > 0.6) {
-        //   //     console.log(TURNLEFT);
-        //   //     let index = faceactionstwo.indexOf(getitem);
-        //   //     faceactionstwo.splice(index, 1);
-        //   //     console.log(faceactionstwo);
-        //   //     const randomIndextwo = Math.floor(
-        //   //       Math.random() * faceactionstwo.length
-        //   //     );
-        //   //     const removevalue = faceactionstwo[randomIndextwo];
-
-        //   //     localStorage.clear();
-        //   //     localStorage.setItem("state", removevalue);
-        //   //     setActions(removevalue);
-        //   //     setstate.push(getitem);
-
-        //   //     const uniqueValues = [...new Set(setstate)];
-        //   //     if (uniqueValues.length >= 3) {
-        //   //       shouldExecuteSetTimeout = false;
-        //   //       setTimeout(capture, 1000);
-        //   //       setCapturebnt(false);
-        //   //       setShowactionmessage(false);
-        //   //     }
-        //   //   }
-        //   // }
-
-        //   // getitem = localStorage.getItem("state");
-        //   // if (getitem === "OPENMOUTH") {
-        //   //   setShowactionmessage(true);
-        //   //   //setTimeout(capture_three, 500);
-        //   //   if (Y > 0.12) {
-        //   //     let index = faceactionstwo.indexOf(getitem);
-        //   //     faceactionstwo.splice(index, 1);
-        //   //     console.log(faceactionstwo);
-        //   //     const randomIndextwo = Math.floor(
-        //   //       Math.random() * faceactionstwo.length
-        //   //     );
-        //   //     const removevalue = faceactionstwo[randomIndextwo];
-        //   //     localStorage.clear();
-        //   //     localStorage.setItem("state", removevalue);
-        //   //     setActions(removevalue);
-        //   //     setstate.push(getitem);
-
-        //   //     const uniqueValues = [...new Set(setstate)];
-        //   //     if (uniqueValues.length >= 3) {
-        //   //       shouldExecuteSetTimeout = false;
-        //   //       setTimeout(capture, 1000);
-        //   //       setCapturebnt(false);
-        //   //       setShowactionmessage(false);
-        //   //     }
-        //   //   }
-        //   // }
-        // } else {
-        //   setAddclass(false);
-        //   setShowactionmessage(false);
-        //   setShowmessage(true);
-        //   setMessage("Please approach the camera with your face in the center");
+        // if (Y > 0.12) {
+        //   setCapturebnt(true);
+        //   setMessage("keep your face in frame & click Capture");
+        //   setCanvasshow(false);
+        //   setShowovalcanvas(false);
+        //   setShowoval(false);
+        //   setShowbnt(true);
+        //   setTimeout(capture, 800);
         // }
+
+        ///console.log("OPEN", Y);
+
+        // console.log("BOTTOM", "---", BOTTOM, "TOP", TOP);
+        // console.log("RIGHT", RIGHT, "--------", "LEFT", LEFT);
+
+        getitem = localStorage.getItem("state");
+        if (
+          facedifference > 0.5 &&
+          TOP > 0 &&
+          BOTTOM < 0.99 &&
+          LEFT > -0 &&
+          RIGHT < 0.99
+        ) {
+          setShowmessage(false);
+          setShowactionmessage(true);
+          setAddclass(true);
+          setChecktime(false);
+          setActionsmessage(true);
+
+          const timeoutId = setTimeout(() => {
+            settimeout();
+          }, 13000);
+
+          if (getitem === "LOOKUP") {
+            const actioncount = localStorage.getItem("countaction");
+            if (actioncount > 2) {
+              setTimeout(capture);
+              shouldExecuteSetTimeout = false;
+              setCapturebnt(false);
+              setShowactionmessage(false);
+            }
+            if (LOOKUP < 0.5) {
+            
+              let index = faceactionstwo.indexOf(getitem);
+              faceactionstwo.splice(index, 1);
+              console.log(faceactionstwo);
+              const randomIndextwo = Math.floor(
+                Math.random() * faceactionstwo.length
+              );
+              const removevalue = faceactionstwo[randomIndextwo];
+              localStorage.clear();
+              localStorage.setItem("state", removevalue);
+              setActions(removevalue);
+              setstate.push(getitem);
+              const uniqueValues = [...new Set(setstate)];
+
+              localStorage.setItem("countaction", uniqueValues.length);
+            }
+          }
+
+          getitem = localStorage.getItem("state");
+          if (getitem === "LOOKDOWN") {
+            const actioncount = localStorage.getItem("countaction");
+              if (actioncount > 2) {
+                setTimeout(capture);
+                shouldExecuteSetTimeout = false;
+                setCapturebnt(false);
+                setShowactionmessage(false);
+              }
+            if (LOOKDOWN > 0.7) {
+              
+              let index = faceactionstwo.indexOf(getitem);
+              faceactionstwo.splice(index, 1);
+              console.log(faceactionstwo);
+              const randomIndextwo = Math.floor(
+                Math.random() * faceactionstwo.length
+              );
+              const removevalue = faceactionstwo[randomIndextwo];
+              localStorage.clear();
+              localStorage.setItem("state", removevalue);
+              setActions(removevalue);
+              setstate.push(getitem);
+              const uniqueValues = [...new Set(setstate)];
+              localStorage.setItem("countaction", uniqueValues.length);
+            }
+          }
+
+          getitem = localStorage.getItem("state");
+          if (getitem === "TURNRIGHT") {
+            const actioncount = localStorage.getItem("countaction");
+            console.log("actioncount", actioncount);
+            if (actioncount > 2) {
+              setTimeout(capture);
+              shouldExecuteSetTimeout = false;
+              setCapturebnt(false);
+              setShowactionmessage(false);
+            }
+            if (TURNRIGHT <= 0.3) {
+             
+
+              let index = faceactionstwo.indexOf(getitem);
+              faceactionstwo.splice(index, 1);
+              console.log(faceactionstwo);
+              const randomIndextwo = Math.floor(
+                Math.random() * faceactionstwo.length
+              );
+              const removevalue = faceactionstwo[randomIndextwo];
+              localStorage.clear();
+              localStorage.setItem("state", removevalue);
+              setActions(removevalue);
+              setstate.push(getitem);
+              const uniqueValues = [...new Set(setstate)];
+
+              localStorage.setItem("countaction", uniqueValues.length);
+            }
+          }
+
+          //console.log("setaction", localStorage.getItem("state"));
+          getitem = localStorage.getItem("state");
+          if (getitem === "TURNLEFT") {
+            const actioncount = localStorage.getItem("countaction");
+              if (actioncount > 2) {
+                setTimeout(capture);
+                shouldExecuteSetTimeout = false;
+                setCapturebnt(false);
+                setShowactionmessage(false);
+              }
+            if (TURNLEFT > 0.6) {
+              
+              let index = faceactionstwo.indexOf(getitem);
+              faceactionstwo.splice(index, 1);
+              console.log(faceactionstwo);
+              const randomIndextwo = Math.floor(
+                Math.random() * faceactionstwo.length
+              );
+              const removevalue = faceactionstwo[randomIndextwo];
+              localStorage.clear();
+              localStorage.setItem("state", removevalue);
+              setActions(removevalue);
+              setstate.push(getitem);
+              const uniqueValues = [...new Set(setstate)];
+
+              localStorage.setItem("countaction", uniqueValues.length);
+              console.log("actioncount", actioncount);
+            }
+          }
+
+          getitem = localStorage.getItem("state");
+          if (getitem === "OPENMOUTH") {
+            const actioncount = localStorage.getItem("countaction");
+            if (actioncount > 2) {
+              setTimeout(capture);
+              shouldExecuteSetTimeout = false;
+              setCapturebnt(false);
+              setShowactionmessage(false);
+            }
+            if (Y > 0.1) {
+           
+              let index = faceactionstwo.indexOf(getitem);
+              faceactionstwo.splice(index, 1);
+              console.log(faceactionstwo);
+              const randomIndextwo = Math.floor(
+                Math.random() * faceactionstwo.length
+              );
+              const removevalue = faceactionstwo[randomIndextwo];
+              localStorage.clear();
+              localStorage.setItem("state", removevalue);
+              setActions(removevalue);
+              setstate.push(getitem);
+              const uniqueValues = [...new Set(setstate)];
+              localStorage.setItem("countaction", uniqueValues.length);
+            }
+          }
+        } else {
+          setAddclass(false);
+          setShowactionmessage(false);
+          setShowmessage(true);
+          setMessage("Please approach the camera with your face in the center");
+        }
         connect(canvasCtx, landmarks, Facemesh.FACEMESH_TESSELATION, {
           color: "#fff0",
           lineWidth: 1,
@@ -446,17 +438,31 @@ const LiveWebCheck = ({
             <div className="takepicture">
               <p>
                 {showmessage ? (
-                  <span>
+                  <span className="red">
                     <b>{message}</b>
                   </span>
                 ) : (
                   ""
                 )}
-              </p>   
+              </p>
+
+              <p>
+                {showactionmessage ? (
+                  <span className="green">
+                    <b>
+                      Please slightly {actions} with your current distance to
+                      camera intact
+                    </b>
+                  </span>
+                ) : (
+                  ""
+                )}
+              </p>
+
               <p className="green">
                 {nextmesage ? (
                   <span>
-                    <b>Action verified click next to continue..</b>
+                    <b>Actions verified click next to continue..</b>
                   </span>
                 ) : (
                   ""
@@ -474,7 +480,7 @@ const LiveWebCheck = ({
                   {tag ? <> {`${actions} with in 5 Seconds`}</> : ""}
                 </b>
                 <br />
-                {/* {showcount ? <b>{count} seconds left</b> : ""}  </p> */}
+                 </p> */}
             </div>
             <div className="picture">
               {/* <p onClick={stop}>stop</p> */}
@@ -492,10 +498,9 @@ const LiveWebCheck = ({
                   right: 0,
                   textAlign: "center",
                   zindex: 9,
-                  marginTop: "-2px",
                 }}
+                id={addclass ? "green" : "red"}
                 className="output_canvas output_canvasweb"
-                
               />
             ) : (
               ""
@@ -525,6 +530,7 @@ const LiveWebCheck = ({
                   right: 0,
                   textAlign: "center",
                   zindex: 9,
+                  paddingTop: "2px",
                 }}
               ></canvas>
             ) : (

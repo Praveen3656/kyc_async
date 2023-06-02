@@ -15,11 +15,10 @@ export default function Navbar() {
       itemName: "Dashboard",
       path: "dashboard",
     },
- 
   ];
+  
   const logout = () => {
-    window.location = "https://o-kyc-dev.onpassive.com/";
-   
+    window.location = "/";
   };
   return (
     <Box sx={{ flexGrow: 1 }}>
