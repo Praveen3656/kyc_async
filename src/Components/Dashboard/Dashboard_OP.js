@@ -951,7 +951,7 @@ export default function Dashboard() {
               </small>
               <br/>
               <button className="reloadbnt" onClick={reload}>
-                Reload
+                Check status
               </button>
             </>
           ) : (

@@ -16,11 +16,12 @@ export default function Navbar() {
       path: "dashboard",
     },
   ];
-  
+
   const logout = () => {
-    window.location = "https://awone.idverify.click/index.html#/";
+    localStorage.clear();
+    window.location = "  https://o-kyc-dev.onpassive.com/";
   };
-  
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">

@@ -98,7 +98,9 @@ export default function Dashboard() {
   const [camcheck, setCamcheck] = useState(2);
   const [token, setToken] = useState("");
 
-  const URL = "https://api.idverify.click";
+  //const URL = "https://api.idverify.click";
+
+  const URL = "https://o-kycapi-dev.onpassive.com";
 
   useEffect(() => {
     if (!uid) {
@@ -228,28 +230,12 @@ export default function Dashboard() {
   };
 
   const uploadid = async (activeStep) => {
-    let tokendata = new FormData();
-    tokendata.append("username", "admin");
-    tokendata.append("password", "sw0rdpass");
-
-    try {
-      const tokenapi = await axios.post(`${URL}/token/`, tokendata, {
-        method: "POST",
-        headers: {
-          "Content-Type": "multipart/form-data;",
-        },
-      });
-      console.log("token", tokenapi.data.access_token);
-      setToken(tokenapi.data.access_token);
-
-      console.log("gettoken", token);
-    } catch (err) {}
-
-    setIderrormessage(false);
     setRedirect(true);
+    setIderrormessage(false);
     setCounter(0);
     setErrorimage(false);
     setMessage("");
+  
 
     try {
       const getcountry = localStorage.getItem("country");
@@ -623,7 +609,7 @@ export default function Dashboard() {
 
   const handleNext = () => {
     setError(false);
-
+    localStorage.removeItem("countaction");
     if (activeStep === 0) {
       if (country === "" || country === undefined || country === null) {
         setError(true);
@@ -697,9 +683,11 @@ export default function Dashboard() {
     setEditusersection(false);
     setIdselfieerror(false);
     setSuccesstemplete(false);
+    localStorage.removeItem("countaction");
   };
 
   const handleReset = () => {
+    localStorage.removeItem("countaction");
     setSuccesstemplete(false);
     setActiveStep(0);
     setDocumnet("");

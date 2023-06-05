@@ -193,6 +193,8 @@ const LiveWebCheck = ({
         var TURNRIGHT = landmarks[1].x;
         var TURNLEFT = landmarks[1].x;
 
+        var nosevalue = landmarks[4];
+
         const PT_49 = landmarks[0].x; //49 Left lip
         const PT_55 = landmarks[17].x; // 55 Right lip
         const PT_52 = landmarks[0].y; // 52 Upper lip
@@ -210,14 +212,14 @@ const LiveWebCheck = ({
         //   setTimeout(capture, 800);
         // }
 
-        ///console.log("OPEN", Y);
+       // console.log("nosevalue", nosevalue);
 
         // console.log("BOTTOM", "---", BOTTOM, "TOP", TOP);
         // console.log("RIGHT", RIGHT, "--------", "LEFT", LEFT);
 
         getitem = localStorage.getItem("state");
         if (
-          facedifference > 0.5 &&
+          facedifference > 0.4 &&
           TOP > 0 &&
           BOTTOM < 0.99 &&
           LEFT > -0 &&
@@ -229,13 +231,13 @@ const LiveWebCheck = ({
           setChecktime(false);
           setActionsmessage(true);
 
-          const timeoutId = setTimeout(() => {
-            settimeout();
-          }, 13000);
+          // const timeoutId = setTimeout(() => {
+          //   settimeout();
+          // }, 15000);
 
           if (getitem === "LOOKUP") {
             const actioncount = localStorage.getItem("countaction");
-            if (actioncount > 2) {
+            if (actioncount >= 3) {
               setTimeout(capture);
               shouldExecuteSetTimeout = false;
               setCapturebnt(false);
@@ -263,7 +265,7 @@ const LiveWebCheck = ({
           getitem = localStorage.getItem("state");
           if (getitem === "LOOKDOWN") {
             const actioncount = localStorage.getItem("countaction");
-              if (actioncount > 2) {
+              if (actioncount >= 3) {
                 setTimeout(capture);
                 shouldExecuteSetTimeout = false;
                 setCapturebnt(false);
@@ -291,7 +293,7 @@ const LiveWebCheck = ({
           if (getitem === "TURNRIGHT") {
             const actioncount = localStorage.getItem("countaction");
           
-            if (actioncount > 2) {
+            if (actioncount >= 3) {
               setTimeout(capture);
               shouldExecuteSetTimeout = false;
               setCapturebnt(false);
@@ -321,7 +323,7 @@ const LiveWebCheck = ({
           getitem = localStorage.getItem("state");
           if (getitem === "TURNLEFT") {
             const actioncount = localStorage.getItem("countaction");
-              if (actioncount > 2) {
+              if (actioncount >= 3) {
                 setTimeout(capture);
                 shouldExecuteSetTimeout = false;
                 setCapturebnt(false);
@@ -350,7 +352,7 @@ const LiveWebCheck = ({
           getitem = localStorage.getItem("state");
           if (getitem === "OPENMOUTH") {
             const actioncount = localStorage.getItem("countaction");
-            if (actioncount > 2) {
+            if (actioncount >= 3) {
               setTimeout(capture);
               shouldExecuteSetTimeout = false;
               setCapturebnt(false);
@@ -389,6 +391,7 @@ const LiveWebCheck = ({
   // }
 
   const retake = () => {
+    localStorage.removeItem("countaction");
     window.location.reload();
     setCapturebnt(false);
     setCameraoff(true);
