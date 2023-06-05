@@ -107,10 +107,7 @@ const Uploadselfieid = ({ updateWebImageid }) => {
                 screenshotFormat="image/jpeg"
                 screenshotQuality={1}
                 videoConstraints={{video:true,facingMode: "user" }}
-              />
-
-              
-              <small className="camnotworking"><b>In case Camera is Not Working then verify at Desktop chrome browser</b></small>
+              />              
               <center>
                 <button className="capture" onClick={capture}>
                   Capture photo

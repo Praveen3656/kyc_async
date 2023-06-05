@@ -98,9 +98,9 @@ export default function Dashboard() {
   const [camcheck, setCamcheck] = useState(2);
   const [token, setToken] = useState("");
 
-  //const URL = "https://api.idverify.click";
+  const URL = "https://api.idverify.click";
 
-  const URL = "https://o-kycapi-dev.onpassive.com";
+  //const URL = "https://o-kycapi-dev.onpassive.com";
 
   useEffect(() => {
     if (!uid) {
