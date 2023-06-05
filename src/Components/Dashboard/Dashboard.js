@@ -106,8 +106,7 @@ export default function Dashboard() {
     if (!uid) {
       const id = uniqueId();
     }
-  });
-
+  }); 
   const updateDocument = (value) => {
     setDocumnet(value);
   };

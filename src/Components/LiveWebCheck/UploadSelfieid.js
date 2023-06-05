@@ -107,7 +107,9 @@ const Uploadselfieid = ({ updateWebImageid }) => {
                 screenshotFormat="image/jpeg"
                 screenshotQuality={1}
                 videoConstraints={{video:true,facingMode: "user" }}
-              />              
+              />
+
+              
               <center>
                 <button className="capture" onClick={capture}>
                   Capture photo

@@ -19,7 +19,7 @@ export default function Navbar() {
 
   const logout = () => {
     localStorage.clear();
-    window.location = "  https://o-kyc-dev.onpassive.com/";
+    window.location = "https://o-kyc-dev.onpassive.com/";
   };
 
   return (
@@ -27,7 +27,6 @@ export default function Navbar() {
       <AppBar position="static">
         <Toolbar>
           <div className="logo-ctn">KYC Verification</div>
-
           <div className="actions-list">
             {navItems.map((items, i) => (
               <NavLink
