@@ -27,7 +27,7 @@ function Home() {
       <div className="home-page-ctn">
         <div className="home-page-layer">
           <div className="kyc-img-ctn">
-           
+
           </div>
           <div className="home-page-title">Welcome to E-KyC Verification!</div>
           <div className="start-btn-ctn" onClick={openLogin}>
