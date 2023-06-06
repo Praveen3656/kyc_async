@@ -30,9 +30,7 @@ export default function Navbar() {
           <div className="actions-list">
             {navItems.map((items, i) => (
               <NavLink
-                key={i.toString()}
-                aria-current="page"
-                to={`/${items.path}`}
+          
                 className={`nav-link `}
               >
                 {items.itemName}
