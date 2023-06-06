@@ -29,14 +29,7 @@ export default function Navbar() {
           <div className="logo-ctn">KYC Verification</div>
           <div className="actions-list">
             {navItems.map((items, i) => (
-              <NavLink
-                key={i.toString()}
-                aria-current="page"
-                to={`/${items.path}`}
-                className={`nav-link `}
-              >
-                {items.itemName}
-              </NavLink>
+              <NavLink className={`nav-link `}>{items.itemName}</NavLink>
             ))}
           </div>
           <div className="logout" onClick={logout}>

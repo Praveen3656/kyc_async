@@ -16,6 +16,7 @@ const Uploadselfieid = ({ updateWebImageid }) => {
   const [imgSrcweb, setImgSrcweb] = React.useState(null);
   const [imagecapture, setImagecapture] = useState("NO");
   const [mobilecam, setMobilecam] = useState(true);
+  const [scroll, setscroll] = useState(true);
 
   const urltoFile = (url, filename, mimeType) => {
     return fetch(url)
@@ -26,11 +27,12 @@ const Uploadselfieid = ({ updateWebImageid }) => {
         return new File([buf], filename, { type: mimeType });
       });
   };
-  useEffect(() => {
-    if (window.innerWidth <= 1020) {
-      window.scrollTo(0, 400);
-    }
-  },[0]);
+
+  // useEffect(() => {
+  //   if (window.innerWidth <= 1020) {
+  //     window.scrollTo(0,600);
+  //   }
+  // },[0]);
 
   const open = () => {
     setMobilecam(true);
@@ -49,6 +51,7 @@ const Uploadselfieid = ({ updateWebImageid }) => {
   }, [webcamRefweb, setImgSrcweb]);
 
   const capture = React.useCallback(() => {
+    setscroll(false);
     const imageSrc = webcamRef.current.getScreenshot();
     urltoFile(imageSrc, "user.txt", "text/plain").then(function (file) {
       updateWebImageid(file);
@@ -58,6 +61,11 @@ const Uploadselfieid = ({ updateWebImageid }) => {
     console.log(imageSrc);
   }, [webcamRef, setImgSrc]);
 
+  if (scroll === true) {
+    if (window.innerWidth <= 1020) {
+      window.scrollTo(0, 500);
+    }
+  }
   return (
     <>
       <div className="idwebcam">
