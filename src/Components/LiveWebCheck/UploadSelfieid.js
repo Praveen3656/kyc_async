@@ -6,8 +6,6 @@ import "./LiveWebCheck.scss";
 import { isMobile } from "react-device-detect";
 
 const Uploadselfieid = ({ updateWebImageid }) => {
- 
-
   const openmblcam = () => {};
 
   const [filedata, setFileData] = useState("");
@@ -28,16 +26,19 @@ const Uploadselfieid = ({ updateWebImageid }) => {
         return new File([buf], filename, { type: mimeType });
       });
   };
+  useEffect(() => {
+    if (window.innerWidth <= 1020) {
+      window.scrollTo(0, 400);
+    }
+  },[0]);
 
   const open = () => {
     setMobilecam(true);
-  }
-  //  const videoConstraints = {
-  //   facingMode: { exact: "environment" }
-  // };
+  };
+
   const capture_web = React.useCallback(() => {
     const imageSrc = webcamRefweb.current.getScreenshot();
-    
+
     console.log(imageSrc);
     urltoFile(imageSrc, "user.txt", "text/plain").then(function (file) {
       updateWebImageid(file);
@@ -66,63 +67,81 @@ const Uploadselfieid = ({ updateWebImageid }) => {
           </div>
           <br />
           <div className="camera">
+            <div className="idbox">
+              <div className="facebox">
+                <span>Keep Your face here</span>
+              </div>
+              <div className="idcard">
+                <span>Keep Your ID here</span>
+              </div>
+            </div>
+
+            <Webcam
+              className="live-web-cam_two"
+              height={1020}
+              width={750}
+              audio={false}
+              ref={webcamRefweb}
+              imageSmoothing={false}
+              screenshotFormat="image/jpeg"
+              screenshotQuality={1}
+            />
+            <center>
+              <button className="capture" onClick={capture_web}>
+                Capture photo
+              </button>
+            </center>
+            <div className="picture">
+              {imgSrcweb && <img className="c-img" src={imgSrcweb} alt="" />}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="idmblcam">
+        <div className="live-ctn">
+          <div className="live-title">Take ID Picture</div>
+          <br />
+
+          <div className="camera">
+            {mobilecam ? (
+              <>
+                <div className="idbox">
+                  <div className="facebox">
+                    <span>Keep Your face here</span>
+                  </div>
+                  <div className="idcard">
+                    <span>Keep Your ID here</span>
+                  </div>
+                </div>
                 <Webcam
                   className="live-web-cam_two"
                   height={1020}
                   width={750}
                   audio={false}
-                  ref={webcamRefweb}
+                  ref={webcamRef}
                   imageSmoothing={false}
                   screenshotFormat="image/jpeg"
                   screenshotQuality={1}
+                  videoConstraints={{ video: true, facingMode: "user" }}
                 />
+
                 <center>
-                  <button className="capture" onClick={capture_web}>
+                  <button className="capture" onClick={capture}>
                     Capture photo
                   </button>
                 </center>
                 <div className="picture">
-               
-                  {imgSrcweb && <img className="c-img" src={imgSrcweb} alt="" />}
+                  {imgSrc && <img className="c-img" src={imgSrc} alt="" />}
                 </div>
+              </>
+            ) : (
+              <button className="capture" onClick={open}>
+                Open camera
+              </button>
+            )}
           </div>
         </div>
       </div>
-      <div className="idmblcam">
-          <div className="live-ctn">
-            <div className="live-title">
-              Take ID Picture
-            </div>
-            <br />
-            <div className="camera">
-              {mobilecam ? (<>
-              
-              <Webcam
-                className="live-web-cam_two"
-                height={1020}
-                width={750}
-                audio={false}
-                ref={webcamRef}
-                imageSmoothing={false}
-                screenshotFormat="image/jpeg"
-                screenshotQuality={1}
-                videoConstraints={{video:true,facingMode: "user" }}
-              />
-
-              
-              <center>
-                <button className="capture" onClick={capture}>
-                  Capture photo
-                </button>
-              </center>
-              <div className="picture">
-                {imgSrc && <img className="c-img" src={imgSrc} alt="" />}
-              </div></>) : (<button className="capture" onClick={open}>
-                  Open camera
-                </button>)}
-            </div>
-          </div>
-        </div>
     </>
   );
 };

@@ -14,11 +14,67 @@
     padding: 10px 0;
     background: #fff;
     color: #333;
-
   }
+
 }
 .idmblcam{
   display: none;
+}
+
+@media screen and (max-width: 1020px) {
+  // .idbox{
+  //   display: none;
+  // }
+  .facebox{
+    float: left !important;
+    width: 80% !important;
+    height: 33% !important;
+    border-bottom: 2px solid #ccc !important;
+    left: 10% !important;
+    margin-top: 2% !important;
+    position: absolute !important;
+
+  }
+
+  .idcard{
+    float: left !important;
+    width: 80% !important;
+    height: 20% !important;
+    border: 2px solid #ccc !important;
+    margin-top: 70% !important;
+    position: absolute !important;
+    right: 9% !important;
+
+  }
+}
+.idbox{
+  width: 100%;;
+}
+.facebox{
+  float: left;
+  width: 34%;
+  height: 80%;
+  border: 2px solid #ccc;
+  left: 17%;
+  margin-top: 6%;
+  position: absolute;
+}
+.facebox span{
+color: #fff;
+font-weight: bold;
+}
+.idcard{
+  float: left;
+  width: 30%;
+  height: 50%;
+  border: 2px solid #ccc;
+  margin-top: 10%;
+  position: absolute;
+  right: 17%;
+}
+.idcard span {
+  color: #fff;
+  font-weight: bold;
 }
 
 
@@ -123,9 +179,7 @@
   border: 2px solid red;
 }
 
-.facebox{
-  text-align: center;
-}
+
   .ovalback{
     width: 191px;
     height: 241px;

@@ -22,10 +22,10 @@ import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [formdata, setformData] = useState({});
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(3);
   const [document, setDocumnet] = useState("");
   const [idtype, setIdType] = useState("");
-  const [country, setCountry] = useState("");
+  const [country, setCountry] = useState(""); 
   const [webImage, setWebImage] = useState("");
   const [webImageid, setWebImageid] = useState("");
   const [idName, setIdName] = useState("");
@@ -116,6 +116,9 @@ export default function Dashboard() {
     console.log(value);
     setWebImageid(value);
   };
+
+  
+
 
   const baseurl = window.location.href;
   const updateName = (value) => {
