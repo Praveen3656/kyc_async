@@ -97,11 +97,7 @@ export default function Dashboard() {
 
   const [camcheck, setCamcheck] = useState(2);
   const [token, setToken] = useState("");
-
- 
-
   const URL = "https://o-kycapi-dev.onpassive.com";
-
   useEffect(() => {
     if (!uid) {
       const id = uniqueId();
