@@ -69,6 +69,7 @@
     z-index: 9999999;
   }
 
+
   .ovalmbl{
     width: 243px;
     height: 299px;
@@ -94,9 +95,9 @@
   .output_canvas{
     z-index: 999999;
     width: 40%;
-   
-
   }
+
+
 
   .dot{
     margin-top: 60px;
@@ -120,6 +121,10 @@
 }
 #red{
   border: 2px solid red;
+}
+
+.facebox{
+  text-align: center;
 }
   .ovalback{
     width: 191px;

@@ -100,13 +100,12 @@ export default function Dashboard() {
 
   const URL = "https://api.idverify.click";
 
-  //const URL = "https://o-kycapi-dev.onpassive.com";
-
   useEffect(() => {
     if (!uid) {
       const id = uniqueId();
     }
   }); 
+  
   const updateDocument = (value) => {
     setDocumnet(value);
   };
@@ -122,6 +121,7 @@ export default function Dashboard() {
   const updateName = (value) => {
     setIdName(value);
   };
+
   const updateType = (value) => {
     setIdType(value);
   };
@@ -270,6 +270,7 @@ export default function Dashboard() {
           },
         }
       );
+      
       console.log("ID_RESPONSE", save_id_image);
 
       if (save_id_image.data.status === "DONE") {
