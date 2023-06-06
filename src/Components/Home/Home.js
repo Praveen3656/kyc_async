@@ -16,12 +16,10 @@ function Home() {
     // window.location.pathname = '/login';
     navigate(`/dashboard/uid=${uid}/data=na`);
   };
-
   useEffect(() => {
     const id = uniqueId();
     setUid(id);
   }, []);
-
   return (
     <>
       <div className="home-page-ctn">

@@ -40,7 +40,6 @@ const Uploadselfieid = ({ updateWebImageid }) => {
 
   const capture_web = React.useCallback(() => {
     const imageSrc = webcamRefweb.current.getScreenshot();
-
     console.log(imageSrc);
     urltoFile(imageSrc, "user.txt", "text/plain").then(function (file) {
       updateWebImageid(file);
@@ -66,6 +65,7 @@ const Uploadselfieid = ({ updateWebImageid }) => {
       window.scrollTo(0, 500);
     }
   }
+
   return (
     <>
       <div className="idwebcam">
@@ -86,8 +86,7 @@ const Uploadselfieid = ({ updateWebImageid }) => {
 
             <Webcam
               className="live-web-cam_two"
-              height={1020}
-              width={750}
+      
               audio={false}
               ref={webcamRefweb}
               imageSmoothing={false}
@@ -123,8 +122,6 @@ const Uploadselfieid = ({ updateWebImageid }) => {
                 </div>
                 <Webcam
                   className="live-web-cam_two"
-                  height={1020}
-                  width={750}
                   audio={false}
                   ref={webcamRef}
                   imageSmoothing={false}
