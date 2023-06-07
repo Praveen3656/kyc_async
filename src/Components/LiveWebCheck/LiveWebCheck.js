@@ -494,7 +494,7 @@ const LiveWebCheck = ({
             </div>
             <div className="picture">
               {/* <p onClick={stop}>stop</p> */}
-              {imageshow ? <img className="c-img" src={imgSrc} alt="" /> : ""}
+              {/* {imageshow ? <img className="c-img" src={imgSrc} alt="" /> : ""} */}
             </div>
             {showoval ? <div className="oval"></div> : ""}
             {cameraoff ? (
