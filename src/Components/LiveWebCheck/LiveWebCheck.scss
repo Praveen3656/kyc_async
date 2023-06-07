@@ -21,25 +21,31 @@
   display: none;
 }
 
-// @media only screen
-//   and (device-width: 375px) 
-//   and (device-height: 667px)
-//   and (device-height: 900px) 
-//   and (-webkit-device-pixel-ratio: 2) 
-//   and (orientation: portrait) {
-//     .facebox{
-//       display: none !important;
-   
-//      }
-//      .idcard{
-//       display: none !important;
-//      }
-// }
+@media screen and (-webkit-min-device-pixel-ratio: 3) and (max-device-width: 720px) {
+
+    .faceboxiphone{
+      float: left !important;
+      width: 80% !important;
+      height: 15vh !important;
+      border-bottom: 2px solid #ccc !important;
+      left: 10% !important;
+      margin-top: 2% !important;
+      position: absolute !important;
+  
+    }
+    .idcardiphone{
+      float: left !important;
+      width: 80% !important;
+      height: 10vh !important;
+      border: 2px solid #ccc !important;
+      margin-top: 18vh !important;
+      position: absolute !important;
+      right: 9% !important;
+    }
+}
 
 @media screen and (max-width: 1020px) {
-    .idbox{
-      display: none;
-    }
+  
   .facebox{
     float: left !important;
     width: 80% !important;

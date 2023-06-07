@@ -17,7 +17,7 @@ const Uploadselfieid = ({ updateWebImageid }) => {
   const [imagecapture, setImagecapture] = useState("NO");
   const [mobilecam, setMobilecam] = useState(true);
   const [scroll, setscroll] = useState(true);
-
+  const [iphonechrome,setIphonechrome] = useState(true);
   const urltoFile = (url, filename, mimeType) => {
     return fetch(url)
       .then(function (res) {
@@ -66,6 +66,24 @@ const Uploadselfieid = ({ updateWebImageid }) => {
     }
   }
 
+  useEffect(() => {
+    const isIPhoneChrome = () => {
+      const userAgent = navigator.userAgent;
+      const isIPhone = /iPhone/i.test(userAgent);
+      const isChrome = /CriOS/i.test(userAgent); // Chrome on iOS
+
+      return isIPhone && isChrome;
+    };
+
+    if (isIPhoneChrome()) {
+      setIphonechrome(true);
+      console.log('Accessed from iPhone Chrome');
+      // Perform specific actions or render specific content for iPhone Chrome
+    }else{
+      console.log("non iphone chrome");
+    }
+  }, []);
+
   return (
     <>
       <div className="idwebcam">
@@ -76,10 +94,10 @@ const Uploadselfieid = ({ updateWebImageid }) => {
           <br />
           <div className="camera">
             <div className="idbox">
-              <div className="facebox">
+              <div className="facebox faceboxipnone">
                 <span>Keep Your face here</span>
               </div>
-              <div className="idcard">
+              <div className="idcard idcardiphone">
                 <span>Keep Your ID here</span>
               </div>
             </div>
@@ -113,10 +131,10 @@ const Uploadselfieid = ({ updateWebImageid }) => {
             {mobilecam ? (
               <>
                 <div className="idbox">
-                  <div className="facebox">
+                  <div className={iphonechrome ? ('facebox') : ('faceboxiphone')}>
                     <span>Keep Your face here</span>
                   </div>
-                  <div className="idcard">
+                  <div className={iphonechrome ? ('idcard') : ('idcardiphone')}>
                     <span>Keep Your ID here</span>
                   </div>
                 </div>
