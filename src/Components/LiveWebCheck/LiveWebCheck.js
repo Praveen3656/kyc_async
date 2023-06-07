@@ -58,6 +58,8 @@ const LiveWebCheck = ({
 
   const [checktime, setChecktime] = useState(true);
 
+  const [capturecheck, setCapturecheck] = useState(true);
+
   const [tag, setTag] = useState(true);
   const urltoFile = (url, filename, mimeType) => {
     return fetch(url)
@@ -70,34 +72,42 @@ const LiveWebCheck = ({
   };
 
   const capture = React.useCallback(() => {
+    setImageshow(true);
     shouldExecuteSetTimeout = false;
-    setTimeout(takephotonew, 1000);
-  }, [webcamRef, setImgSrc]);
-
-  const takephotonew = React.useCallback(() => {
     setShowactionmessage(false);
-    const imageSrc = webcamRef.current.getScreenshot();
-    urltoFile(imageSrc, "user.txt", "text/plain").then(function (file) {
-      updateWebImage(file);
-    });
     setNextmesage(true);
-    setImgSrc(imageSrc);
     setShowmessage(false);
     setActions();
     setCanvasshow(false);
     setCapturebnt(false);
     setTimeoutmessage(false);
     setShowmessage(false);
-
     setTag(false);
     setActions();
     setShowovalcanvas(false);
     setCameraoff(false);
     setDashboarddiv(false);
-    setImageshow(true);
-    updateWebImage(imageSrc);
     setTimeoutmesg(false);
+  });
+
+  let capturecheck1 = true;
+  const startcapture = React.useCallback(() => {
+    if (capturecheck1) {
+      const imageSrc = webcamRef.current.getScreenshot();
+      urltoFile(imageSrc, "user.txt", "text/plain").then(function (file) {
+        updateWebImage(file);
+      });
+      setImgSrc(imageSrc);
+      updateWebImage(imageSrc);
+      console.log(imageSrc);
+
+      capturecheck1 = false;
+      console.log(imageSrc);
+ 
+    }
   }, [webcamRef, setImgSrc]);
+
+  const takephotonew = React.useCallback(() => {});
 
   // useEffect(() => {
   //   setActions(randomValuen);
@@ -212,12 +222,13 @@ const LiveWebCheck = ({
         //   setTimeout(capture, 800);
         // }
 
-       // console.log("nosevalue", nosevalue);
+        // console.log("nosevalue", nosevalue);
 
         // console.log("BOTTOM", "---", BOTTOM, "TOP", TOP);
         // console.log("RIGHT", RIGHT, "--------", "LEFT", LEFT);
 
         getitem = localStorage.getItem("state");
+
         if (
           facedifference > 0.4 &&
           TOP > 0 &&
@@ -231,6 +242,9 @@ const LiveWebCheck = ({
           setChecktime(false);
           setActionsmessage(true);
 
+          startcapture()
+        
+
           // const timeoutId = setTimeout(() => {
           //   settimeout();
           // }, 15000);
@@ -238,16 +252,15 @@ const LiveWebCheck = ({
           if (getitem === "LOOKUP") {
             const actioncount = localStorage.getItem("countaction");
             if (actioncount >= 3) {
-              setTimeout(capture);
+              capture()
               shouldExecuteSetTimeout = false;
               setCapturebnt(false);
               setShowactionmessage(false);
             }
             if (LOOKUP < 0.5) {
-            
               let index = faceactionstwo.indexOf(getitem);
               faceactionstwo.splice(index, 1);
-        
+
               const randomIndextwo = Math.floor(
                 Math.random() * faceactionstwo.length
               );
@@ -265,17 +278,16 @@ const LiveWebCheck = ({
           getitem = localStorage.getItem("state");
           if (getitem === "LOOKDOWN") {
             const actioncount = localStorage.getItem("countaction");
-              if (actioncount >= 3) {
-                setTimeout(capture);
-                shouldExecuteSetTimeout = false;
-                setCapturebnt(false);
-                setShowactionmessage(false);
-              }
+            if (actioncount >= 3) {
+              capture()
+              shouldExecuteSetTimeout = false;
+              setCapturebnt(false);
+              setShowactionmessage(false);
+            }
             if (LOOKDOWN > 0.7) {
-              
               let index = faceactionstwo.indexOf(getitem);
               faceactionstwo.splice(index, 1);
-             
+
               const randomIndextwo = Math.floor(
                 Math.random() * faceactionstwo.length
               );
@@ -292,19 +304,17 @@ const LiveWebCheck = ({
           getitem = localStorage.getItem("state");
           if (getitem === "TURNRIGHT") {
             const actioncount = localStorage.getItem("countaction");
-          
+
             if (actioncount >= 3) {
-              setTimeout(capture);
+              capture()
               shouldExecuteSetTimeout = false;
               setCapturebnt(false);
               setShowactionmessage(false);
             }
             if (TURNRIGHT <= 0.3) {
-             
-
               let index = faceactionstwo.indexOf(getitem);
               faceactionstwo.splice(index, 1);
-             
+
               const randomIndextwo = Math.floor(
                 Math.random() * faceactionstwo.length
               );
@@ -323,17 +333,16 @@ const LiveWebCheck = ({
           getitem = localStorage.getItem("state");
           if (getitem === "TURNLEFT") {
             const actioncount = localStorage.getItem("countaction");
-              if (actioncount >= 3) {
-                setTimeout(capture);
-                shouldExecuteSetTimeout = false;
-                setCapturebnt(false);
-                setShowactionmessage(false);
-              }
+            if (actioncount >= 3) {
+              capture()
+              shouldExecuteSetTimeout = false;
+              setCapturebnt(false);
+              setShowactionmessage(false);
+            }
             if (TURNLEFT > 0.6) {
-              
               let index = faceactionstwo.indexOf(getitem);
               faceactionstwo.splice(index, 1);
-             
+
               const randomIndextwo = Math.floor(
                 Math.random() * faceactionstwo.length
               );
@@ -345,7 +354,6 @@ const LiveWebCheck = ({
               const uniqueValues = [...new Set(setstate)];
 
               localStorage.setItem("countaction", uniqueValues.length);
-              
             }
           }
 
@@ -353,7 +361,7 @@ const LiveWebCheck = ({
           if (getitem === "OPENMOUTH") {
             const actioncount = localStorage.getItem("countaction");
             if (actioncount >= 3) {
-              setTimeout(capture);
+              capture()
               shouldExecuteSetTimeout = false;
               setCapturebnt(false);
               setShowactionmessage(false);
@@ -361,7 +369,7 @@ const LiveWebCheck = ({
             if (Y > 0.1) {
               let index = faceactionstwo.indexOf(getitem);
               faceactionstwo.splice(index, 1);
-           
+
               const randomIndextwo = Math.floor(
                 Math.random() * faceactionstwo.length
               );
