@@ -242,7 +242,8 @@ const LiveWebCheck = ({
           setChecktime(false);
           setActionsmessage(true);
 
-          startcapture();
+          setTimeout(startcapture,1000);
+        
 
           // const timeoutId = setTimeout(() => {
           //   settimeout();
@@ -251,7 +252,7 @@ const LiveWebCheck = ({
           if (getitem === "LOOKUP") {
             const actioncount = localStorage.getItem("countaction");
             if (actioncount >= 3) {
-              setTimeout(capture);
+              capture()
               shouldExecuteSetTimeout = false;
               setCapturebnt(false);
               setShowactionmessage(false);
@@ -278,7 +279,7 @@ const LiveWebCheck = ({
           if (getitem === "LOOKDOWN") {
             const actioncount = localStorage.getItem("countaction");
             if (actioncount >= 3) {
-              setTimeout(capture);
+              capture()
               shouldExecuteSetTimeout = false;
               setCapturebnt(false);
               setShowactionmessage(false);
@@ -305,7 +306,7 @@ const LiveWebCheck = ({
             const actioncount = localStorage.getItem("countaction");
 
             if (actioncount >= 3) {
-              setTimeout(capture);
+              capture()
               shouldExecuteSetTimeout = false;
               setCapturebnt(false);
               setShowactionmessage(false);
@@ -333,7 +334,7 @@ const LiveWebCheck = ({
           if (getitem === "TURNLEFT") {
             const actioncount = localStorage.getItem("countaction");
             if (actioncount >= 3) {
-              setTimeout(capture);
+              capture()
               shouldExecuteSetTimeout = false;
               setCapturebnt(false);
               setShowactionmessage(false);
@@ -360,7 +361,7 @@ const LiveWebCheck = ({
           if (getitem === "OPENMOUTH") {
             const actioncount = localStorage.getItem("countaction");
             if (actioncount >= 3) {
-              setTimeout(capture);
+              capture()
               shouldExecuteSetTimeout = false;
               setCapturebnt(false);
               setShowactionmessage(false);
