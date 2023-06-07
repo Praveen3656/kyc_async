@@ -242,7 +242,7 @@ const LiveWebCheck = ({
           setChecktime(false);
           setActionsmessage(true);
 
-          setTimeout(startcapture,1000);
+          startcapture()
         
 
           // const timeoutId = setTimeout(() => {
