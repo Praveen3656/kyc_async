@@ -23,25 +23,35 @@
 
 @media screen and (-webkit-min-device-pixel-ratio: 3) and (max-device-width: 720px) {
 
-    .faceboxiphone{
-      float: left !important;
-      width: 80% !important;
-      height: 15vh !important;
-      border-bottom: 2px solid #ccc !important;
-      left: 10% !important;
-      margin-top: 2% !important;
-      position: absolute !important;
-  
+    .idbox{
+      display: none !important;
     }
-    .idcardiphone{
-      float: left !important;
-      width: 80% !important;
-      height: 10vh !important;
-      border: 2px solid #ccc !important;
-      margin-top: 18vh !important;
-      position: absolute !important;
-      right: 9% !important;
-    }
+    // .faceboxiphone{
+    //   float: left !important;
+    //   width: 80% !important;
+    //   height: 30% !important;
+    //   border: 2px solid #ccc !important;
+    //   left: 10% !important;
+    //   margin-top: 2% !important;
+    //   position: absolute !important;
+    // }
+    // .idcardiphone{
+    //   float: left !important;
+    //   width: 80% !important;
+    //   height: 25% !important;
+    //   border: 2px solid #ccc !important;
+    //   margin-top: 65% !important;
+    //   position: absolute !important;
+    //   right: 9% !important;
+    // }
+    // .faceboxiphone span{
+    //   color: #fff;
+    //   font-weight: bold;
+    // }
+    // .idcardiphone span {
+    //   color: #fff;
+    //   font-weight: bold;
+    // }
 }
 
 @media screen and (max-width: 1020px) {
@@ -50,7 +60,7 @@
     float: left !important;
     width: 80% !important;
     height: 33% !important;
-    border-bottom: 2px solid #ccc !important;
+    border: 2px solid #ccc !important;
     left: 10% !important;
     margin-top: 2% !important;
     position: absolute !important;
@@ -64,6 +74,7 @@
     position: absolute !important;
     right: 9% !important;
   }
+  
 }
 
 .idbox{

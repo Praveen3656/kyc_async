@@ -60,7 +60,7 @@ const Uploadselfieid = ({ updateWebImageid }) => {
     console.log(imageSrc);
   }, [webcamRef, setImgSrc]);
 
-  if (scroll === true) {
+  if (scroll === true && iphonechrome === true) {
     if (window.innerWidth <= 1020) {
       window.scrollTo(0, 500);
     }
@@ -76,9 +76,8 @@ const Uploadselfieid = ({ updateWebImageid }) => {
     };
 
     if (isIPhoneChrome()) {
-      setIphonechrome(true);
+      setIphonechrome(false);
       console.log('Accessed from iPhone Chrome');
-      // Perform specific actions or render specific content for iPhone Chrome
     }else{
       console.log("non iphone chrome");
     }
