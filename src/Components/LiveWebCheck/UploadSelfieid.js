@@ -4,6 +4,7 @@ import * as cam from "@mediapipe/camera_utils";
 import Webcam from "react-webcam";
 import "./LiveWebCheck.scss";
 import { isMobile } from "react-device-detect";
+import idselfieimage from "./Selfie_ID.png";
 
 const Uploadselfieid = ({ updateWebImageid }) => {
   const openmblcam = () => {};
@@ -16,8 +17,8 @@ const Uploadselfieid = ({ updateWebImageid }) => {
   const [imgSrcweb, setImgSrcweb] = React.useState(null);
   const [imagecapture, setImagecapture] = useState("NO");
   const [mobilecam, setMobilecam] = useState(true);
-  const [scroll, setscroll] = useState(true);
-  const [iphonechrome,setIphonechrome] = useState(true);
+  const [iphonechrome, setIphonechrome] = useState(true);
+  const [showidimage, setShowidimage] = useState(false);
   const urltoFile = (url, filename, mimeType) => {
     return fetch(url)
       .then(function (res) {
@@ -28,18 +29,15 @@ const Uploadselfieid = ({ updateWebImageid }) => {
       });
   };
 
-  // useEffect(() => {
-  //   if (window.innerWidth <= 1020) {
-  //     window.scrollTo(0,600);
-  //   }
-  // },[0]);
-
   const open = () => {
     setMobilecam(true);
   };
-
+  //  const videoConstraints = {
+  //   facingMode: { exact: "environment" }
+  // };
   const capture_web = React.useCallback(() => {
     const imageSrc = webcamRefweb.current.getScreenshot();
+
     console.log(imageSrc);
     urltoFile(imageSrc, "user.txt", "text/plain").then(function (file) {
       updateWebImageid(file);
@@ -50,7 +48,6 @@ const Uploadselfieid = ({ updateWebImageid }) => {
   }, [webcamRefweb, setImgSrcweb]);
 
   const capture = React.useCallback(() => {
-    setscroll(false);
     const imageSrc = webcamRef.current.getScreenshot();
     urltoFile(imageSrc, "user.txt", "text/plain").then(function (file) {
       updateWebImageid(file);
@@ -59,12 +56,6 @@ const Uploadselfieid = ({ updateWebImageid }) => {
     updateWebImageid(imageSrc);
     console.log(imageSrc);
   }, [webcamRef, setImgSrc]);
-
-  if (scroll === true && iphonechrome === true) {
-    if (window.innerWidth <= 1020) {
-      window.scrollTo(0, 500);
-    }
-  }
 
   useEffect(() => {
     const isIPhoneChrome = () => {
@@ -77,33 +68,63 @@ const Uploadselfieid = ({ updateWebImageid }) => {
 
     if (isIPhoneChrome()) {
       setIphonechrome(false);
-      console.log('Accessed from iPhone Chrome');
-    }else{
+      console.log("Accessed from iPhone Chrome");
+    } else {
       console.log("non iphone chrome");
     }
   }, []);
 
+  const guide = () => {
+    setShowidimage(true);
+  };
+  const idclose = () => {
+    setShowidimage(false);
+  };
   return (
     <>
+      {showidimage ? (
+        <>
+          <div className="guidimage">
+            <img src={idselfieimage} alt="idimage"></img>
+            visible
+            <ul>
+              <li>
+                Hold your ID card below the face and bring close to camera
+              </li>
+              <li>
+                Make sure your face and face on id card are clearly visible
+              </li>
+              <li>Make sure that the ID card is fully visible</li>
+            </ul>
+            <p>
+              <span onClick={idclose}>CLOSE</span>
+            </p>
+          </div>
+        </>
+      ) : (
+        ""
+      )}
+
       <div className="idwebcam">
         <div className="live-ctn">
           <div className="live-title">
             Keep Your ID to camera and click Capture photo
           </div>
+
           <br />
           <div className="camera">
             <div className="idbox">
-              <div className="facebox faceboxipnone">
+              <div className="facebox">
                 <span>Keep Your face here</span>
               </div>
-              <div className="idcard idcardiphone">
+              <div className="idcard">
                 <span>Keep Your ID here</span>
               </div>
             </div>
-
             <Webcam
               className="live-web-cam_two"
-      
+              height={1020}
+              width={750}
               audio={false}
               ref={webcamRefweb}
               imageSmoothing={false}
@@ -123,22 +144,29 @@ const Uploadselfieid = ({ updateWebImageid }) => {
       </div>
       <div className="idmblcam">
         <div className="live-ctn">
-          <div className="live-title">Take ID Picture</div>
-          <br />
+          <div className="live-title">
+            Keep Your ID to camera and click Capture photo
+            <div className="guide" onClick={guide}>
+              Guide
+            </div>
+          </div>
 
+          <br />
           <div className="camera">
             {mobilecam ? (
               <>
                 <div className="idbox">
-                  <div className={iphonechrome ? ('facebox') : ('faceboxiphone')}>
+                  <div className={iphonechrome ? "facebox" : "faceboxiphone"}>
                     <span>Keep Your face here</span>
                   </div>
-                  <div className={iphonechrome ? ('idcard') : ('idcardiphone')}>
+                  <div className={iphonechrome ? "idcard" : "idcardiphone"}>
                     <span>Keep Your ID here</span>
                   </div>
                 </div>
                 <Webcam
                   className="live-web-cam_two"
+                  height={1020}
+                  width={750}
                   audio={false}
                   ref={webcamRef}
                   imageSmoothing={false}
