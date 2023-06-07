@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [formdata, setformData] = useState({});
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(2);
   const [document, setDocumnet] = useState("");
   const [idtype, setIdType] = useState("");
   const [country, setCountry] = useState(""); 
