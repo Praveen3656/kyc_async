@@ -86,7 +86,6 @@ const Uploadselfieid = ({ updateWebImageid }) => {
         <>
           <div className="guidimage">
             <img src={idselfieimage} alt="idimage"></img>
-            visible
             <ul>
               <li>
                 Hold your ID card below the face and bring close to camera
