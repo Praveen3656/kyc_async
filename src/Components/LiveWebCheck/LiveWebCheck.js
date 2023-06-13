@@ -10,7 +10,6 @@ const LiveWebCheck = ({
   updateWebImagetwo,
   updateWebImagethree,
 }) => {
-  //console.log(Livecamera);
   const [filedata, setFileData] = useState("");
   const [cameraoff, setCameraoff] = useState(true);
 
@@ -60,6 +59,9 @@ const LiveWebCheck = ({
 
   const [capturecheck, setCapturecheck] = useState(true);
 
+  const [messageaction, setMessageaction] = useState(true);
+  const [multiplemessage,setMultiplemessage] =useState()
+
   const [tag, setTag] = useState(true);
   const urltoFile = (url, filename, mimeType) => {
     return fetch(url)
@@ -91,6 +93,7 @@ const LiveWebCheck = ({
   });
 
   let capturecheck1 = true;
+
   const startcapture = React.useCallback(() => {
     if (capturecheck1) {
       const imageSrc = webcamRef.current.getScreenshot();
@@ -99,11 +102,10 @@ const LiveWebCheck = ({
       });
       setImgSrc(imageSrc);
       updateWebImage(imageSrc);
-      console.log(imageSrc);
+      //  console.log(imageSrc);
 
       capturecheck1 = false;
-      console.log(imageSrc);
- 
+      // console.log(imageSrc);
     }
   }, [webcamRef, setImgSrc]);
 
@@ -127,10 +129,6 @@ const LiveWebCheck = ({
     localStorage.setItem("state", randomValuen);
   }, [actions]);
 
-  // const timeout = () => {
-  //   setTimeoutmessage(true);
-  //   setCapturebnt(true);
-  // };
   const faceactionstwo = [
     "LOOKUP",
     "LOOKDOWN",
@@ -140,6 +138,39 @@ const LiveWebCheck = ({
   ];
   const setstate = [];
   let shouldExecuteSetTimeout = true;
+
+  const nofacefound = () => {
+    setMessage("No Faces Found");
+    setMessageaction(false);
+    setShowmessage(true);
+    setTag(false);
+    setCanvasshow(false);
+    setCapturebnt(true);
+    setShowovalcanvas(false);
+    setCameraoff(false);
+    setDashboarddiv(false);
+    setTimeoutmessage(false);
+    setAddclass(false);
+    setShowactionmessage(false);
+    setTimeoutmesg(true);
+  };
+
+  const breakfunction = () => {
+    setMultiplemessage("Multiple faces Detected Please try again");
+    setMessage();
+    setMessageaction(false);
+    setShowmessage(true);
+    setTag(false);
+    setCanvasshow(false);
+    setCapturebnt(true);
+    setShowovalcanvas(false);
+    setCameraoff(false);
+    setDashboarddiv(false);
+    setTimeoutmessage(false);
+    setAddclass(false);
+    setShowactionmessage(false);
+    setTimeoutmesg(true);
+  };
 
   const settimeout = () => {
     if (shouldExecuteSetTimeout) {
@@ -163,6 +194,12 @@ const LiveWebCheck = ({
   });
 
   function onResults(results) {
+    // console.log("results",results.multiFaceLandmarks.length);
+
+    if (results.multiFaceLandmarks.length == 0) {
+      nofacefound();
+    }
+
     let getitem = localStorage.getItem("state");
     localStorage.setItem("counter", 0);
 
@@ -189,204 +226,192 @@ const LiveWebCheck = ({
 
     if (results.multiFaceLandmarks) {
       for (const landmarks of results.multiFaceLandmarks) {
-        var facetop_y = landmarks[10].y;
-        var chin_y = landmarks[152].y;
+        if (results.multiFaceLandmarks.length > 1) {
+          breakfunction();
+        }
 
-        var facedifference = chin_y - facetop_y;
-        var TOP = landmarks[10].y;
-        var LEFT = landmarks[234].x;
-        var RIGHT = landmarks[366].x;
-        var BOTTOM = landmarks[152].y;
+        const facetop_y = landmarks[10].y;
+        const chin_y = landmarks[152].y;
 
-        var LOOKUP = landmarks[1].y;
-        var LOOKDOWN = landmarks[1].y;
-        var TURNRIGHT = landmarks[1].x;
-        var TURNLEFT = landmarks[1].x;
+        const facedifference = chin_y - facetop_y;
 
-        var nosevalue = landmarks[4];
+        const TOP = landmarks[10].y;
+        const LEFT = landmarks[234].x;
+        const RIGHT = landmarks[366].x;
+        const BOTTOM = landmarks[152].y;
 
-        const PT_49 = landmarks[0].x; //49 Left lip
-        const PT_55 = landmarks[17].x; // 55 Right lip
-        const PT_52 = landmarks[0].y; // 52 Upper lip
-        const PT_58 = landmarks[17].y; // 58 Lower Lip
+        const TOPZ = landmarks[10].z;
+        const LEFTZ = landmarks[234].z;
+        const RIGHTZ = landmarks[366].z;
+        const BOTTOMZ = landmarks[152].z;
+
+        const faceArea = (LEFT - RIGHT) * (TOP - BOTTOM);
+
+        //  console.log("TOPZ",TOPZ,'--------',"BOTTOMZ",BOTTOMZ);
+
+        const LOOKUP = landmarks[1].y;
+        const LOOKDOWN = landmarks[1].y;
+        const TURNRIGHT = landmarks[1].x;
+        const TURNLEFT = landmarks[1].x;
+
+        //console.log("LEFT",landmarks[234].z);
+
+        const PT_49 = landmarks[0].x;
+        const PT_55 = landmarks[17].x;
+
+        const PT_52 = landmarks[0].y;
+        const PT_58 = landmarks[17].y;
+
         var Y = PT_58 - PT_52;
+
         var X = PT_55 - PT_49;
-
-        // if (Y > 0.12) {
-        //   setCapturebnt(true);
-        //   setMessage("keep your face in frame & click Capture");
-        //   setCanvasshow(false);
-        //   setShowovalcanvas(false);
-        //   setShowoval(false);
-        //   setShowbnt(true);
-        //   setTimeout(capture, 800);
-        // }
-
-        // console.log("nosevalue", nosevalue);
-
-        // console.log("BOTTOM", "---", BOTTOM, "TOP", TOP);
-        // console.log("RIGHT", RIGHT, "--------", "LEFT", LEFT);
 
         getitem = localStorage.getItem("state");
 
-        if (
-          facedifference > 0.4 &&
-          TOP > 0 &&
-          BOTTOM < 0.99 &&
-          LEFT > -0 &&
-          RIGHT < 0.99
-        ) {
+        if (faceArea > 0.15) {
           setShowmessage(false);
           setShowactionmessage(true);
           setAddclass(true);
           setChecktime(false);
           setActionsmessage(true);
-
-          startcapture()
-        
-
-          // const timeoutId = setTimeout(() => {
-          //   settimeout();
-          // }, 15000);
-
-          if (getitem === "LOOKUP") {
-            const actioncount = localStorage.getItem("countaction");
-            if (actioncount >= 3) {
-              capture()
-              shouldExecuteSetTimeout = false;
-              setCapturebnt(false);
-              setShowactionmessage(false);
-            }
-            if (LOOKUP < 0.5) {
-              let index = faceactionstwo.indexOf(getitem);
-              faceactionstwo.splice(index, 1);
-
-              const randomIndextwo = Math.floor(
-                Math.random() * faceactionstwo.length
-              );
-              const removevalue = faceactionstwo[randomIndextwo];
-              localStorage.clear();
-              localStorage.setItem("state", removevalue);
-              setActions(removevalue);
-              setstate.push(getitem);
-              const uniqueValues = [...new Set(setstate)];
-
-              localStorage.setItem("countaction", uniqueValues.length);
-            }
-          }
-
-          getitem = localStorage.getItem("state");
-          if (getitem === "LOOKDOWN") {
-            const actioncount = localStorage.getItem("countaction");
-            if (actioncount >= 3) {
-              capture()
-              shouldExecuteSetTimeout = false;
-              setCapturebnt(false);
-              setShowactionmessage(false);
-            }
-            if (LOOKDOWN > 0.7) {
-              let index = faceactionstwo.indexOf(getitem);
-              faceactionstwo.splice(index, 1);
-
-              const randomIndextwo = Math.floor(
-                Math.random() * faceactionstwo.length
-              );
-              const removevalue = faceactionstwo[randomIndextwo];
-              localStorage.clear();
-              localStorage.setItem("state", removevalue);
-              setActions(removevalue);
-              setstate.push(getitem);
-              const uniqueValues = [...new Set(setstate)];
-              localStorage.setItem("countaction", uniqueValues.length);
-            }
-          }
-
-          getitem = localStorage.getItem("state");
-          if (getitem === "TURNRIGHT") {
-            const actioncount = localStorage.getItem("countaction");
-
-            if (actioncount >= 3) {
-              capture()
-              shouldExecuteSetTimeout = false;
-              setCapturebnt(false);
-              setShowactionmessage(false);
-            }
-            if (TURNRIGHT <= 0.3) {
-              let index = faceactionstwo.indexOf(getitem);
-              faceactionstwo.splice(index, 1);
-
-              const randomIndextwo = Math.floor(
-                Math.random() * faceactionstwo.length
-              );
-              const removevalue = faceactionstwo[randomIndextwo];
-              localStorage.clear();
-              localStorage.setItem("state", removevalue);
-              setActions(removevalue);
-              setstate.push(getitem);
-              const uniqueValues = [...new Set(setstate)];
-
-              localStorage.setItem("countaction", uniqueValues.length);
-            }
-          }
-
-          //console.log("setaction", localStorage.getItem("state"));
-          getitem = localStorage.getItem("state");
-          if (getitem === "TURNLEFT") {
-            const actioncount = localStorage.getItem("countaction");
-            if (actioncount >= 3) {
-              capture()
-              shouldExecuteSetTimeout = false;
-              setCapturebnt(false);
-              setShowactionmessage(false);
-            }
-            if (TURNLEFT > 0.6) {
-              let index = faceactionstwo.indexOf(getitem);
-              faceactionstwo.splice(index, 1);
-
-              const randomIndextwo = Math.floor(
-                Math.random() * faceactionstwo.length
-              );
-              const removevalue = faceactionstwo[randomIndextwo];
-              localStorage.clear();
-              localStorage.setItem("state", removevalue);
-              setActions(removevalue);
-              setstate.push(getitem);
-              const uniqueValues = [...new Set(setstate)];
-
-              localStorage.setItem("countaction", uniqueValues.length);
-            }
-          }
-
-          getitem = localStorage.getItem("state");
-          if (getitem === "OPENMOUTH") {
-            const actioncount = localStorage.getItem("countaction");
-            if (actioncount >= 3) {
-              capture()
-              shouldExecuteSetTimeout = false;
-              setCapturebnt(false);
-              setShowactionmessage(false);
-            }
-            if (Y > 0.1) {
-              let index = faceactionstwo.indexOf(getitem);
-              faceactionstwo.splice(index, 1);
-
-              const randomIndextwo = Math.floor(
-                Math.random() * faceactionstwo.length
-              );
-              const removevalue = faceactionstwo[randomIndextwo];
-              localStorage.clear();
-              localStorage.setItem("state", removevalue);
-              setActions(removevalue);
-              setstate.push(getitem);
-              const uniqueValues = [...new Set(setstate)];
-              localStorage.setItem("countaction", uniqueValues.length);
-            }
-          }
+          startcapture();
         } else {
           setAddclass(false);
           setShowactionmessage(false);
           setShowmessage(true);
-          setMessage("Please approach the camera with your face in the center");
+        }
+        if (getitem === "LOOKUP") {
+          const actioncount = localStorage.getItem("countaction");
+          if (actioncount >= 3) {
+            capture();
+            shouldExecuteSetTimeout = false;
+            setCapturebnt(false);
+            setShowactionmessage(false);
+          }
+          if (TOPZ > 0.05 && BOTTOMZ < -0.05) {
+            console.log("Lookup action done");
+            let index = faceactionstwo.indexOf(getitem);
+            faceactionstwo.splice(index, 1);
+
+            const randomIndextwo = Math.floor(
+              Math.random() * faceactionstwo.length
+            );
+
+            const removevalue = faceactionstwo[randomIndextwo];
+            localStorage.clear();
+            localStorage.setItem("state", removevalue);
+            setActions(removevalue);
+            setstate.push(getitem);
+            const uniqueValues = [...new Set(setstate)];
+
+            localStorage.setItem("countaction", uniqueValues.length);
+          }
+        }
+
+        getitem = localStorage.getItem("state");
+        if (getitem === "LOOKDOWN") {
+          const actioncount = localStorage.getItem("countaction");
+          if (actioncount >= 3) {
+            capture();
+            shouldExecuteSetTimeout = false;
+            setCapturebnt(false);
+            setShowactionmessage(false);
+          }
+          if (BOTTOMZ > 0.05 && TOPZ < -0.05) {
+            console.log("Look Down action done");
+            let index = faceactionstwo.indexOf(getitem);
+            faceactionstwo.splice(index, 1);
+
+            const randomIndextwo = Math.floor(
+              Math.random() * faceactionstwo.length
+            );
+            const removevalue = faceactionstwo[randomIndextwo];
+            localStorage.clear();
+            localStorage.setItem("state", removevalue);
+            setActions(removevalue);
+            setstate.push(getitem);
+            const uniqueValues = [...new Set(setstate)];
+            localStorage.setItem("countaction", uniqueValues.length);
+          }
+        }
+
+        getitem = localStorage.getItem("state");
+        if (getitem === "TURNRIGHT") {
+          const actioncount = localStorage.getItem("countaction");
+          if (actioncount >= 3) {
+            capture();
+            shouldExecuteSetTimeout = false;
+            setCapturebnt(false);
+            setShowactionmessage(false);
+          }
+          if (RIGHTZ < 0 && LEFTZ > 0.2) {
+            console.log("right actions done");
+            let index = faceactionstwo.indexOf(getitem);
+            faceactionstwo.splice(index, 1);
+            const randomIndextwo = Math.floor(
+              Math.random() * faceactionstwo.length
+            );
+            const removevalue = faceactionstwo[randomIndextwo];
+            localStorage.clear();
+            localStorage.setItem("state", removevalue);
+            setActions(removevalue);
+            setstate.push(getitem);
+            const uniqueValues = [...new Set(setstate)];
+            localStorage.setItem("countaction", uniqueValues.length);
+          }
+        }
+
+        getitem = localStorage.getItem("state");
+        if (getitem === "TURNLEFT") {
+          const actioncount = localStorage.getItem("countaction");
+          if (actioncount >= 3) {
+            capture();
+            shouldExecuteSetTimeout = false;
+            setCapturebnt(false);
+            setShowactionmessage(false);
+          }
+          if (LEFTZ < 0 && RIGHTZ > 0.2) {
+            console.log("LEft action Done");
+            let index = faceactionstwo.indexOf(getitem);
+            faceactionstwo.splice(index, 1);
+
+            const randomIndextwo = Math.floor(
+              Math.random() * faceactionstwo.length
+            );
+            const removevalue = faceactionstwo[randomIndextwo];
+            localStorage.clear();
+            localStorage.setItem("state", removevalue);
+            setActions(removevalue);
+            setstate.push(getitem);
+            const uniqueValues = [...new Set(setstate)];
+            localStorage.setItem("countaction", uniqueValues.length);
+          }
+        }
+
+        getitem = localStorage.getItem("state");
+        if (getitem === "OPENMOUTH") {
+          const actioncount = localStorage.getItem("countaction");
+          if (actioncount >= 3) {
+            capture();
+            shouldExecuteSetTimeout = false;
+            setCapturebnt(false);
+            setShowactionmessage(false);
+          }
+          if (Y > 0.1) {
+            let index = faceactionstwo.indexOf(getitem);
+            faceactionstwo.splice(index, 1);
+
+            const randomIndextwo = Math.floor(
+              Math.random() * faceactionstwo.length
+            );
+            const removevalue = faceactionstwo[randomIndextwo];
+            localStorage.clear();
+            localStorage.setItem("state", removevalue);
+            setActions(removevalue);
+            setstate.push(getitem);
+            const uniqueValues = [...new Set(setstate)];
+            localStorage.setItem("countaction", uniqueValues.length);
+          }
         }
         connect(canvasCtx, landmarks, Facemesh.FACEMESH_TESSELATION, {
           color: "#fff0",
@@ -408,7 +433,7 @@ const LiveWebCheck = ({
     setDashboarddiv(true);
     setCanvasshow(true);
   };
-  // setInterval(())
+
   useEffect(() => {
     const faceMesh = new FaceMesh({
       locateFile: (file) => {
@@ -417,11 +442,10 @@ const LiveWebCheck = ({
     });
 
     faceMesh.setOptions({
-      maxNumFaces: 1,
+      maxNumFaces: 3,
       minDetectionConfidence: 0.5,
       minTrackingConfidence: 0.5,
     });
-
     faceMesh.onResults(onResults);
 
     if (
@@ -455,15 +479,29 @@ const LiveWebCheck = ({
                   ""
                 )}
               </p>
+              <p>
+           
+                  <span className="red">
+                    <b>{multiplemessage}</b>
+                  </span>
+             
+              </p>
 
               <p>
-                {showactionmessage ? (
-                  <span className="green">
-                    <b>
-                      Please slightly {actions} with your current distance to
-                      camera intact
-                    </b>
-                  </span>
+                {messageaction ? (
+                  <>
+                    {" "}
+                    {showactionmessage ? (
+                      <span className="green">
+                        <b>
+                          Please slightly {actions} with your current distance
+                          to camera intact
+                        </b>
+                      </span>
+                    ) : (
+                      ""
+                    )}
+                  </>
                 ) : (
                   ""
                 )}
@@ -478,24 +516,8 @@ const LiveWebCheck = ({
                   ""
                 )}
               </p>
-
-              {/* <p className={addclass ? "green" : "red"}>
-                <b>
-                  <span></span>
-                  {showmessage ? (
-                    <>{message}</>
-                  ) : (
-                    <span className="clicknext">Click next to continue</span>
-                  )}
-                  {tag ? <> {`${actions} with in 5 Seconds`}</> : ""}
-                </b>
-                <br />
-                 </p> */}
             </div>
-            <div className="picture">
-              {/* <p onClick={stop}>stop</p> */}
-              {/* {imageshow ? <img className="c-img" src={imgSrc} alt="" /> : ""} */}
-            </div>
+            <div className="picture"></div>
             {showoval ? <div className="oval"></div> : ""}
             {cameraoff ? (
               <Webcam
