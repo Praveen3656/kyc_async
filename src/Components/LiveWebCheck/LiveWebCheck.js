@@ -577,7 +577,7 @@ const LiveWebCheck = ({
         </div>
       </center>
 
-      {dashboarddiv ? <div className="dashboard-ctnnew"></div> : ""}
+      {dashboarddiv ? <div className="dashboard-ctn"></div> : ""}
 
       <div className="App">
         {/* <center>
