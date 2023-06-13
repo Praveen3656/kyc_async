@@ -268,6 +268,10 @@ const LiveWebCheck = ({
 
         getitem = localStorage.getItem("state");
 
+        const timeoutId = setTimeout(() => {
+          settimeout();
+        }, 25000);
+
         if (faceArea > 0.15) {
           setShowmessage(false);
           setShowactionmessage(true);
@@ -275,6 +279,7 @@ const LiveWebCheck = ({
           setChecktime(false);
           setActionsmessage(true);
           startcapture();
+       
         } else {
           setAddclass(false);
           setShowactionmessage(false);
@@ -282,7 +287,7 @@ const LiveWebCheck = ({
         }
         if (getitem === "LOOKUP") {
           const actioncount = localStorage.getItem("countaction");
-          if (actioncount >= 3) {
+          if (actioncount  == 5) {
             capture();
             shouldExecuteSetTimeout = false;
             setCapturebnt(false);
@@ -311,7 +316,7 @@ const LiveWebCheck = ({
         getitem = localStorage.getItem("state");
         if (getitem === "LOOKDOWN") {
           const actioncount = localStorage.getItem("countaction");
-          if (actioncount >= 3) {
+          if (actioncount  == 5) {
             capture();
             shouldExecuteSetTimeout = false;
             setCapturebnt(false);
@@ -338,7 +343,7 @@ const LiveWebCheck = ({
         getitem = localStorage.getItem("state");
         if (getitem === "TURNRIGHT") {
           const actioncount = localStorage.getItem("countaction");
-          if (actioncount >= 3) {
+          if (actioncount  == 5) {
             capture();
             shouldExecuteSetTimeout = false;
             setCapturebnt(false);
@@ -364,7 +369,7 @@ const LiveWebCheck = ({
         getitem = localStorage.getItem("state");
         if (getitem === "TURNLEFT") {
           const actioncount = localStorage.getItem("countaction");
-          if (actioncount >= 3) {
+          if (actioncount  == 5) {
             capture();
             shouldExecuteSetTimeout = false;
             setCapturebnt(false);
@@ -391,7 +396,7 @@ const LiveWebCheck = ({
         getitem = localStorage.getItem("state");
         if (getitem === "OPENMOUTH") {
           const actioncount = localStorage.getItem("countaction");
-          if (actioncount >= 3) {
+          if (actioncount  == 5) {
             capture();
             shouldExecuteSetTimeout = false;
             setCapturebnt(false);
