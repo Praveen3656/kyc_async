@@ -632,5 +632,4 @@ const LiveWebCheck = ({
     </>
   );
 };
-
 export default LiveWebCheck;
