@@ -74,6 +74,7 @@ const LiveWebCheck = ({
   };
 
   const capture = React.useCallback(() => {
+    setIsActionCompleted(true);
     setImageshow(true);
     shouldExecuteSetTimeout = false;
     setShowactionmessage(false);
@@ -193,6 +194,24 @@ const LiveWebCheck = ({
     localStorage.removeItem("countaction");
   });
 
+  const [isActionCompleted,setIsActionCompleted] = useState(true);
+
+  useEffect(() => {
+    let timeoutIdactions = null;
+    if (!isActionCompleted) {
+      timeoutIdactions = setTimeout(() => {
+        settimeout()
+      }, 2000);
+    }
+    return () => {
+      clearTimeout(timeoutIdactions); 
+    };
+  }, [isActionCompleted]);
+
+  // const handleAction = () => {
+  //   setIsActionCompleted(true);
+  // };
+
   function onResults(results) {
     // console.log("results",results.multiFaceLandmarks.length);
 
@@ -247,7 +266,7 @@ const LiveWebCheck = ({
 
         const faceArea = (LEFT - RIGHT) * (TOP - BOTTOM);
 
-        //  console.log("TOPZ",TOPZ,'--------',"BOTTOMZ",BOTTOMZ);
+          console.log("faceArea",faceArea);
 
         const LOOKUP = landmarks[1].y;
         const LOOKDOWN = landmarks[1].y;
@@ -268,11 +287,12 @@ const LiveWebCheck = ({
 
         getitem = localStorage.getItem("state");
 
-        const timeoutId = setTimeout(() => {
-          settimeout();
-        }, 25000);
+        // const timeoutId = setTimeout(() => {
+        //   settimeout();
+        // }, 25000);
 
-        if (faceArea > 0.15) {
+        if (faceArea > 0.25) {
+          setIsActionCompleted(false);
           setShowmessage(false);
           setShowactionmessage(true);
           setAddclass(true);
@@ -284,7 +304,8 @@ const LiveWebCheck = ({
           setShowactionmessage(false);
           setShowmessage(true);
         }
-        if (getitem === "LOOKUP") {
+
+        if (getitem === "LOOKUP") { 
           const actioncount = localStorage.getItem("countaction");
           if (actioncount == 5) {
             capture();
@@ -293,14 +314,13 @@ const LiveWebCheck = ({
             setShowactionmessage(false);
           }
           if (TOPZ > 0.05 && BOTTOMZ < -0.05) {
+           setIsActionCompleted(true);
             console.log("Lookup action done");
             let index = faceactionstwo.indexOf(getitem);
             faceactionstwo.splice(index, 1);
-
             const randomIndextwo = Math.floor(
               Math.random() * faceactionstwo.length
             );
-
             const removevalue = faceactionstwo[randomIndextwo];
             localStorage.clear();
             localStorage.setItem("state", removevalue);
@@ -313,7 +333,9 @@ const LiveWebCheck = ({
         }
 
         getitem = localStorage.getItem("state");
+    
         if (getitem === "LOOKDOWN") {
+       
           const actioncount = localStorage.getItem("countaction");
           if (actioncount == 5) {
             capture();
@@ -322,6 +344,7 @@ const LiveWebCheck = ({
             setShowactionmessage(false);
           }
           if (BOTTOMZ > 0.05 && TOPZ < -0.05) {
+            setIsActionCompleted(true);
             console.log("Look Down action done");
             let index = faceactionstwo.indexOf(getitem);
             faceactionstwo.splice(index, 1);
@@ -341,6 +364,7 @@ const LiveWebCheck = ({
 
         getitem = localStorage.getItem("state");
         if (getitem === "TURNRIGHT") {
+       
           const actioncount = localStorage.getItem("countaction");
           if (actioncount == 5) {
             capture();
@@ -349,6 +373,8 @@ const LiveWebCheck = ({
             setShowactionmessage(false);
           }
           if (RIGHTZ < 0 && LEFTZ > 0.2) {
+
+            setIsActionCompleted(true);
             console.log("right actions done");
             let index = faceactionstwo.indexOf(getitem);
             faceactionstwo.splice(index, 1);
@@ -367,6 +393,7 @@ const LiveWebCheck = ({
 
         getitem = localStorage.getItem("state");
         if (getitem === "TURNLEFT") {
+         
           const actioncount = localStorage.getItem("countaction");
           if (actioncount == 5) {
             capture();
@@ -375,6 +402,7 @@ const LiveWebCheck = ({
             setShowactionmessage(false);
           }
           if (LEFTZ < 0 && RIGHTZ > 0.2) {
+           setIsActionCompleted(true);
             console.log("LEft action Done");
             let index = faceactionstwo.indexOf(getitem);
             faceactionstwo.splice(index, 1);
@@ -394,6 +422,7 @@ const LiveWebCheck = ({
 
         getitem = localStorage.getItem("state");
         if (getitem === "OPENMOUTH") {
+         
           const actioncount = localStorage.getItem("countaction");
           if (actioncount == 5) {
             capture();
@@ -402,6 +431,7 @@ const LiveWebCheck = ({
             setShowactionmessage(false);
           }
           if (Y > 0.1) {
+           setIsActionCompleted(true);
             let index = faceactionstwo.indexOf(getitem);
             faceactionstwo.splice(index, 1);
 
