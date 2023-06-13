@@ -60,7 +60,7 @@ const LiveWebCheck = ({
   const [capturecheck, setCapturecheck] = useState(true);
 
   const [messageaction, setMessageaction] = useState(true);
-  const [multiplemessage,setMultiplemessage] =useState()
+  const [multiplemessage, setMultiplemessage] = useState();
 
   const [tag, setTag] = useState(true);
   const urltoFile = (url, filename, mimeType) => {
@@ -279,7 +279,6 @@ const LiveWebCheck = ({
           setChecktime(false);
           setActionsmessage(true);
           startcapture();
-       
         } else {
           setAddclass(false);
           setShowactionmessage(false);
@@ -287,7 +286,7 @@ const LiveWebCheck = ({
         }
         if (getitem === "LOOKUP") {
           const actioncount = localStorage.getItem("countaction");
-          if (actioncount  == 5) {
+          if (actioncount == 5) {
             capture();
             shouldExecuteSetTimeout = false;
             setCapturebnt(false);
@@ -316,7 +315,7 @@ const LiveWebCheck = ({
         getitem = localStorage.getItem("state");
         if (getitem === "LOOKDOWN") {
           const actioncount = localStorage.getItem("countaction");
-          if (actioncount  == 5) {
+          if (actioncount == 5) {
             capture();
             shouldExecuteSetTimeout = false;
             setCapturebnt(false);
@@ -343,7 +342,7 @@ const LiveWebCheck = ({
         getitem = localStorage.getItem("state");
         if (getitem === "TURNRIGHT") {
           const actioncount = localStorage.getItem("countaction");
-          if (actioncount  == 5) {
+          if (actioncount == 5) {
             capture();
             shouldExecuteSetTimeout = false;
             setCapturebnt(false);
@@ -369,7 +368,7 @@ const LiveWebCheck = ({
         getitem = localStorage.getItem("state");
         if (getitem === "TURNLEFT") {
           const actioncount = localStorage.getItem("countaction");
-          if (actioncount  == 5) {
+          if (actioncount == 5) {
             capture();
             shouldExecuteSetTimeout = false;
             setCapturebnt(false);
@@ -396,7 +395,7 @@ const LiveWebCheck = ({
         getitem = localStorage.getItem("state");
         if (getitem === "OPENMOUTH") {
           const actioncount = localStorage.getItem("countaction");
-          if (actioncount  == 5) {
+          if (actioncount == 5) {
             capture();
             shouldExecuteSetTimeout = false;
             setCapturebnt(false);
@@ -485,11 +484,9 @@ const LiveWebCheck = ({
                 )}
               </p>
               <p>
-           
-                  <span className="red">
-                    <b>{multiplemessage}</b>
-                  </span>
-             
+                <span className="red">
+                  <b>{multiplemessage}</b>
+                </span>
               </p>
 
               <p>
