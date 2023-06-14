@@ -201,7 +201,7 @@ const LiveWebCheck = ({
     if (!isActionCompleted) {
       timeoutIdactions = setTimeout(() => {
         settimeout()
-      }, 2000);
+      }, 6000);
     }
     return () => {
       clearTimeout(timeoutIdactions); 
@@ -458,8 +458,9 @@ const LiveWebCheck = ({
   // }
 
   const retake = () => {
-    localStorage.removeItem("countaction");
     window.location.reload();
+    localStorage.removeItem("countaction");
+   
     setCapturebnt(false);
     setCameraoff(true);
     setImageshow(false);
