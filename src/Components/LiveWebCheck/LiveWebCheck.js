@@ -141,6 +141,7 @@ const LiveWebCheck = ({
   let shouldExecuteSetTimeout = true;
 
   const nofacefound = () => {
+    window.location.reload();
     setMessage("No Faces Found");
     setMessageaction(false);
     setShowmessage(true);
@@ -157,6 +158,7 @@ const LiveWebCheck = ({
   };
 
   const breakfunction = () => {
+    window.location.reload();
     setMultiplemessage("Multiple faces Detected Please try again");
     setMessage();
     setMessageaction(false);
@@ -194,17 +196,17 @@ const LiveWebCheck = ({
     localStorage.removeItem("countaction");
   });
 
-  const [isActionCompleted,setIsActionCompleted] = useState(true);
+  const [isActionCompleted, setIsActionCompleted] = useState(true);
 
   useEffect(() => {
     let timeoutIdactions = null;
     if (!isActionCompleted) {
       timeoutIdactions = setTimeout(() => {
-        settimeout()
+        settimeout();
       }, 2000);
     }
     return () => {
-      clearTimeout(timeoutIdactions); 
+      clearTimeout(timeoutIdactions);
     };
   }, [isActionCompleted]);
 
@@ -266,7 +268,7 @@ const LiveWebCheck = ({
 
         const faceArea = (LEFT - RIGHT) * (TOP - BOTTOM);
 
-          console.log("faceArea",faceArea);
+        console.log("faceArea", faceArea);
 
         const LOOKUP = landmarks[1].y;
         const LOOKDOWN = landmarks[1].y;
@@ -305,7 +307,7 @@ const LiveWebCheck = ({
           setShowmessage(true);
         }
 
-        if (getitem === "LOOKUP") { 
+        if (getitem === "LOOKUP") {
           const actioncount = localStorage.getItem("countaction");
           if (actioncount == 5) {
             capture();
@@ -314,7 +316,7 @@ const LiveWebCheck = ({
             setShowactionmessage(false);
           }
           if (TOPZ > 0.05 && BOTTOMZ < -0.05) {
-           setIsActionCompleted(true);
+            setIsActionCompleted(true);
             console.log("Lookup action done");
             let index = faceactionstwo.indexOf(getitem);
             faceactionstwo.splice(index, 1);
@@ -333,9 +335,8 @@ const LiveWebCheck = ({
         }
 
         getitem = localStorage.getItem("state");
-    
+
         if (getitem === "LOOKDOWN") {
-       
           const actioncount = localStorage.getItem("countaction");
           if (actioncount == 5) {
             capture();
@@ -364,7 +365,6 @@ const LiveWebCheck = ({
 
         getitem = localStorage.getItem("state");
         if (getitem === "TURNRIGHT") {
-       
           const actioncount = localStorage.getItem("countaction");
           if (actioncount == 5) {
             capture();
@@ -373,7 +373,6 @@ const LiveWebCheck = ({
             setShowactionmessage(false);
           }
           if (RIGHTZ < 0 && LEFTZ > 0.2) {
-
             setIsActionCompleted(true);
             console.log("right actions done");
             let index = faceactionstwo.indexOf(getitem);
@@ -393,7 +392,6 @@ const LiveWebCheck = ({
 
         getitem = localStorage.getItem("state");
         if (getitem === "TURNLEFT") {
-         
           const actioncount = localStorage.getItem("countaction");
           if (actioncount == 5) {
             capture();
@@ -402,7 +400,7 @@ const LiveWebCheck = ({
             setShowactionmessage(false);
           }
           if (LEFTZ < 0 && RIGHTZ > 0.2) {
-           setIsActionCompleted(true);
+            setIsActionCompleted(true);
             console.log("LEft action Done");
             let index = faceactionstwo.indexOf(getitem);
             faceactionstwo.splice(index, 1);
@@ -422,7 +420,6 @@ const LiveWebCheck = ({
 
         getitem = localStorage.getItem("state");
         if (getitem === "OPENMOUTH") {
-         
           const actioncount = localStorage.getItem("countaction");
           if (actioncount == 5) {
             capture();
@@ -431,7 +428,7 @@ const LiveWebCheck = ({
             setShowactionmessage(false);
           }
           if (Y > 0.1) {
-           setIsActionCompleted(true);
+            setIsActionCompleted(true);
             let index = faceactionstwo.indexOf(getitem);
             faceactionstwo.splice(index, 1);
 
@@ -458,8 +455,8 @@ const LiveWebCheck = ({
   // }
 
   const retake = () => {
-    localStorage.removeItem("countaction");
     window.location.reload();
+    localStorage.removeItem("countaction");
     setCapturebnt(false);
     setCameraoff(true);
     setImageshow(false);
