@@ -14,6 +14,7 @@ const LiveWebCheck = ({
   const [cameraoff, setCameraoff] = useState(true);
 
   const webcamRef = React.useRef(null);
+  const Boxref = React.useRef(null);
   const [imgSrc, setImgSrc] = React.useState(null);
   const [imgSrctwo, setImgSrctwo] = React.useState(null);
   const [imgSrcthree, setImgSrcthree] = React.useState(null);
@@ -61,6 +62,54 @@ const LiveWebCheck = ({
 
   const [messageaction, setMessageaction] = useState(true);
   const [multiplemessage, setMultiplemessage] = useState();
+
+  const [boxCoordinates, setBoxCoordinates] = useState({
+    topLeft: { x: 0, y: 0 },
+    topRight: { x: 0, y: 0 },
+    bottomLeft: { x: 0, y: 0 },
+    bottomRight: { x: 0, y: 0 },
+  });
+
+  useEffect(() => {
+    const updateBoxCoordinates = () => { 
+      const box = Boxref.current.querySelector('.faceboxnew').getBoundingClientRect();
+
+      const cameraBox = Boxref.current.querySelector('.output_canvas').getBoundingClientRect();
+      console.log("box",box);
+      console.log("output_canvas",cameraBox);
+
+      const topLeft = {
+        x: box.left - cameraBox.left,
+        y: box.top - cameraBox.top,
+      };
+
+      const topRight = {
+        x: box.right - cameraBox.left,
+        y: box.top - cameraBox.top,
+      };
+
+      const bottomLeft = {
+        x: box.left - cameraBox.left,
+        y: box.bottom - cameraBox.top,
+      };
+
+      const bottomRight = {
+        x: box.right - cameraBox.left,
+        y: box.bottom - cameraBox.top,
+      };
+      
+      setBoxCoordinates({ topLeft, topRight, bottomLeft, bottomRight });
+      console.log("boxCoordinates",boxCoordinates);
+      
+    };
+
+    window.addEventListener('resize', updateBoxCoordinates);
+    updateBoxCoordinates();
+
+    return () => {
+      window.removeEventListener('resize', updateBoxCoordinates);
+    };
+  }, []);
 
   const [tag, setTag] = useState(true);
   const urltoFile = (url, filename, mimeType) => {
@@ -202,7 +251,7 @@ const LiveWebCheck = ({
     let timeoutIdactions = null;
     if (!isActionCompleted) {
       timeoutIdactions = setTimeout(() => {
-        settimeout();
+        // settimeout()
       }, 2000);
     }
     return () => {
@@ -268,7 +317,7 @@ const LiveWebCheck = ({
 
         const faceArea = (LEFT - RIGHT) * (TOP - BOTTOM);
 
-        console.log("faceArea", faceArea);
+        //console.log("faceArea", faceArea);
 
         const LOOKUP = landmarks[1].y;
         const LOOKDOWN = landmarks[1].y;
@@ -471,14 +520,12 @@ const LiveWebCheck = ({
         return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
       },
     });
-
     faceMesh.setOptions({
       maxNumFaces: 3,
       minDetectionConfidence: 0.5,
       minTrackingConfidence: 0.5,
     });
     faceMesh.onResults(onResults);
-
     if (
       typeof webcamRef.current !== "undefined" &&
       webcamRef.current !== null
@@ -548,21 +595,29 @@ const LiveWebCheck = ({
             </div>
             <div className="picture"></div>
             {showoval ? <div className="oval"></div> : ""}
+
             {cameraoff ? (
-              <Webcam
-                ref={webcamRef}
-                style={{
-                  position: "absolute",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                  left: 0,
-                  right: 0,
-                  textAlign: "center",
-                  zindex: 9,
-                }}
-                id={addclass ? "green" : "red"}
-                className="output_canvas output_canvasweb"
-              />
+              <>
+              <div className="parentdiv" ref={Boxref}>
+
+              <div className="faceboxnew"></div>
+                <Webcam
+                  ref={webcamRef}
+                  style={{
+                    position: "absolute",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    left: 0,
+                    right: 0,
+                    textAlign: "center",
+                    zindex: 9,
+                  }}
+                  id={addclass ? "green" : "red"}
+                  className="output_canvas output_canvasweb"
+                />
+              </div>
+                
+              </>
             ) : (
               ""
             )}
@@ -578,7 +633,6 @@ const LiveWebCheck = ({
           </div>
           <div className="webcam">
             {/* {showovalcanvas ? <div className="ovalmbl"></div> : ""} */}
-
             {canvasshow ? (
               <canvas
                 ref={canvasRef}
