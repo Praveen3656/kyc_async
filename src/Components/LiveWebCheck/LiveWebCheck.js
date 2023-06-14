@@ -10,11 +10,11 @@ const LiveWebCheck = ({
   updateWebImagetwo,
   updateWebImagethree,
 }) => {
+  
   const [filedata, setFileData] = useState("");
   const [cameraoff, setCameraoff] = useState(true);
 
   const webcamRef = React.useRef(null);
-  const Boxref = React.useRef(null);
   const [imgSrc, setImgSrc] = React.useState(null);
   const [imgSrctwo, setImgSrctwo] = React.useState(null);
   const [imgSrcthree, setImgSrcthree] = React.useState(null);
@@ -63,55 +63,10 @@ const LiveWebCheck = ({
   const [messageaction, setMessageaction] = useState(true);
   const [multiplemessage, setMultiplemessage] = useState();
 
-  const [boxCoordinates, setBoxCoordinates] = useState({
-    topLeft: { x: 0, y: 0 },
-    topRight: { x: 0, y: 0 },
-    bottomLeft: { x: 0, y: 0 },
-    bottomRight: { x: 0, y: 0 },
-  });
-
-  useEffect(() => {
-    const updateBoxCoordinates = () => { 
-      const box = Boxref.current.querySelector('.faceboxnew').getBoundingClientRect();
-
-      const cameraBox = Boxref.current.querySelector('.output_canvas').getBoundingClientRect();
-      console.log("box",box);
-      console.log("output_canvas",cameraBox);
-
-      const topLeft = {
-        x: box.left - cameraBox.left,
-        y: box.top - cameraBox.top,
-      };
-
-      const topRight = {
-        x: box.right - cameraBox.left,
-        y: box.top - cameraBox.top,
-      };
-
-      const bottomLeft = {
-        x: box.left - cameraBox.left,
-        y: box.bottom - cameraBox.top,
-      };
-
-      const bottomRight = {
-        x: box.right - cameraBox.left,
-        y: box.bottom - cameraBox.top,
-      };
-      
-      setBoxCoordinates({ topLeft, topRight, bottomLeft, bottomRight });
-      console.log("boxCoordinates",boxCoordinates);
-      
-    };
-
-    window.addEventListener('resize', updateBoxCoordinates);
-    updateBoxCoordinates();
-
-    return () => {
-      window.removeEventListener('resize', updateBoxCoordinates);
-    };
-  }, []);
-
   const [tag, setTag] = useState(true);
+  
+  const [facecounter,setFacecounter] = useState(false);
+
   const urltoFile = (url, filename, mimeType) => {
     return fetch(url)
       .then(function (res) {
@@ -190,7 +145,6 @@ const LiveWebCheck = ({
   let shouldExecuteSetTimeout = true;
 
   const nofacefound = () => {
-    window.location.reload();
     setMessage("No Faces Found");
     setMessageaction(false);
     setShowmessage(true);
@@ -204,10 +158,10 @@ const LiveWebCheck = ({
     setAddclass(false);
     setShowactionmessage(false);
     setTimeoutmesg(true);
+
   };
 
   const breakfunction = () => {
-    window.location.reload();
     setMultiplemessage("Multiple faces Detected Please try again");
     setMessage();
     setMessageaction(false);
@@ -226,7 +180,7 @@ const LiveWebCheck = ({
 
   const settimeout = () => {
     if (shouldExecuteSetTimeout) {
-      setMessage("Time out try again");
+      setMessage("Time out come close and try again");
       setTag(false);
       setCanvasshow(false);
       setCapturebnt(true);
@@ -245,30 +199,37 @@ const LiveWebCheck = ({
     localStorage.removeItem("countaction");
   });
 
-  const [isActionCompleted, setIsActionCompleted] = useState(true);
+  const [isActionCompleted,setIsActionCompleted] = useState(true);
 
   useEffect(() => {
     let timeoutIdactions = null;
     if (!isActionCompleted) {
       timeoutIdactions = setTimeout(() => {
-        // settimeout()
-      }, 2000);
+        settimeout()
+      }, 5000);
     }
     return () => {
-      clearTimeout(timeoutIdactions);
+      clearTimeout(timeoutIdactions); 
     };
   }, [isActionCompleted]);
 
-  // const handleAction = () => {
-  //   setIsActionCompleted(true);
-  // };
+
+
+  
+
+
 
   function onResults(results) {
-    // console.log("results",results.multiFaceLandmarks.length);
 
-    if (results.multiFaceLandmarks.length == 0) {
+    //  console.log("results",results.multiFaceLandmarks);
+    //  console.log("length",results.multiFaceLandmarks.length);
+
+    
+    if (results.multiFaceLandmarks.length == 0 && facecounter === true) {
       nofacefound();
     }
+    
+   
 
     let getitem = localStorage.getItem("state");
     localStorage.setItem("counter", 0);
@@ -296,6 +257,7 @@ const LiveWebCheck = ({
 
     if (results.multiFaceLandmarks) {
       for (const landmarks of results.multiFaceLandmarks) {
+
         if (results.multiFaceLandmarks.length > 1) {
           breakfunction();
         }
@@ -317,7 +279,7 @@ const LiveWebCheck = ({
 
         const faceArea = (LEFT - RIGHT) * (TOP - BOTTOM);
 
-        //console.log("faceArea", faceArea);
+        //   console.log("faceArea",faceArea);
 
         const LOOKUP = landmarks[1].y;
         const LOOKDOWN = landmarks[1].y;
@@ -338,11 +300,8 @@ const LiveWebCheck = ({
 
         getitem = localStorage.getItem("state");
 
-        // const timeoutId = setTimeout(() => {
-        //   settimeout();
-        // }, 25000);
-
-        if (faceArea > 0.25) {
+        if (faceArea > 0.15) {
+          setFacecounter(true);
           setIsActionCompleted(false);
           setShowmessage(false);
           setShowactionmessage(true);
@@ -356,7 +315,7 @@ const LiveWebCheck = ({
           setShowmessage(true);
         }
 
-        if (getitem === "LOOKUP") {
+        if (getitem === "LOOKUP") { 
           const actioncount = localStorage.getItem("countaction");
           if (actioncount == 5) {
             capture();
@@ -365,7 +324,7 @@ const LiveWebCheck = ({
             setShowactionmessage(false);
           }
           if (TOPZ > 0.05 && BOTTOMZ < -0.05) {
-            setIsActionCompleted(true);
+           setIsActionCompleted(true);
             console.log("Lookup action done");
             let index = faceactionstwo.indexOf(getitem);
             faceactionstwo.splice(index, 1);
@@ -384,8 +343,9 @@ const LiveWebCheck = ({
         }
 
         getitem = localStorage.getItem("state");
-
+    
         if (getitem === "LOOKDOWN") {
+       
           const actioncount = localStorage.getItem("countaction");
           if (actioncount == 5) {
             capture();
@@ -414,6 +374,7 @@ const LiveWebCheck = ({
 
         getitem = localStorage.getItem("state");
         if (getitem === "TURNRIGHT") {
+       
           const actioncount = localStorage.getItem("countaction");
           if (actioncount == 5) {
             capture();
@@ -422,6 +383,7 @@ const LiveWebCheck = ({
             setShowactionmessage(false);
           }
           if (RIGHTZ < 0 && LEFTZ > 0.2) {
+
             setIsActionCompleted(true);
             console.log("right actions done");
             let index = faceactionstwo.indexOf(getitem);
@@ -441,6 +403,7 @@ const LiveWebCheck = ({
 
         getitem = localStorage.getItem("state");
         if (getitem === "TURNLEFT") {
+         
           const actioncount = localStorage.getItem("countaction");
           if (actioncount == 5) {
             capture();
@@ -449,7 +412,7 @@ const LiveWebCheck = ({
             setShowactionmessage(false);
           }
           if (LEFTZ < 0 && RIGHTZ > 0.2) {
-            setIsActionCompleted(true);
+           setIsActionCompleted(true);
             console.log("LEft action Done");
             let index = faceactionstwo.indexOf(getitem);
             faceactionstwo.splice(index, 1);
@@ -469,6 +432,7 @@ const LiveWebCheck = ({
 
         getitem = localStorage.getItem("state");
         if (getitem === "OPENMOUTH") {
+         
           const actioncount = localStorage.getItem("countaction");
           if (actioncount == 5) {
             capture();
@@ -477,7 +441,7 @@ const LiveWebCheck = ({
             setShowactionmessage(false);
           }
           if (Y > 0.1) {
-            setIsActionCompleted(true);
+           setIsActionCompleted(true);
             let index = faceactionstwo.indexOf(getitem);
             faceactionstwo.splice(index, 1);
 
@@ -504,6 +468,7 @@ const LiveWebCheck = ({
   // }
 
   const retake = () => {
+    setFacecounter(false)
     window.location.reload();
     localStorage.removeItem("countaction");
     setCapturebnt(false);
@@ -514,18 +479,21 @@ const LiveWebCheck = ({
     setCanvasshow(true);
   };
 
+  
   useEffect(() => {
     const faceMesh = new FaceMesh({
       locateFile: (file) => {
         return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
       },
     });
+
     faceMesh.setOptions({
       maxNumFaces: 3,
       minDetectionConfidence: 0.5,
       minTrackingConfidence: 0.5,
     });
     faceMesh.onResults(onResults);
+
     if (
       typeof webcamRef.current !== "undefined" &&
       webcamRef.current !== null
@@ -540,7 +508,7 @@ const LiveWebCheck = ({
 
       camera.start();
     }
-  }, []);
+  }, [facecounter]);
 
   return (
     <>
@@ -595,29 +563,21 @@ const LiveWebCheck = ({
             </div>
             <div className="picture"></div>
             {showoval ? <div className="oval"></div> : ""}
-
             {cameraoff ? (
-              <>
-              <div className="parentdiv" ref={Boxref}>
-
-              <div className="faceboxnew"></div>
-                <Webcam
-                  ref={webcamRef}
-                  style={{
-                    position: "absolute",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    left: 0,
-                    right: 0,
-                    textAlign: "center",
-                    zindex: 9,
-                  }}
-                  id={addclass ? "green" : "red"}
-                  className="output_canvas output_canvasweb"
-                />
-              </div>
-                
-              </>
+              <Webcam
+                ref={webcamRef}
+                style={{
+                  position: "absolute",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                  left: 0,
+                  right: 0,
+                  textAlign: "center",
+                  zindex: 9,
+                }}
+                id={addclass ? "green" : "red"}
+                className="output_canvas output_canvasweb"
+              />
             ) : (
               ""
             )}
@@ -633,6 +593,7 @@ const LiveWebCheck = ({
           </div>
           <div className="webcam">
             {/* {showovalcanvas ? <div className="ovalmbl"></div> : ""} */}
+
             {canvasshow ? (
               <canvas
                 ref={canvasRef}
@@ -655,7 +616,7 @@ const LiveWebCheck = ({
         </div>
       </center>
 
-      {dashboarddiv ? <div className="dashboard-ctn"></div> : ""}
+      {dashboarddiv ? <div className="dashboard-ctnnew"></div> : ""}
 
       <div className="App">
         {/* <center>

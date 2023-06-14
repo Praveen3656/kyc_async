@@ -224,9 +224,9 @@ export default function Dashboard() {
     setKey(e.target.name);
     setValue(e.target.value);
 
-    getuserdetails[key] = value;
+    getuserdetails[key] = e.target.value;
 
-    console.log("valeo", e.target.value);
+    console.log("value", e.target.value);
   };
 
   const uploadid = async (activeStep) => {

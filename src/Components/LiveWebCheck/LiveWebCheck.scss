@@ -23,9 +23,9 @@
 
 @media screen and (-webkit-min-device-pixel-ratio: 3) and (max-device-width: 720px) {
 
-  .idbox{
-    display: none !important;
-  }
+  // .idbox{
+  //   display: none !important;
+  // }
   // .faceboxiphone{
   //   float: left !important;
   //   width: 80% !important;
@@ -350,9 +350,10 @@ font-weight: bold;
     margin: 0 auto;
   }
 
+  
   .live-web-cam_two{
     width: 70% ;
-    height: 100% !important;
+    height: 100% ;
     margin: 0 auto;
   }
 
@@ -417,7 +418,10 @@ font-weight: bold;
 }
 
 .live-web-cam_two{
-  width: 100% !important;
+ 
+    width: 100% !important;
+    height: auto !important;
+
 }
 
 .face-area{

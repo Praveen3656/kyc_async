@@ -32,9 +32,7 @@ const Uploadselfieid = ({ updateWebImageid }) => {
   const open = () => {
     setMobilecam(true);
   };
-  //  const videoConstraints = {
-  //   facingMode: { exact: "environment" }
-  // };
+
   const capture_web = React.useCallback(() => {
     const imageSrc = webcamRefweb.current.getScreenshot();
 
@@ -112,18 +110,16 @@ const Uploadselfieid = ({ updateWebImageid }) => {
 
           <br />
           <div className="camera">
-            <div className="idbox">
+            {/* <div className="idbox">
               <div className="facebox">
                 <span>Keep Your face here</span>
               </div>
               <div className="idcard">
                 <span>Keep Your ID here</span>
               </div>
-            </div>
+            </div> */}
             <Webcam
               className="live-web-cam_two"
-              height={1020}
-              width={750}
               audio={false}
               ref={webcamRefweb}
               imageSmoothing={false}
@@ -154,24 +150,25 @@ const Uploadselfieid = ({ updateWebImageid }) => {
           <div className="camera">
             {mobilecam ? (
               <>
-                <div className="idbox">
+                {/* <div className="idbox">
                   <div className={iphonechrome ? "facebox" : "faceboxiphone"}>
                     <span>Keep Your face here</span>
                   </div>
                   <div className={iphonechrome ? "idcard" : "idcardiphone"}>
                     <span>Keep Your ID here</span>
                   </div>
-                </div>
+                </div> */}
                 <Webcam
                   className="live-web-cam_two"
-                  height={1020}
-                  width={750}
                   audio={false}
                   ref={webcamRef}
+                  style={{ 
+                    width: '100%',
+                    height: 'auto',
+                  }}
                   imageSmoothing={false}
                   screenshotFormat="image/jpeg"
                   screenshotQuality={1}
-                  videoConstraints={{ video: true, facingMode: "user" }}
                 />
 
                 <center>
