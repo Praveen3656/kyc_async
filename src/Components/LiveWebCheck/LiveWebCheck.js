@@ -5,10 +5,9 @@ import * as cam from "@mediapipe/camera_utils";
 import Webcam from "react-webcam";
 import "./LiveWebCheck.scss";
 
-const LiveWebCheck = ({ updateWebImage }) => {
+const LiveWebCheck = ({ updateWebImage, onData }) => {
   const [filedata, setFileData] = useState("");
   const [cameraoff, setCameraoff] = useState(true);
-
   const webcamRef = React.useRef(null);
   const [imgSrc, setImgSrc] = React.useState(null);
   const [imgSrctwo, setImgSrctwo] = React.useState(null);
@@ -61,7 +60,7 @@ const LiveWebCheck = ({ updateWebImage }) => {
   const [tag, setTag] = useState(true);
 
   const [facecounter, setFacecounter] = useState(false);
-  const [isActionCompleted, setIsActionCompleted] = useState(true);
+
   const [messagetimeout, setMessagetimeout] = useState();
   const urltoFile = (url, filename, mimeType) => {
     return fetch(url)
@@ -74,7 +73,9 @@ const LiveWebCheck = ({ updateWebImage }) => {
   };
 
   const capture = React.useCallback(() => {
+    onData(true);
     setIsActionCompleted(true);
+    resetTimer(10000000);
     setMessageaction(false);
     setShowactionmessage(false);
     setMultiplemessage();
@@ -109,10 +110,21 @@ const LiveWebCheck = ({ updateWebImage }) => {
       capturecheck1 = false;
     }
   }, [webcamRef, setImgSrc]);
+
+  useEffect(() => {
+    const faceactions = ["LOOKUP", "OPENMOUTH"];
+    const randomIndex = Math.floor(Math.random() * faceactions.length);
+    const randomValuen = faceactions[randomIndex];
+    setActions(randomValuen);
+    localStorage.setItem("state", randomValuen);
+  }, [actions]);
+
+  const faceactionstwo = ["LOOKUP", "OPENMOUTH"];
   const setstate = [];
   let shouldExecuteSetTimeout = true;
 
   const nofacefound = () => {
+    onData(false);
     setMessage("No Faces Found");
     setMessagetimeout();
     setMessageaction(false);
@@ -130,6 +142,7 @@ const LiveWebCheck = ({ updateWebImage }) => {
   };
 
   const breakfunction = () => {
+    onData(false);
     setMessagetimeout();
     setMessage();
     setMultiplemessage("Multiple faces Detected Please try again");
@@ -149,41 +162,61 @@ const LiveWebCheck = ({ updateWebImage }) => {
   };
 
   const settimeout = () => {
-    setMessageaction(false);
-    setShowactionmessage(false);
-    setMultiplemessage();
-    setMessage();
-    setMessagetimeout("Time out come close and try again");
-    setTag(false);
-    setCanvasshow(false);
-    setCapturebnt(true);
-    setShowovalcanvas(false);
-    setCameraoff(false);
-    setDashboarddiv(false);
-    setTimeoutmessage(false);
-    setAddclass(false);
-    setShowactionmessage(false);
-    setShowmessage(true);
-    setTimeoutmesg(true);
+    if (shouldExecuteSetTimeout) {
+      onData(false);
+      setMessageaction(false);
+      setShowactionmessage(false);
+      setMultiplemessage();
+      setMessage();
+      setMessagetimeout("Time out come close and try again");
+      setTag(false);
+      setCanvasshow(false);
+      setCapturebnt(true);
+      setShowovalcanvas(false);
+      setCameraoff(false);
+      setDashboarddiv(false);
+      setTimeoutmessage(false);
+      setAddclass(false);
+      setShowactionmessage(false);
+      setShowmessage(true);
+      setTimeoutmesg(true);
+    }
   };
 
   window.addEventListener("beforeunload", function () {
     localStorage.removeItem("countaction");
   });
 
- 
+  const [isActionCompleted, setIsActionCompleted] = useState(true);
 
-  useEffect(() => {
-    let timeoutIdactions = null;
-    if (!isActionCompleted) {
-      timeoutIdactions = setTimeout(() => {
-        settimeout();
-      }, 5000);
-    }
-    return () => {
-      clearTimeout(timeoutIdactions);
-    };
-  }, [isActionCompleted]);
+  const [timer, setTimer] = useState(0);
+
+  const settimerfunction = (timer) => {
+    let timeoutIdactions = setTimeout(() => {
+      settimeout();
+    }, timer);
+    return timeoutIdactions;
+  };
+
+  // useEffect(() => {
+
+  //   console.log("timecheck",isActionCompleted);
+  //   let timeoutIdactions = null;
+  //   if (!isActionCompleted) {
+  //     timeoutIdactions = setTimeout(() => {
+  //      settimeout();
+  //     }, timer);
+  //   }
+  //   return () => {
+  //     console.log("timeclear",timeoutIdactions);
+  //     clearTimeout(timeoutIdactions);
+
+  //   };
+  // }, [isActionCompleted]);
+
+  const resetTimer = (t) => {
+    setTimer(t);
+  };
 
   function onResults(results) {
     //  console.log("results",results.multiFaceLandmarks);
@@ -212,8 +245,11 @@ const LiveWebCheck = ({ updateWebImage }) => {
     );
 
     var i = 0;
+    let tf;
+    let facedetect = false;
 
     if (results.multiFaceLandmarks) {
+      clearTimeout(tf);
       for (const landmarks of results.multiFaceLandmarks) {
         if (results.multiFaceLandmarks.length > 1) {
           breakfunction();
@@ -221,15 +257,45 @@ const LiveWebCheck = ({ updateWebImage }) => {
 
         const facetop_y = landmarks[10].y;
         const chin_y = landmarks[152].y;
+
+        const facedifference = chin_y - facetop_y;
+
+        const TOP = landmarks[10].y;
+        const LEFT = landmarks[234].x;
+        const RIGHT = landmarks[366].x;
+        const BOTTOM = landmarks[152].y;
+
+        const TOPZ = landmarks[10].z;
+        const LEFTZ = landmarks[234].z;
+        const RIGHTZ = landmarks[366].z;
+        const BOTTOMZ = landmarks[152].z;
+
         const faceArea = (LEFT - RIGHT) * (TOP - BOTTOM);
+
+        ///console.log("LEFTZ", LEFTZ, "-----------", "RIGHTZ", RIGHTZ);
+
+        const LOOKUP = landmarks[1].y;
+        const LOOKDOWN = landmarks[1].y;
+        const TURNRIGHT = landmarks[1].x;
+        const TURNLEFT = landmarks[1].x;
+
         const PT_49 = landmarks[0].x;
         const PT_55 = landmarks[17].x;
+
         const PT_52 = landmarks[0].y;
         const PT_58 = landmarks[17].y;
+
         var Y = PT_58 - PT_52;
+
         var X = PT_55 - PT_49;
+
         getitem = localStorage.getItem("state");
+        
         if (faceArea > 0.15) {
+          facedetect = true;
+          // setTimer(8000);
+          clearTimeout(tf);
+          tf = settimerfunction(8000);
           setFacecounter(true);
           setIsActionCompleted(false);
           setShowmessage(false);
@@ -239,21 +305,96 @@ const LiveWebCheck = ({ updateWebImage }) => {
           setActionsmessage(true);
           startcapture();
         } else {
+          facedetect = false;
+          clearTimeout(tf);
           setAddclass(false);
           setShowactionmessage(false);
           setShowmessage(true);
         }
 
-       
-        if (getitem === "OPENMOUTH") {
-          const actioncount = localStorage.getItem("countaction");
-          if (Y > 0.1) {
+        let actioncount = localStorage.getItem("countaction");
+        if (actioncount >= 2) {
+          clearTimeout(tf);
+          setIsActionCompleted(true);
+          capture();
+          shouldExecuteSetTimeout = false;
+          setCapturebnt(false);
+          setShowactionmessage(false);
+        }
+        if (getitem === "LOOKUP") {
+          clearTimeout(tf);
+          if (facedetect === true) {
+
+            tf = settimerfunction(8000);
+          }
+
+          if (TOPZ > 0.05 && BOTTOMZ < -0.05) {
+            clearTimeout(tf);
             setIsActionCompleted(true);
-            capture()
-            
+            console.log("Lookup action done");
+            let index = faceactionstwo.indexOf(getitem);
+            faceactionstwo.splice(index, 1);
+            const randomIndextwo = Math.floor(
+              Math.random() * faceactionstwo.length
+            );
+            const removevalue = faceactionstwo[randomIndextwo];
+            localStorage.clear();
+            localStorage.setItem("state", removevalue);
+            setActions(removevalue);
+
+            setstate.push(getitem);
+
+            const uniqueValues = [...new Set(setstate)];
+
+            localStorage.setItem("countaction", uniqueValues.length);
           }
         }
 
+        getitem = localStorage.getItem("state");
+        actioncount = localStorage.getItem("countaction");
+        if (actioncount >= 2) {
+          clearTimeout(tf);
+          setIsActionCompleted(true);
+          capture();
+          shouldExecuteSetTimeout = false;
+          setCapturebnt(false);
+          setShowactionmessage(false);
+        }
+        if (getitem === "OPENMOUTH") {
+          clearTimeout(tf);
+          if (facedetect === true) {
+
+            tf = settimerfunction(8000);
+          }
+
+          if (Y > 0.1) {
+            clearTimeout(tf);
+            setIsActionCompleted(true);
+            let index = faceactionstwo.indexOf(getitem);
+            faceactionstwo.splice(index, 1);
+
+            const randomIndextwo = Math.floor(
+              Math.random() * faceactionstwo.length
+            );
+            const removevalue = faceactionstwo[randomIndextwo];
+            localStorage.clear();
+            localStorage.setItem("state", removevalue);
+            setActions(removevalue);
+            setstate.push(getitem);
+            const uniqueValues = [...new Set(setstate)];
+            localStorage.setItem("countaction", uniqueValues.length);
+          }
+        }
+        getitem = localStorage.getItem("state");
+        actioncount = localStorage.getItem("countaction");
+        if (actioncount >= 2) {
+          clearTimeout(tf);
+          setIsActionCompleted(true);
+          capture();
+          shouldExecuteSetTimeout = false;
+          setCapturebnt(false);
+          setShowactionmessage(false);
+        }
         connect(canvasCtx, landmarks, Facemesh.FACEMESH_TESSELATION, {
           color: "#fff0",
           lineWidth: 1,
@@ -304,7 +445,7 @@ const LiveWebCheck = ({ updateWebImage }) => {
 
       camera.start();
     }
-  }, [facecounter]);
+  }, [facecounter, isActionCompleted]);
 
   return (
     <>
@@ -340,7 +481,7 @@ const LiveWebCheck = ({ updateWebImage }) => {
                     {showactionmessage ? (
                       <span className="green">
                         <b>
-                          Please  {actionstate} with your current distance
+                          Please slightly {actions} with your current distance
                           to camera intact
                         </b>
                       </span>
@@ -366,7 +507,20 @@ const LiveWebCheck = ({ updateWebImage }) => {
             <div className="picture"></div>
             {showoval ? <div className="oval"></div> : ""}
             {cameraoff ? (
-              ""
+              <Webcam
+                ref={webcamRef}
+                style={{
+                  position: "absolute",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                  left: 0,
+                  right: 0,
+                  textAlign: "center",
+                  zindex: 9,
+                }}
+                id={addclass ? "green" : "red"}
+                className="output_canvas output_canvasweb"
+              />
             ) : (
               ""
             )}
@@ -381,7 +535,7 @@ const LiveWebCheck = ({ updateWebImage }) => {
             )}
           </div>
           <div className="webcam">
-            
+            {/* {showovalcanvas ? <div className="ovalmbl"></div> : ""} */}
 
             {canvasshow ? (
               <canvas
@@ -408,7 +562,17 @@ const LiveWebCheck = ({ updateWebImage }) => {
       {dashboarddiv ? <div className="dashboard-ctnnew"></div> : ""}
 
       <div className="App">
+        {/* <center>
+          {capturebnt ? (
+            <button className="capture" onClick={capture}>
+              Capture photo
+            </button>
+          ) : (
+            ""
+          )}
+          <br />
         
+        </center> */}
         <center>
           {capturebnt ? (
             <button className="capture" onClick={retake}>
@@ -423,4 +587,5 @@ const LiveWebCheck = ({ updateWebImage }) => {
     </>
   );
 };
+
 export default LiveWebCheck;

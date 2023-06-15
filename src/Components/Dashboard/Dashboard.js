@@ -10,7 +10,7 @@ import StepLabel from "@mui/material/StepLabel";
 import StepContent from "@mui/material/StepContent";
 import InputType from "../InputType/InputType";
 import UploadForm from "../UploadForm/UploadForm";
-import LiveCheck from "../LiveWebCheck/LiveWebCheck_bkp";
+import LiveCheck from "../LiveWebCheck/LiveWebCheck";
 import InputId from "../InputId/InputId";
 import Uploadselfieid from "../LiveWebCheck/UploadSelfieid";
 import { axiosRequest } from "../API/Api";
