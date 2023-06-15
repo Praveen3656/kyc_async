@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [formdata, setformData] = useState({});
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(0);
   const [document, setDocumnet] = useState("");
   const [idtype, setIdType] = useState("");
   const [country, setCountry] = useState("");
@@ -99,6 +99,8 @@ export default function Dashboard() {
   const [camcheck, setCamcheck] = useState(2);
   const [token, setToken] = useState("");
 
+  const [isnextenable,setIsnextenable] = useState(false);
+
   const URL = "https://api.idverify.click";
 
   useEffect(() => {
@@ -143,6 +145,9 @@ export default function Dashboard() {
     "Submit Name",
   ];
 
+  const handleChildData  = (data) => {
+    setIsnextenable(data);
+  };
   function getStepContent(step) {
     switch (step) {
       case 0:
@@ -156,7 +161,7 @@ export default function Dashboard() {
       case 1:
         return <UploadForm updateDocument={updateDocument} />;
       case 2:
-          return <LiveCheck updateWebImage={updateWebImage} />;
+          return <LiveCheck updateWebImage={updateWebImage} onData={handleChildData}/>;
       case 3:
         return <Uploadselfieid updateWebImageid={updateWebImageid} />;
       case 4:
@@ -184,7 +189,7 @@ export default function Dashboard() {
     if (getstepid.verified_face === true) {
       setActiveStep(3);
     }
-    if (getstepid.verified_name === true && getstepid.verified_face === false) {
+    if (getstepid.verified_name === "SUCCESS" && getstepid.verified_face === false) {
       setActiveStep(2);
     }
     // if (getstepid.selfie_spoof_data.is_spoof === true) {
@@ -196,7 +201,7 @@ export default function Dashboard() {
       getstepid._id === true &&
       getstepid.selfie === true &&
       getstepid.verified_face === true &&
-      getstepid.verified_name === true &&
+      getstepid.verified_name === "SUCCESS" &&
       getstepid.selfie_spoof_data.is_spoof === false
     ) {
       setActiveStep(4);
@@ -952,15 +957,19 @@ export default function Dashboard() {
             >
               Back
             </Button> */}
+            
+            
             <div className="r-n-btn">
               <Button
+                
                 variant="contained"
                 color="primary"
                 onClick={handleNext}
                 className="next-btn m-r"
-                disabled={activeStep === steps.length ? true : false}
+                disabled={isnextenable  ? false : true}
               >
                 {activeStep === steps.length - 1 ? "Finish" : "Next"}
+
               </Button>
               <Button
                 variant="contained"
@@ -971,6 +980,8 @@ export default function Dashboard() {
                 Reset
               </Button>
             </div>
+
+
           </div>
         </div>
         <center></center>
