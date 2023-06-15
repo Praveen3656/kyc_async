@@ -23,9 +23,9 @@
 
 @media screen and (-webkit-min-device-pixel-ratio: 3) and (max-device-width: 720px) {
 
-  .idbox{
-    display: none !important;
-  }
+  // .idbox{
+  //   display: none !important;
+  // }
   // .faceboxiphone{
   //   float: left !important;
   //   width: 80% !important;
@@ -78,6 +78,7 @@
   color: blue !important;
   text-decoration: underline;
 }
+
 .guidimage{
   background: #fff;
   width: 89%;
@@ -94,6 +95,7 @@
 .guidimage ul {
   list-style-type: auto;
 }
+
 .guidimage ul li{
   text-align: left;
   padding: 10px;
@@ -112,6 +114,20 @@
   width: 100%;
 }
 
+}
+
+.parentdiv{
+
+}
+.faceboxnew{
+  position: absolute;
+  height: 300px;
+  width: 300px;
+  border: 2px solid #ccc;
+  z-index: 9999999;
+  left: 40%;
+  top: 54%;
+  z-index: 9999999;
 }
 
 .idbox{
@@ -216,9 +232,7 @@ font-weight: bold;
 
   .output_canvas{
     z-index: 999999;
-    width: 40%;
-   
-
+    width: 550px;
   }
 
   .dot{
@@ -336,9 +350,10 @@ font-weight: bold;
     margin: 0 auto;
   }
 
+  
   .live-web-cam_two{
     width: 70% ;
-    height: 100% !important;
+    height: 100% ;
     margin: 0 auto;
   }
 
@@ -403,7 +418,10 @@ font-weight: bold;
 }
 
 .live-web-cam_two{
-  width: 100% !important;
+ 
+    width: 100% !important;
+    height: auto !important;
+
 }
 
 .face-area{
