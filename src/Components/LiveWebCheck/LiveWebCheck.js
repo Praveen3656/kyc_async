@@ -5,9 +5,11 @@ import * as cam from "@mediapipe/camera_utils";
 import Webcam from "react-webcam";
 import "./LiveWebCheck.scss";
 
-const LiveWebCheck = ({ updateWebImage, onData }) => {
+const LiveWebCheck = ({ updateWebImage, onData}) => {
+  
   const [filedata, setFileData] = useState("");
   const [cameraoff, setCameraoff] = useState(true);
+  console.log("cameraoff",cameraoff);
   const webcamRef = React.useRef(null);
   const [imgSrc, setImgSrc] = React.useState(null);
   const [imgSrctwo, setImgSrctwo] = React.useState(null);
@@ -62,6 +64,7 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
   const [facecounter, setFacecounter] = useState(false);
 
   const [messagetimeout, setMessagetimeout] = useState();
+  
   const urltoFile = (url, filename, mimeType) => {
     return fetch(url)
       .then(function (res) {
@@ -219,6 +222,7 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
   };
 
   function onResults(results) {
+    onData(false);
     //  console.log("results",results.multiFaceLandmarks);
     //  console.log("length",results.multiFaceLandmarks.length);
     if (results.multiFaceLandmarks.length == 0 && facecounter === true) {
