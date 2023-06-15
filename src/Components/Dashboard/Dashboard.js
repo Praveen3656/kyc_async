@@ -25,7 +25,7 @@ export default function Dashboard() {
   const [activeStep, setActiveStep] = useState(0);
   const [document, setDocumnet] = useState("");
   const [idtype, setIdType] = useState("");
-  const [country, setCountry] = useState("");
+  const [country, setCountry] = useState(""); 
   const [webImage, setWebImage] = useState("");
   const [webImageid, setWebImageid] = useState("");
   const [idName, setIdName] = useState("");
@@ -97,12 +97,15 @@ export default function Dashboard() {
 
   const [camcheck, setCamcheck] = useState(2);
   const [token, setToken] = useState("");
+
   const URL = "https://o-kycapi-dev.onpassive.com";
+
   useEffect(() => {
     if (!uid) {
       const id = uniqueId();
     }
   }); 
+  
   const updateDocument = (value) => {
     setDocumnet(value);
   };
@@ -114,10 +117,14 @@ export default function Dashboard() {
     setWebImageid(value);
   };
 
+  
+
+
   const baseurl = window.location.href;
   const updateName = (value) => {
     setIdName(value);
   };
+
   const updateType = (value) => {
     setIdType(value);
   };
@@ -168,12 +175,13 @@ export default function Dashboard() {
       method: "POST",
       body: formdata,
       redirect: "follow",
+      
     };
-    fetch(`${URL}/id_verify/status/`, requestOptions)
+    fetch(`${URL}/id_verify/status`, requestOptions)
       .then((response) => response.json())
       .then((result) => setGetstepid(result));
 
-    if (getstepid.id === true) {
+    if (getstepid._id === true) {
       setActiveStep(2);
     }
     if (getstepid.verified_face === true) {
@@ -182,23 +190,43 @@ export default function Dashboard() {
     if (getstepid.verified_name === true && getstepid.verified_face === false) {
       setActiveStep(2);
     }
+    // if (getstepid.selfie_spoof_data.is_spoof === true) {
+    //   setActiveStep(3);
+    //   setMessage("Manual verification required");
+    // }
 
     if (
-      getstepid.id === true &&
+      getstepid._id === true &&
       getstepid.selfie === true &&
       getstepid.verified_face === true &&
-      getstepid.verified_name === true
+      getstepid.verified_name === true &&
+      getstepid.selfie_spoof_data.is_spoof === false
     ) {
       setActiveStep(4);
       setNewtemplate(true);
       setSuccesstemplete(true);
       //  console.log(newtemplate);
     }
+
+    if (
+      getstepid._id === true &&
+      getstepid.selfie === true &&
+      getstepid.verified_face === true &&
+      getstepid.verified_name === true &&
+      getstepid.selfie_spoof_data.is_spoof === true
+
+    ) {
+      setActiveStep(4);
+      setNewtemplate(false);
+      setSuccesstemplete(false);
+      setIderrormessage(true);
+      setMessage("Manual verification required");
+    }
     setNewid(getstepid.type_of_id);
     setCountrynew(getstepid.country);
-  }, [getstepid.id, getstepid.selfie, getstepid.verified]);
+  }, [getstepid._id]);
 
-  //console.log(getstepid);
+  //console.log("statusapi",getstepid);
 
   useEffect(() => {
     const timer = setInterval(() => setCounter(counter + 1), 1000);
@@ -218,9 +246,7 @@ export default function Dashboard() {
     setformData({ ...formdata, [e.target.name]: [e.target.value] });
     setKey(e.target.name);
     setValue(e.target.value);
-
-    getuserdetails[key] = value;
-
+    getuserdetails[key] = e.target.value;
     console.log("valeo", e.target.value);
   };
 
@@ -266,6 +292,7 @@ export default function Dashboard() {
           },
         }
       );
+      
       console.log("ID_RESPONSE", save_id_image);
 
       if (save_id_image.data.status === "DONE") {
@@ -580,7 +607,7 @@ export default function Dashboard() {
         setActiveStep(4);
         setResult(JSON.parse(localStorage.getItem("count")));
         setSuccesstemplete(true);
-        setTimeout(reload, 1000);
+        setTimeout(reload, 200);
       } else {
         setCounter(0);
         setLoading(false);
