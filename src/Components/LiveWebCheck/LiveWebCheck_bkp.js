@@ -109,6 +109,28 @@ const LiveWebCheck = ({ updateWebImage }) => {
       capturecheck1 = false;
     }
   }, [webcamRef, setImgSrc]);
+
+  useEffect(() => {
+    const faceactions = [
+      "LOOKUP",
+      "LOOKDOWN",
+      "TURNLEFT",
+      "TURNRIGHT",
+      "OPENMOUTH",
+    ];
+    const randomIndex = Math.floor(Math.random() * faceactions.length);
+    const randomValuen = faceactions[randomIndex];
+    setActions(randomValuen);
+    localStorage.setItem("state", randomValuen);
+  }, [actions]);
+
+  const faceactionstwo = [
+    "LOOKUP",
+    "LOOKDOWN",
+    "TURNLEFT",
+    "TURNRIGHT",
+    "OPENMOUTH",
+  ];
   const setstate = [];
   let shouldExecuteSetTimeout = true;
 
@@ -177,7 +199,7 @@ const LiveWebCheck = ({ updateWebImage }) => {
     let timeoutIdactions = null;
     if (!isActionCompleted) {
       timeoutIdactions = setTimeout(() => {
-        settimeout();
+       // settimeout();
       }, 5000);
     }
     return () => {
@@ -221,14 +243,40 @@ const LiveWebCheck = ({ updateWebImage }) => {
 
         const facetop_y = landmarks[10].y;
         const chin_y = landmarks[152].y;
+
+        const facedifference = chin_y - facetop_y;
+
+        const TOP = landmarks[10].y;
+        const LEFT = landmarks[234].x;
+        const RIGHT = landmarks[366].x;
+        const BOTTOM = landmarks[152].y;
+
+        const TOPZ = landmarks[10].z;
+        const LEFTZ = landmarks[234].z;
+        const RIGHTZ = landmarks[366].z;
+        const BOTTOMZ = landmarks[152].z;
+
         const faceArea = (LEFT - RIGHT) * (TOP - BOTTOM);
+
+        console.log("LEFTZ", LEFTZ, "-----------", "RIGHTZ", RIGHTZ);
+
+        const LOOKUP = landmarks[1].y;
+        const LOOKDOWN = landmarks[1].y;
+        const TURNRIGHT = landmarks[1].x;
+        const TURNLEFT = landmarks[1].x;
+
         const PT_49 = landmarks[0].x;
         const PT_55 = landmarks[17].x;
+
         const PT_52 = landmarks[0].y;
         const PT_58 = landmarks[17].y;
+
         var Y = PT_58 - PT_52;
+
         var X = PT_55 - PT_49;
+
         getitem = localStorage.getItem("state");
+
         if (faceArea > 0.15) {
           setFacecounter(true);
           setIsActionCompleted(false);
@@ -244,13 +292,143 @@ const LiveWebCheck = ({ updateWebImage }) => {
           setShowmessage(true);
         }
 
-       
+        if (getitem === "LOOKUP") {
+          const actioncount = localStorage.getItem("countaction");
+          if (actioncount == 5) {
+            capture();
+            shouldExecuteSetTimeout = false;
+            setCapturebnt(false);
+            setShowactionmessage(false);
+          }
+          if (TOPZ > 0.05 && BOTTOMZ < -0.05) {
+            setIsActionCompleted(true);
+            console.log("Lookup action done");
+            let index = faceactionstwo.indexOf(getitem);
+            faceactionstwo.splice(index, 1);
+            const randomIndextwo = Math.floor(
+              Math.random() * faceactionstwo.length
+            );
+            const removevalue = faceactionstwo[randomIndextwo];
+            localStorage.clear();
+            localStorage.setItem("state", removevalue);
+            setActions(removevalue);
+
+            setstate.push(getitem);
+
+            const uniqueValues = [...new Set(setstate)];
+
+            localStorage.setItem("countaction", uniqueValues.length);
+          }
+        }
+
+        getitem = localStorage.getItem("state");
+
+        if (getitem === "LOOKDOWN") {
+          const actioncount = localStorage.getItem("countaction");
+          if (actioncount == 5) {
+            capture();
+            shouldExecuteSetTimeout = false;
+            setCapturebnt(false);
+            setShowactionmessage(false);
+          }
+          if (BOTTOMZ > 0.03 && TOPZ < -0.05) {
+            setIsActionCompleted(true);
+            console.log("Look Down action done");
+            let index = faceactionstwo.indexOf(getitem);
+            faceactionstwo.splice(index, 1);
+
+            const randomIndextwo = Math.floor(
+              Math.random() * faceactionstwo.length
+            );
+            const removevalue = faceactionstwo[randomIndextwo];
+            localStorage.clear();
+            localStorage.setItem("state", removevalue);
+            setActions(removevalue);
+            setstate.push(getitem);
+            const uniqueValues = [...new Set(setstate)];
+            localStorage.setItem("countaction", uniqueValues.length);
+          }
+        }
+
+        getitem = localStorage.getItem("state");
+        if (getitem === "TURNRIGHT") {
+          const actioncount = localStorage.getItem("countaction");
+          if (actioncount == 5) {
+            capture();
+            shouldExecuteSetTimeout = false;
+            setCapturebnt(false);
+            setShowactionmessage(false);
+          }
+          if (RIGHTZ < 0.02 && LEFTZ > 0.2) {
+            setIsActionCompleted(true);
+            console.log("right actions done");
+            let index = faceactionstwo.indexOf(getitem);
+            faceactionstwo.splice(index, 1);
+            const randomIndextwo = Math.floor(
+              Math.random() * faceactionstwo.length
+            );
+            const removevalue = faceactionstwo[randomIndextwo];
+            localStorage.clear();
+            localStorage.setItem("state", removevalue);
+            setActions(removevalue);
+            setstate.push(getitem);
+            const uniqueValues = [...new Set(setstate)];
+            localStorage.setItem("countaction", uniqueValues.length);
+          }
+        }
+
+        getitem = localStorage.getItem("state");
+        if (getitem === "TURNLEFT") {
+          const actioncount = localStorage.getItem("countaction");
+          if (actioncount == 5) {
+            capture();
+            shouldExecuteSetTimeout = false;
+            setCapturebnt(false);
+            setShowactionmessage(false);
+          }
+          if (LEFTZ < 0.01 && RIGHTZ > 0.15) {
+            setIsActionCompleted(true);
+            console.log("LEft action Done");
+            let index = faceactionstwo.indexOf(getitem);
+            faceactionstwo.splice(index, 1);
+
+            const randomIndextwo = Math.floor(
+              Math.random() * faceactionstwo.length
+            );
+            const removevalue = faceactionstwo[randomIndextwo];
+            localStorage.clear();
+            localStorage.setItem("state", removevalue);
+            setActions(removevalue);
+            setstate.push(getitem);
+            const uniqueValues = [...new Set(setstate)];
+            localStorage.setItem("countaction", uniqueValues.length);
+          }
+        }
+
+        getitem = localStorage.getItem("state");
         if (getitem === "OPENMOUTH") {
           const actioncount = localStorage.getItem("countaction");
+          if (actioncount == 5) {
+            capture();
+            shouldExecuteSetTimeout = false;
+            setCapturebnt(false);
+            setShowactionmessage(false);
+          }
           if (Y > 0.1) {
             setIsActionCompleted(true);
-            capture()
-            
+            let index = faceactionstwo.indexOf(getitem);
+            faceactionstwo.splice(index, 1);
+
+            const randomIndextwo = Math.floor(
+              Math.random() * faceactionstwo.length
+            );
+            const removevalue = faceactionstwo[randomIndextwo];
+            localStorage.clear();
+            localStorage.setItem("state", removevalue);
+            setActions(removevalue);
+            setstate.push(getitem);
+            const uniqueValues = [...new Set(setstate)];
+            localStorage.setItem("countaction", uniqueValues.length);
           }
         }
 
@@ -340,7 +518,7 @@ const LiveWebCheck = ({ updateWebImage }) => {
                     {showactionmessage ? (
                       <span className="green">
                         <b>
-                          Please  {actionstate} with your current distance
+                          Please slightly {actions} with your current distance
                           to camera intact
                         </b>
                       </span>
@@ -366,7 +544,20 @@ const LiveWebCheck = ({ updateWebImage }) => {
             <div className="picture"></div>
             {showoval ? <div className="oval"></div> : ""}
             {cameraoff ? (
-              ""
+              <Webcam
+                ref={webcamRef}
+                style={{
+                  position: "absolute",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                  left: 0,
+                  right: 0,
+                  textAlign: "center",
+                  zindex: 9,
+                }}
+                id={addclass ? "green" : "red"}
+                className="output_canvas output_canvasweb"
+              />
             ) : (
               ""
             )}
@@ -381,7 +572,7 @@ const LiveWebCheck = ({ updateWebImage }) => {
             )}
           </div>
           <div className="webcam">
-            
+            {/* {showovalcanvas ? <div className="ovalmbl"></div> : ""} */}
 
             {canvasshow ? (
               <canvas
@@ -408,7 +599,17 @@ const LiveWebCheck = ({ updateWebImage }) => {
       {dashboarddiv ? <div className="dashboard-ctnnew"></div> : ""}
 
       <div className="App">
+        {/* <center>
+          {capturebnt ? (
+            <button className="capture" onClick={capture}>
+              Capture photo
+            </button>
+          ) : (
+            ""
+          )}
+          <br />
         
+        </center> */}
         <center>
           {capturebnt ? (
             <button className="capture" onClick={retake}>
@@ -423,4 +624,5 @@ const LiveWebCheck = ({ updateWebImage }) => {
     </>
   );
 };
+
 export default LiveWebCheck;

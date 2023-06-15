@@ -10,7 +10,7 @@ import StepLabel from "@mui/material/StepLabel";
 import StepContent from "@mui/material/StepContent";
 import InputType from "../InputType/InputType";
 import UploadForm from "../UploadForm/UploadForm";
-import LiveCheck from "../LiveWebCheck/LiveWebCheck";
+import LiveCheck from "../LiveWebCheck/LiveWebCheck_bkp";
 import InputId from "../InputId/InputId";
 import { axiosRequest } from "../API/Api";
 import { useParams } from "react-router-dom";

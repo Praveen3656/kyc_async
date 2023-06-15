@@ -10,7 +10,7 @@ import StepLabel from "@mui/material/StepLabel";
 import StepContent from "@mui/material/StepContent";
 import InputType from "../InputType/InputType";
 import UploadForm from "../UploadForm/UploadForm";
-import LiveCheck from "../LiveWebCheck/LiveWebCheck";
+import LiveCheck from "../LiveWebCheck/LiveWebCheck_bkp";
 import InputId from "../InputId/InputId";
 import Uploadselfieid from "../LiveWebCheck/UploadSelfieid";
 import { axiosRequest } from "../API/Api";
@@ -22,10 +22,10 @@ import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [formdata, setformData] = useState({});
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(2);
   const [document, setDocumnet] = useState("");
   const [idtype, setIdType] = useState("");
-  const [country, setCountry] = useState(""); 
+  const [country, setCountry] = useState("");
   const [webImage, setWebImage] = useState("");
   const [webImageid, setWebImageid] = useState("");
   const [idName, setIdName] = useState("");
@@ -49,6 +49,7 @@ export default function Dashboard() {
   const [timeresult, setTimeresult] = useState(false);
   const [counter, setCounter] = useState(0);
   const [result, setResult] = useState("");
+  const [idstatus, setIdstatus] = useState(false);
 
   let navigate = useNavigate();
   const { data } = useParams();
@@ -104,8 +105,8 @@ export default function Dashboard() {
     if (!uid) {
       const id = uniqueId();
     }
-  }); 
-  
+  });
+
   const updateDocument = (value) => {
     setDocumnet(value);
   };
@@ -116,9 +117,6 @@ export default function Dashboard() {
     console.log(value);
     setWebImageid(value);
   };
-
-  
-
 
   const baseurl = window.location.href;
   const updateName = (value) => {
@@ -158,7 +156,7 @@ export default function Dashboard() {
       case 1:
         return <UploadForm updateDocument={updateDocument} />;
       case 2:
-        return <LiveCheck updateWebImage={updateWebImage} />;
+          return <LiveCheck updateWebImage={updateWebImage} />;
       case 3:
         return <Uploadselfieid updateWebImageid={updateWebImageid} />;
       case 4:
@@ -175,7 +173,6 @@ export default function Dashboard() {
       method: "POST",
       body: formdata,
       redirect: "follow",
-      
     };
     fetch(`${URL}/id_verify/status`, requestOptions)
       .then((response) => response.json())
@@ -214,7 +211,6 @@ export default function Dashboard() {
       getstepid.verified_face === true &&
       getstepid.verified_name === true &&
       getstepid.selfie_spoof_data.is_spoof === true
-
     ) {
       setActiveStep(4);
       setNewtemplate(false);
@@ -256,7 +252,6 @@ export default function Dashboard() {
     setCounter(0);
     setErrorimage(false);
     setMessage("");
-  
 
     try {
       const getcountry = localStorage.getItem("country");
@@ -292,13 +287,14 @@ export default function Dashboard() {
           },
         }
       );
-      
+
       console.log("ID_RESPONSE", save_id_image);
 
       if (save_id_image.data.status === "DONE") {
         setRedirect(false);
         setScore(true);
         setMessage("Template Score " + save_id_image.data.score);
+        setIdstatus(true);
         setActiveStep(2);
         setLoading(false);
         setIderrormessage(false);
@@ -672,6 +668,7 @@ export default function Dashboard() {
     }
     if (activeStep === 2) {
       Uploadselfie(activeStep);
+      
     }
     if (activeStep === 3) {
       uploadselfiid(activeStep);
