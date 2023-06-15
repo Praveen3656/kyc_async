@@ -110,14 +110,14 @@ const Uploadselfieid = ({ updateWebImageid }) => {
 
           <br />
           <div className="camera">
-            {/* <div className="idbox">
+            <div className="idbox">
               <div className="facebox">
                 <span>Keep Your face here</span>
               </div>
               <div className="idcard">
                 <span>Keep Your ID here</span>
               </div>
-            </div> */}
+            </div>
             <Webcam
               className="live-web-cam_two"
               audio={false}
