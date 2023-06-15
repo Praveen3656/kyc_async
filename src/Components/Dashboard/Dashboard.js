@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [formdata, setformData] = useState({});
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(0);
   const [document, setDocumnet] = useState("");
   const [idtype, setIdType] = useState("");
   const [country, setCountry] = useState(""); 
@@ -246,8 +246,8 @@ export default function Dashboard() {
     setformData({ ...formdata, [e.target.name]: [e.target.value] });
     setKey(e.target.name);
     setValue(e.target.value);
-    getuserdetails[key] = e.target.value;
-    console.log("valeo", e.target.value);
+    getuserdetails[key] = value;
+    console.log("value", e.target.value);
   };
 
   const uploadid = async (activeStep) => {
