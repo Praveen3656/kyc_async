@@ -42,6 +42,8 @@ const LiveWebCheck = ({
 
   const [addclass, setAddclass] = useState(false);
 
+  const [timeoutmesgnew,setTimeoutmesgnew] = useState()
+
   const [stream, setStream] = useState(null);
   const [timeoutmesg, setTimeoutmesg] = useState(false);
 
@@ -145,7 +147,9 @@ const LiveWebCheck = ({
   let shouldExecuteSetTimeout = true;
 
   const nofacefound = () => {
+
     setMessage("No Faces Found");
+    shouldExecuteSetTimeout = false;
     setMessageaction(false);
     setShowmessage(true);
     setTag(false);
@@ -163,6 +167,7 @@ const LiveWebCheck = ({
 
   const breakfunction = () => {
     setMultiplemessage("Multiple faces Detected Please try again");
+    shouldExecuteSetTimeout = false;
     setMessage();
     setMessageaction(false);
     setShowmessage(true);
@@ -179,8 +184,13 @@ const LiveWebCheck = ({
   };
 
   const settimeout = () => {
+    
+  
     if (shouldExecuteSetTimeout) {
-      setMessage("Time out come close and try again");
+      setTimeoutmesgnew("Time out come close and try again")
+      setMessageaction(false)
+      setShowmessage(true);
+      setMessage();
       setTag(false);
       setCanvasshow(false);
       setCapturebnt(true);
@@ -190,7 +200,7 @@ const LiveWebCheck = ({
       setTimeoutmessage(false);
       setAddclass(false);
       setShowactionmessage(false);
-      setShowmessage(true);
+   
       setTimeoutmesg(true);
     }
   };
@@ -411,7 +421,7 @@ const LiveWebCheck = ({
             setCapturebnt(false);
             setShowactionmessage(false);
           }
-          if (LEFTZ < 0 && RIGHTZ > 0.2) {
+          if (LEFTZ < 0 && RIGHTZ > 0.1) {
            setIsActionCompleted(true);
             console.log("LEft action Done");
             let index = faceactionstwo.indexOf(getitem);
@@ -527,9 +537,16 @@ const LiveWebCheck = ({
               </p>
               <p>
                 <span className="red">
+                  <b>{timeoutmesgnew}</b>
+                </span>
+              </p>
+              <p>
+                <span className="red">
                   <b>{multiplemessage}</b>
                 </span>
               </p>
+
+              
 
               <p>
                 {messageaction ? (
