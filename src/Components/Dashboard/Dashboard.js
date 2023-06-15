@@ -25,7 +25,7 @@ export default function Dashboard() {
   const [activeStep, setActiveStep] = useState(0);
   const [document, setDocumnet] = useState("");
   const [idtype, setIdType] = useState("");
-  const [country, setCountry] = useState(""); 
+  const [country, setCountry] = useState("");
   const [webImage, setWebImage] = useState("");
   const [webImageid, setWebImageid] = useState("");
   const [idName, setIdName] = useState("");
@@ -49,6 +49,7 @@ export default function Dashboard() {
   const [timeresult, setTimeresult] = useState(false);
   const [counter, setCounter] = useState(0);
   const [result, setResult] = useState("");
+  const [idstatus, setIdstatus] = useState(false);
 
   let navigate = useNavigate();
   const { data } = useParams();
@@ -98,14 +99,16 @@ export default function Dashboard() {
   const [camcheck, setCamcheck] = useState(2);
   const [token, setToken] = useState("");
 
-  const URL = "https://o-kycapi-dev.onpassive.com";
+  const [isnextenable,setIsnextenable] = useState(true);
+
+  const URL = "https://api.idverify.click";
 
   useEffect(() => {
     if (!uid) {
       const id = uniqueId();
     }
-  }); 
-  
+  });
+
   const updateDocument = (value) => {
     setDocumnet(value);
   };
@@ -116,9 +119,6 @@ export default function Dashboard() {
     console.log(value);
     setWebImageid(value);
   };
-
-  
-
 
   const baseurl = window.location.href;
   const updateName = (value) => {
@@ -145,6 +145,9 @@ export default function Dashboard() {
     "Submit Name",
   ];
 
+  const handleChildData  = (data) => {
+    setIsnextenable(data);
+  };
   function getStepContent(step) {
     switch (step) {
       case 0:
@@ -158,7 +161,7 @@ export default function Dashboard() {
       case 1:
         return <UploadForm updateDocument={updateDocument} />;
       case 2:
-        return <LiveCheck updateWebImage={updateWebImage} />;
+          return <LiveCheck updateWebImage={updateWebImage} onData={handleChildData}/>;
       case 3:
         return <Uploadselfieid updateWebImageid={updateWebImageid} />;
       case 4:
@@ -175,7 +178,6 @@ export default function Dashboard() {
       method: "POST",
       body: formdata,
       redirect: "follow",
-      
     };
     fetch(`${URL}/id_verify/status`, requestOptions)
       .then((response) => response.json())
@@ -187,7 +189,7 @@ export default function Dashboard() {
     if (getstepid.verified_face === true) {
       setActiveStep(3);
     }
-    if (getstepid.verified_name === true && getstepid.verified_face === false) {
+    if (getstepid.verified_name === "SUCCESS" && getstepid.verified_face === false) {
       setActiveStep(2);
     }
     // if (getstepid.selfie_spoof_data.is_spoof === true) {
@@ -199,7 +201,7 @@ export default function Dashboard() {
       getstepid._id === true &&
       getstepid.selfie === true &&
       getstepid.verified_face === true &&
-      getstepid.verified_name === true &&
+      getstepid.verified_name === "SUCCESS" &&
       getstepid.selfie_spoof_data.is_spoof === false
     ) {
       setActiveStep(4);
@@ -214,7 +216,6 @@ export default function Dashboard() {
       getstepid.verified_face === true &&
       getstepid.verified_name === true &&
       getstepid.selfie_spoof_data.is_spoof === true
-
     ) {
       setActiveStep(4);
       setNewtemplate(false);
@@ -226,7 +227,7 @@ export default function Dashboard() {
     setCountrynew(getstepid.country);
   }, [getstepid._id]);
 
-  console.log("statusapi",getstepid);
+  //console.log("statusapi",getstepid);
 
   useEffect(() => {
     const timer = setInterval(() => setCounter(counter + 1), 1000);
@@ -247,7 +248,7 @@ export default function Dashboard() {
     setKey(e.target.name);
     setValue(e.target.value);
     getuserdetails[key] = value;
-    console.log("valeo", e.target.value);
+    console.log("value", e.target.value);
   };
 
   const uploadid = async (activeStep) => {
@@ -256,7 +257,6 @@ export default function Dashboard() {
     setCounter(0);
     setErrorimage(false);
     setMessage("");
-  
 
     try {
       const getcountry = localStorage.getItem("country");
@@ -292,13 +292,14 @@ export default function Dashboard() {
           },
         }
       );
-      
+
       console.log("ID_RESPONSE", save_id_image);
 
       if (save_id_image.data.status === "DONE") {
         setRedirect(false);
         setScore(true);
         setMessage("Template Score " + save_id_image.data.score);
+        setIdstatus(true);
         setActiveStep(2);
         setLoading(false);
         setIderrormessage(false);
@@ -672,6 +673,7 @@ export default function Dashboard() {
     }
     if (activeStep === 2) {
       Uploadselfie(activeStep);
+      
     }
     if (activeStep === 3) {
       uploadselfiid(activeStep);
@@ -955,15 +957,19 @@ export default function Dashboard() {
             >
               Back
             </Button> */}
+            
+            
             <div className="r-n-btn">
               <Button
+                
                 variant="contained"
                 color="primary"
                 onClick={handleNext}
                 className="next-btn m-r"
-                disabled={activeStep === steps.length ? true : false}
+                disabled={isnextenable  ? false : true}
               >
                 {activeStep === steps.length - 1 ? "Finish" : "Next"}
+
               </Button>
               <Button
                 variant="contained"
@@ -974,6 +980,8 @@ export default function Dashboard() {
                 Reset
               </Button>
             </div>
+
+
           </div>
         </div>
         <center></center>
