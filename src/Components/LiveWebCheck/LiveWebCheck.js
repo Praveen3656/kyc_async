@@ -82,6 +82,7 @@ const LiveWebCheck = ({
   const capture = React.useCallback(() => {
     setIsActionCompleted(true);
     setImageshow(true);
+    setMessage()
     shouldExecuteSetTimeout = false;
     setShowactionmessage(false);
     setNextmesage(true);
@@ -548,7 +549,7 @@ const LiveWebCheck = ({
               <p>
                 {messageaction ? (
                   <>
-                    {" "}
+          
                     {showactionmessage ? (
                       <span className="green">
                         <b>
