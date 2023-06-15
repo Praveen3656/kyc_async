@@ -246,9 +246,7 @@ export default function Dashboard() {
     setformData({ ...formdata, [e.target.name]: [e.target.value] });
     setKey(e.target.name);
     setValue(e.target.value);
-
     getuserdetails[key] = e.target.value;
-
     console.log("valeo", e.target.value);
   };
 

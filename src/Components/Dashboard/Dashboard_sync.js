@@ -223,9 +223,7 @@ export default function Dashboard() {
     setformData({ ...formdata, [e.target.name]: [e.target.value] });
     setKey(e.target.name);
     setValue(e.target.value);
-
-    getuserdetails[key] = e.target.value;
-
+    getuserdetails[key] = value;
     console.log("value", e.target.value);
   };
 
