@@ -545,9 +545,6 @@ const LiveWebCheck = ({
                   <b>{multiplemessage}</b>
                 </span>
               </p>
-
-              
-
               <p>
                 {messageaction ? (
                   <>
