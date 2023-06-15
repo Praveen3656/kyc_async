@@ -10,6 +10,7 @@ const LiveWebCheck = ({
   updateWebImagetwo,
   updateWebImagethree,
 }) => {
+  
   const [filedata, setFileData] = useState("");
   const [cameraoff, setCameraoff] = useState(true);
 
@@ -63,6 +64,9 @@ const LiveWebCheck = ({
   const [multiplemessage, setMultiplemessage] = useState();
 
   const [tag, setTag] = useState(true);
+  
+  const [facecounter,setFacecounter] = useState(false);
+
   const urltoFile = (url, filename, mimeType) => {
     return fetch(url)
       .then(function (res) {
@@ -154,6 +158,7 @@ const LiveWebCheck = ({
     setAddclass(false);
     setShowactionmessage(false);
     setTimeoutmesg(true);
+
   };
 
   const breakfunction = () => {
@@ -175,7 +180,7 @@ const LiveWebCheck = ({
 
   const settimeout = () => {
     if (shouldExecuteSetTimeout) {
-      setMessage("Time out try again");
+      setMessage("Time out come close and try again");
       setTag(false);
       setCanvasshow(false);
       setCapturebnt(true);
@@ -201,23 +206,30 @@ const LiveWebCheck = ({
     if (!isActionCompleted) {
       timeoutIdactions = setTimeout(() => {
         settimeout()
-      }, 6000);
+      }, 5000);
     }
     return () => {
       clearTimeout(timeoutIdactions); 
     };
   }, [isActionCompleted]);
 
-  // const handleAction = () => {
-  //   setIsActionCompleted(true);
-  // };
+
+
+  
+
+
 
   function onResults(results) {
-    // console.log("results",results.multiFaceLandmarks.length);
 
-    if (results.multiFaceLandmarks.length == 0) {
+    //  console.log("results",results.multiFaceLandmarks);
+    //  console.log("length",results.multiFaceLandmarks.length);
+
+    
+    if (results.multiFaceLandmarks.length == 0 && facecounter === true) {
       nofacefound();
     }
+    
+   
 
     let getitem = localStorage.getItem("state");
     localStorage.setItem("counter", 0);
@@ -245,6 +257,7 @@ const LiveWebCheck = ({
 
     if (results.multiFaceLandmarks) {
       for (const landmarks of results.multiFaceLandmarks) {
+
         if (results.multiFaceLandmarks.length > 1) {
           breakfunction();
         }
@@ -266,7 +279,7 @@ const LiveWebCheck = ({
 
         const faceArea = (LEFT - RIGHT) * (TOP - BOTTOM);
 
-          console.log("faceArea",faceArea);
+        //   console.log("faceArea",faceArea);
 
         const LOOKUP = landmarks[1].y;
         const LOOKDOWN = landmarks[1].y;
@@ -287,11 +300,8 @@ const LiveWebCheck = ({
 
         getitem = localStorage.getItem("state");
 
-        // const timeoutId = setTimeout(() => {
-        //   settimeout();
-        // }, 25000);
-
-        if (faceArea > 0.25) {
+        if (faceArea > 0.15) {
+          setFacecounter(true);
           setIsActionCompleted(false);
           setShowmessage(false);
           setShowactionmessage(true);
@@ -458,9 +468,9 @@ const LiveWebCheck = ({
   // }
 
   const retake = () => {
+    setFacecounter(false)
     window.location.reload();
     localStorage.removeItem("countaction");
-   
     setCapturebnt(false);
     setCameraoff(true);
     setImageshow(false);
@@ -469,6 +479,7 @@ const LiveWebCheck = ({
     setCanvasshow(true);
   };
 
+  
   useEffect(() => {
     const faceMesh = new FaceMesh({
       locateFile: (file) => {
@@ -497,7 +508,7 @@ const LiveWebCheck = ({
 
       camera.start();
     }
-  }, []);
+  }, [facecounter]);
 
   return (
     <>
@@ -605,7 +616,7 @@ const LiveWebCheck = ({
         </div>
       </center>
 
-      {dashboarddiv ? <div className="dashboard-ctn"></div> : ""}
+      {dashboarddiv ? <div className="dashboard-ctnnew"></div> : ""}
 
       <div className="App">
         {/* <center>
@@ -633,4 +644,5 @@ const LiveWebCheck = ({
     </>
   );
 };
+
 export default LiveWebCheck;
