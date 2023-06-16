@@ -270,7 +270,7 @@ export default function Dashboard() {
     setCountrynew(getstepid.country);
   }, [getstepid._id]);
 
-  console.log("statusapi",getstepid);
+  //console.log("statusapi",getstepid);
 
   useEffect(() => {
     const timer = setInterval(() => setCounter(counter + 1), 1000);
