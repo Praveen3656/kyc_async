@@ -9,7 +9,7 @@ const LiveWebCheck = ({ updateWebImage, onData}) => {
   
   const [filedata, setFileData] = useState("");
   const [cameraoff, setCameraoff] = useState(true);
-  console.log("cameraoff",cameraoff);
+
   const webcamRef = React.useRef(null);
   const [imgSrc, setImgSrc] = React.useState(null);
   const [imgSrctwo, setImgSrctwo] = React.useState(null);
