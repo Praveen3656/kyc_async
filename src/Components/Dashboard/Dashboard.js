@@ -219,6 +219,20 @@ export default function Dashboard() {
       getstepid.selfie === true &&
       getstepid.verified_face === true &&
       getstepid.verified_name === "SUCCESS" &&
+      getstepid.selfie_spoof_data.is_spoof === true
+    ) {
+      setActiveStep(4);
+      setNewtemplate(false);
+      setSuccesstemplete(false);
+      setIderrormessage(true);
+      setMessage("Manual verification required");
+    }
+
+    if (
+      getstepid._id === true &&
+      getstepid.selfie === true &&
+      getstepid.verified_face === true &&
+      getstepid.verified_name === "SUCCESS" &&
       getstepid.selfie_spoof_data.is_spoof === false
     ) {
       setActiveStep(4);
@@ -258,7 +272,7 @@ export default function Dashboard() {
     setCountrynew(getstepid.country);
   }, [getstepid._id]);
 
-  //console.log("statusapi",getstepid);
+  console.log("statusapi",getstepid);
 
   useEffect(() => {
     const timer = setInterval(() => setCounter(counter + 1), 1000);
