@@ -152,6 +152,10 @@ export default function Dashboard() {
     setIsnextenable(data);
   };
 
+  const handleChildDataId = (data) => {
+    setIsnextenable(true);
+  };
+
   const handlecamara = (datatwo) => {
     setLivecamon(datatwo);
   };
@@ -167,7 +171,7 @@ export default function Dashboard() {
           />
         );
       case 1:
-        return <UploadForm updateDocument={updateDocument} />;
+        return <UploadForm updateDocument={updateDocument} onData={handleChildDataId}/>;
 
       case 2:
         return (
