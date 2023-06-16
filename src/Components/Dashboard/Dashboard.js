@@ -231,6 +231,20 @@ export default function Dashboard() {
       getstepid._id === true &&
       getstepid.selfie === true &&
       getstepid.verified_face === true &&
+      getstepid.verified_name === "SUCCESS_REVIEW" &&
+      getstepid.selfie_spoof_data.is_spoof === true
+    ) {
+      setActiveStep(4);
+      setNewtemplate(false);
+      setSuccesstemplete(false);
+      setIderrormessage(true);
+      setMessage("Manual verification required");
+    }
+    
+    if (
+      getstepid._id === true &&
+      getstepid.selfie === true &&
+      getstepid.verified_face === true &&
       getstepid.verified_name === true &&
       getstepid.selfie_spoof_data.is_spoof === true
     ) {
@@ -614,7 +628,7 @@ export default function Dashboard() {
         verify_name.data
       );
 
-      if (verify_name.data.first_name === true) {
+      if (verify_name.data.first_name === "SUCCESS") {
         setLoading(false);
         setNameMatch(true);
         setImageverify(true);
