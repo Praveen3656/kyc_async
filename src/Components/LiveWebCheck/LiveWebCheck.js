@@ -609,7 +609,7 @@ const LiveWebCheck = ({ updateWebImage, onData}) => {
       });
       camera.start();
     }
-  }, [facecounter]);
+  }, [facecounter,isActionCompleted]);
 
   return (
     <>
