@@ -5,9 +5,11 @@ import * as cam from "@mediapipe/camera_utils";
 import Webcam from "react-webcam";
 import "./LiveWebCheck.scss";
 
-const LiveWebCheck = ({ updateWebImage, onData }) => {
+const LiveWebCheck = ({ updateWebImage, onData}) => {
+  
   const [filedata, setFileData] = useState("");
   const [cameraoff, setCameraoff] = useState(true);
+
   const webcamRef = React.useRef(null);
   const [imgSrc, setImgSrc] = React.useState(null);
   const [imgSrctwo, setImgSrctwo] = React.useState(null);
@@ -62,7 +64,7 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
   const [facecounter, setFacecounter] = useState(false);
 
   const [messagetimeout, setMessagetimeout] = useState();
-
+  
   const urltoFile = (url, filename, mimeType) => {
     return fetch(url)
       .then(function (res) {
@@ -75,10 +77,8 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
 
   const capture = React.useCallback(() => {
     onData(true);
-    settimerfunction(1000000);
     setIsActionCompleted(true);
-
-    setMessagetimeout();
+    resetTimer(10000000);
     setMessageaction(false);
     setShowactionmessage(false);
     setMultiplemessage();
@@ -115,32 +115,19 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
   }, [webcamRef, setImgSrc]);
 
   useEffect(() => {
-    const faceactions = [
-      "LOOKUP",
-      "OPENMOUTH",
-      "TURNRIGHT",
-      "TURNLEFT",
-      "LOOKDOWN",
-    ];
+    const faceactions = ["LOOKUP", "OPENMOUTH","TURNRIGHT","TURNLEFT","LOOKDOWN"];
     const randomIndex = Math.floor(Math.random() * faceactions.length);
     const randomValuen = faceactions[randomIndex];
     setActions(randomValuen);
     localStorage.setItem("state", randomValuen);
   }, [actions]);
 
-  const faceactionstwo = [
-    "LOOKUP",
-    "OPENMOUTH",
-    "TURNRIGHT",
-    "TURNLEFT",
-    "LOOKDOWN",
-  ];
+  const faceactionstwo = ["LOOKUP", "OPENMOUTH","TURNRIGHT","TURNLEFT","LOOKDOWN"];
   const setstate = [];
   let shouldExecuteSetTimeout = true;
 
   const nofacefound = () => {
     onData(false);
-
     setMessage("No Faces Found");
     setMessagetimeout();
     setMessageaction(false);
@@ -155,7 +142,6 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
     setAddclass(false);
     setShowactionmessage(false);
     setTimeoutmesg(true);
-    setNextmesage(false);
   };
 
   const breakfunction = () => {
@@ -163,7 +149,7 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
     setMessagetimeout();
     setMessage();
     setMultiplemessage("Multiple faces Detected Please try again");
-
+    setMessagetimeout();
     setMessageaction(false);
     setShowmessage(true);
     setTag(false);
@@ -176,7 +162,6 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
     setAddclass(false);
     setShowactionmessage(false);
     setTimeoutmesg(true);
-    setNextmesage(false);
   };
 
   const settimeout = () => {
@@ -185,7 +170,6 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
       setMessageaction(false);
       setShowactionmessage(false);
       setMultiplemessage();
-      setNextmesage(false);
       setMessage();
       setMessagetimeout("Time out come close and try again");
       setTag(false);
@@ -310,7 +294,7 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
         var X = PT_55 - PT_49;
 
         getitem = localStorage.getItem("state");
-
+        
         if (faceArea > 0.15) {
           facedetect = true;
           // setTimer(8000);
@@ -345,6 +329,7 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
         if (getitem === "LOOKUP") {
           clearTimeout(tf);
           if (facedetect === true) {
+
             tf = settimerfunction(18000);
           }
 
@@ -395,6 +380,7 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
         if (getitem === "TURNRIGHT") {
           clearTimeout(tf);
           if (facedetect === true) {
+
             tf = settimerfunction(18000);
           }
 
@@ -445,6 +431,7 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
         if (getitem === "TURNLEFT") {
           clearTimeout(tf);
           if (facedetect === true) {
+
             tf = settimerfunction(18000);
           }
 
@@ -483,6 +470,7 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
 
         //TURNLEFT
 
+
         //LOOKDOWN
         if (actioncount >= 3) {
           clearTimeout(tf);
@@ -495,6 +483,7 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
         if (getitem === "LOOKDOWN") {
           clearTimeout(tf);
           if (facedetect === true) {
+
             tf = settimerfunction(18000);
           }
 
@@ -531,6 +520,7 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
           setShowactionmessage(false);
         }
 
+
         //LOOKDOWN
 
         //OPENMOUTH
@@ -538,6 +528,7 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
         if (getitem === "OPENMOUTH") {
           clearTimeout(tf);
           if (facedetect === true) {
+
             tf = settimerfunction(18000);
           }
 
@@ -617,6 +608,7 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
         width: 640,
         height: 480,
       });
+
       camera.start();
     }
   }, [facecounter, isActionCompleted]);
