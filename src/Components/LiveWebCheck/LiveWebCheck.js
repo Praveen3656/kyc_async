@@ -77,8 +77,7 @@ const LiveWebCheck = ({ updateWebImage, onData}) => {
   const capture = React.useCallback(() => {
     onData(true);
     setIsActionCompleted(true);
-    clearTimeout(tf);
-    let tf = settimerfunction(1000000);
+    settimerfunction(1000000);
     setMessageaction(false);
     setShowactionmessage(false);
     setMultiplemessage();
@@ -608,10 +607,9 @@ const LiveWebCheck = ({ updateWebImage, onData}) => {
         width: 640,
         height: 480,
       });
-
       camera.start();
     }
-  }, [facecounter, isActionCompleted]);
+  }, [facecounter]);
 
   return (
     <>
