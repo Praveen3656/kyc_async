@@ -657,10 +657,13 @@ export default function Dashboard() {
         setSuccesstemplete(true);
         setTimeout(reload, 200);
       } else {
+
         if (verify_name.data.first_name === "SUCCESS_REVIEW") {
-          setNameMatch("Manual verification required");
+          setNamemessage("Manual verification required");
         }
-        setNamemessage("Name verification Failed");
+        if (verify_name.data.first_name === "FAILURE") {
+          setNamemessage("Name verification Failed");
+        }
         setCounter(0);
         setLoading(false);
         setActiveStep(4);
