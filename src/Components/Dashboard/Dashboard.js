@@ -99,9 +99,11 @@ export default function Dashboard() {
   const [camcheck, setCamcheck] = useState(2);
   const [token, setToken] = useState("");
 
-  const [isnextenable,setIsnextenable] = useState(true);
+  const [isnextenable, setIsnextenable] = useState(true);
 
-  const URL = "https://api.idverify.click";
+  const [livecamon,setLivecamon] = useState(false);
+
+  const URL = "https://o-kycapi-dev.onpassive.com";
 
   useEffect(() => {
     if (!uid) {
@@ -145,9 +147,14 @@ export default function Dashboard() {
     "Submit Name",
   ];
 
-  const handleChildData  = (data) => {
+  const handleChildData = (data) => {
     setIsnextenable(data);
   };
+
+  const handlecamara = (datatwo) =>{
+    setLivecamon(datatwo)
+  }
+
   function getStepContent(step) {
     switch (step) {
       case 0:
@@ -159,9 +166,14 @@ export default function Dashboard() {
           />
         );
       case 1:
+    
         return <UploadForm updateDocument={updateDocument} />;
+
       case 2:
-          return <LiveCheck updateWebImage={updateWebImage} onData={handleChildData}/>;
+        
+        return (
+          <LiveCheck updateWebImage={updateWebImage} onData={handleChildData} livecamon={livecamon}/>
+        );
       case 3:
         return <Uploadselfieid updateWebImageid={updateWebImageid} />;
       case 4:
@@ -189,13 +201,30 @@ export default function Dashboard() {
     if (getstepid.verified_face === true) {
       setActiveStep(3);
     }
-    if (getstepid.verified_name === "SUCCESS" && getstepid.verified_face === false) {
+    if (
+      getstepid.verified_name === "SUCCESS" &&
+      getstepid.verified_face === false
+    ) {
       setActiveStep(2);
     }
     // if (getstepid.selfie_spoof_data.is_spoof === true) {
     //   setActiveStep(3);
     //   setMessage("Manual verification required");
     // }
+
+    if (
+      getstepid._id === true &&
+      getstepid.selfie === true &&
+      getstepid.verified_face === true &&
+      getstepid.verified_name === "SUCCESS" &&
+      getstepid.selfie_spoof_data.is_spoof === true
+    ) {
+      setActiveStep(4);
+      setNewtemplate(false);
+      setSuccesstemplete(false);
+      setIderrormessage(true);
+      setMessage("Manual verification required");
+    }
 
     if (
       getstepid._id === true &&
@@ -214,6 +243,20 @@ export default function Dashboard() {
       getstepid._id === true &&
       getstepid.selfie === true &&
       getstepid.verified_face === true &&
+      getstepid.verified_name === "SUCCESS_REVIEW" &&
+      getstepid.selfie_spoof_data.is_spoof === true
+    ) {
+      setActiveStep(4);
+      setNewtemplate(false);
+      setSuccesstemplete(false);
+      setIderrormessage(true);
+      setMessage("Manual verification required");
+    }
+    
+    if (
+      getstepid._id === true &&
+      getstepid.selfie === true &&
+      getstepid.verified_face === true &&
       getstepid.verified_name === true &&
       getstepid.selfie_spoof_data.is_spoof === true
     ) {
@@ -227,7 +270,7 @@ export default function Dashboard() {
     setCountrynew(getstepid.country);
   }, [getstepid._id]);
 
-  //console.log("statusapi",getstepid);
+  console.log("statusapi",getstepid);
 
   useEffect(() => {
     const timer = setInterval(() => setCounter(counter + 1), 1000);
@@ -296,6 +339,7 @@ export default function Dashboard() {
       console.log("ID_RESPONSE", save_id_image);
 
       if (save_id_image.data.status === "DONE") {
+        setLivecamon(true);
         setRedirect(false);
         setScore(true);
         setMessage("Template Score " + save_id_image.data.score);
@@ -303,6 +347,8 @@ export default function Dashboard() {
         setActiveStep(2);
         setLoading(false);
         setIderrormessage(false);
+        window.location.reload();
+        
       } else {
         setLoading(false);
         setRedirect(false);
@@ -338,7 +384,6 @@ export default function Dashboard() {
     localStorage.removeItem("setseconds");
     setCounter(0);
     setProcesscount(0);
-
     setFakeface(false);
     setRedirect(true);
     setIdselfieerror(false);
@@ -595,7 +640,7 @@ export default function Dashboard() {
         verify_name.data
       );
 
-      if (verify_name.data.first_name === true) {
+      if (verify_name.data.first_name === "SUCCESS") {
         setLoading(false);
         setNameMatch(true);
         setImageverify(true);
@@ -672,8 +717,8 @@ export default function Dashboard() {
       uploadid(activeStep);
     }
     if (activeStep === 2) {
+  
       Uploadselfie(activeStep);
-      
     }
     if (activeStep === 3) {
       uploadselfiid(activeStep);
@@ -957,19 +1002,16 @@ export default function Dashboard() {
             >
               Back
             </Button> */}
-            
-            
+
             <div className="r-n-btn">
               <Button
-                
                 variant="contained"
                 color="primary"
                 onClick={handleNext}
                 className="next-btn m-r"
-                disabled={isnextenable  ? false : true}
+                disabled={isnextenable ? false : true}
               >
                 {activeStep === steps.length - 1 ? "Finish" : "Next"}
-
               </Button>
               <Button
                 variant="contained"
@@ -980,8 +1022,6 @@ export default function Dashboard() {
                 Reset
               </Button>
             </div>
-
-
           </div>
         </div>
         <center></center>
