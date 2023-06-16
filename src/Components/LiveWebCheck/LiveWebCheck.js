@@ -77,7 +77,8 @@ const LiveWebCheck = ({ updateWebImage, onData}) => {
   const capture = React.useCallback(() => {
     onData(true);
     setIsActionCompleted(true);
-    resetTimer(10000000);
+    clearTimeout(tf);
+    let tf = settimerfunction(1000000);
     setMessageaction(false);
     setShowactionmessage(false);
     setMultiplemessage();
