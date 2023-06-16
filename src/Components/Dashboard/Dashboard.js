@@ -50,6 +50,7 @@ export default function Dashboard() {
   const [counter, setCounter] = useState(0);
   const [result, setResult] = useState("");
   const [idstatus, setIdstatus] = useState(false);
+  const [namemessage, setNamemessage] = useState();
 
   let navigate = useNavigate();
   const { data } = useParams();
@@ -101,7 +102,7 @@ export default function Dashboard() {
 
   const [isnextenable, setIsnextenable] = useState(true);
 
-  const [livecamon,setLivecamon] = useState(false);
+  const [livecamon, setLivecamon] = useState(false);
 
   const URL = "https://o-kycapi-dev.onpassive.com";
 
@@ -151,9 +152,9 @@ export default function Dashboard() {
     setIsnextenable(data);
   };
 
-  const handlecamara = (datatwo) =>{
-    setLivecamon(datatwo)
-  }
+  const handlecamara = (datatwo) => {
+    setLivecamon(datatwo);
+  };
 
   function getStepContent(step) {
     switch (step) {
@@ -166,13 +167,15 @@ export default function Dashboard() {
           />
         );
       case 1:
-    
         return <UploadForm updateDocument={updateDocument} />;
 
       case 2:
-        
         return (
-          <LiveCheck updateWebImage={updateWebImage} onData={handleChildData} livecamon={livecamon}/>
+          <LiveCheck
+            updateWebImage={updateWebImage}
+            onData={handleChildData}
+            livecamon={livecamon}
+          />
         );
       case 3:
         return <Uploadselfieid updateWebImageid={updateWebImageid} />;
@@ -252,7 +255,7 @@ export default function Dashboard() {
       setIderrormessage(true);
       setMessage("Manual verification required");
     }
-    
+
     if (
       getstepid._id === true &&
       getstepid.selfie === true &&
@@ -348,7 +351,6 @@ export default function Dashboard() {
         setLoading(false);
         setIderrormessage(false);
         window.location.reload();
-        
       } else {
         setLoading(false);
         setRedirect(false);
@@ -655,6 +657,10 @@ export default function Dashboard() {
         setSuccesstemplete(true);
         setTimeout(reload, 200);
       } else {
+        if (verify_name.data.first_name === "SUCCESS_REVIEW") {
+          setNameMatch("Manual verification required");
+        }
+        setNamemessage("Name verification Failed");
         setCounter(0);
         setLoading(false);
         setActiveStep(4);
@@ -665,6 +671,7 @@ export default function Dashboard() {
         setTimeresult(true);
       }
     } catch (err) {
+      setNamemessage("Name verification Failed");
       setLoading(false);
       setActiveStep(3);
       setErrorname(true);
@@ -717,7 +724,6 @@ export default function Dashboard() {
       uploadid(activeStep);
     }
     if (activeStep === 2) {
-  
       Uploadselfie(activeStep);
     }
     if (activeStep === 3) {
@@ -887,7 +893,7 @@ export default function Dashboard() {
 
             {errorname ? (
               <p className="error">
-                <b>Name Verification Failed</b>
+                <b>{namemessage}</b>
               </p>
             ) : (
               ""
