@@ -76,7 +76,7 @@ const LiveWebCheck = ({ updateWebImage, onData}) => {
   };
 
   const capture = React.useCallback(() => {
-   
+    setMessagetimeout();
     settimerfunction(1000000);
     onData(true);
     setIsActionCompleted(true);
@@ -172,6 +172,7 @@ const LiveWebCheck = ({ updateWebImage, onData}) => {
       setShowactionmessage(false);
       setMultiplemessage();
       setMessage();
+      setNextmesage(false)
       setMessagetimeout("Time out come close and try again");
       setTag(false);
       setCanvasshow(false);
@@ -197,7 +198,7 @@ const LiveWebCheck = ({ updateWebImage, onData}) => {
 
   const settimerfunction = (timer) => {
     let timeoutIdactions = setTimeout(() => {
-     // settimeout();
+      settimeout();
     }, timer);
     return timeoutIdactions;
   };
