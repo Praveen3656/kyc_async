@@ -9,6 +9,7 @@ const LiveWebCheck = ({ updateWebImage, onData}) => {
   
   const [filedata, setFileData] = useState("");
   const [cameraoff, setCameraoff] = useState(true);
+  
   const webcamRef = React.useRef(null);
   const [imgSrc, setImgSrc] = React.useState(null);
   const [imgSrctwo, setImgSrctwo] = React.useState(null);
@@ -77,7 +78,7 @@ const LiveWebCheck = ({ updateWebImage, onData}) => {
   const capture = React.useCallback(() => {
     onData(true);
     setIsActionCompleted(true);
-    settimerfunction(1000000);
+    resetTimer(10000000);
     setMessageaction(false);
     setShowactionmessage(false);
     setMultiplemessage();
@@ -607,9 +608,10 @@ const LiveWebCheck = ({ updateWebImage, onData}) => {
         width: 640,
         height: 480,
       });
+
       camera.start();
     }
-  }, [facecounter,isActionCompleted]);
+  }, [facecounter, isActionCompleted]);
 
   return (
     <>
