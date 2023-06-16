@@ -76,8 +76,9 @@ const LiveWebCheck = ({ updateWebImage, onData}) => {
 
   const capture = React.useCallback(() => {
     onData(true);
-    setIsActionCompleted(true);
     settimerfunction(1000000);
+    setIsActionCompleted(true);
+    setMessagetimeout();
     setMessageaction(false);
     setShowactionmessage(false);
     setMultiplemessage();
@@ -127,6 +128,7 @@ const LiveWebCheck = ({ updateWebImage, onData}) => {
 
   const nofacefound = () => {
     onData(false);
+    
     setMessage("No Faces Found");
     setMessagetimeout();
     setMessageaction(false);
@@ -149,7 +151,7 @@ const LiveWebCheck = ({ updateWebImage, onData}) => {
     setMessagetimeout();
     setMessage();
     setMultiplemessage("Multiple faces Detected Please try again");
-    setMessagetimeout();
+  
     setMessageaction(false);
     setShowmessage(true);
     setTag(false);
