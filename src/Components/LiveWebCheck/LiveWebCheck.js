@@ -76,11 +76,10 @@ const LiveWebCheck = ({ updateWebImage, onData}) => {
   };
 
   const capture = React.useCallback(() => {
+   
+    settimerfunction(1000000);
     onData(true);
     setIsActionCompleted(true);
- 
-    clearTimeout(tf);
-    let tf = settimerfunction(1000000);
     setMessageaction(false);
     setShowactionmessage(false);
     setMultiplemessage();
@@ -198,26 +197,12 @@ const LiveWebCheck = ({ updateWebImage, onData}) => {
 
   const settimerfunction = (timer) => {
     let timeoutIdactions = setTimeout(() => {
-      settimeout();
+     // settimeout();
     }, timer);
     return timeoutIdactions;
   };
 
-  // useEffect(() => {
-
-  //   console.log("timecheck",isActionCompleted);
-  //   let timeoutIdactions = null;
-  //   if (!isActionCompleted) {
-  //     timeoutIdactions = setTimeout(() => {
-  //      settimeout();
-  //     }, timer);
-  //   }
-  //   return () => {
-  //     console.log("timeclear",timeoutIdactions);
-  //     clearTimeout(timeoutIdactions);
-
-  //   };
-  // }, [isActionCompleted]);
+  
 
   const resetTimer = (t) => {
     setTimer(t);
@@ -278,7 +263,7 @@ const LiveWebCheck = ({ updateWebImage, onData}) => {
 
         const faceArea = (LEFT - RIGHT) * (TOP - BOTTOM);
 
-        ///console.log("LEFTZ", LEFTZ, "-----------", "RIGHTZ", RIGHTZ);
+        console.log("LEFTZ", LEFTZ, "-----------", "RIGHTZ", RIGHTZ);
 
         const LOOKUP = landmarks[1].y;
         const LOOKDOWN = landmarks[1].y;
@@ -613,7 +598,7 @@ const LiveWebCheck = ({ updateWebImage, onData}) => {
 
       camera.start();
     }
-  }, [facecounter, isActionCompleted]);
+  }, [facecounter]);
 
   return (
     <>
