@@ -107,7 +107,6 @@ const Uploadselfieid = ({ updateWebImageid }) => {
           <div className="live-title">
             Keep Your ID to camera and click Capture photo
           </div>
-
           <br />
           <div className="camera">
             <div className="idbox">
