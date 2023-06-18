@@ -104,7 +104,7 @@ export default function Dashboard() {
 
   const [livecamon, setLivecamon] = useState(false);
 
-  const URL = "https://o-kycapi-dev.onpassive.com";
+  const URL = "https://o-verifyapi-qa.onpassive.com";
 
   useEffect(() => {
     if (!uid) {
