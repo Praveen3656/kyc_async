@@ -9,6 +9,7 @@ import Webcam from "react-webcam";
 
 const UploadForm = ({ updateDocument,onData }) => {
   onData(true);
+  //nextenable
   const webcamRef = React.useRef(null);
   const [imgSrc, setImgSrc] = React.useState(null);
 
