@@ -7,8 +7,9 @@ import australia from "./aus.png";
 import usa from "./usa.png";
 import Webcam from "react-webcam";
 
-const UploadForm = ({ updateDocument }) => {
-  // updateDocument(event.target.files[0]);
+const UploadForm = ({ updateDocument,onData }) => {
+  onData(true);
+  //nextenable
   const webcamRef = React.useRef(null);
   const [imgSrc, setImgSrc] = React.useState(null);
 
@@ -31,9 +32,21 @@ const UploadForm = ({ updateDocument }) => {
       });
   };
 
+  const capture = React.useCallback(() => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    urltoFile(imageSrc, "user.txt", "text/plain").then(function (file) {
+      updateDocument(file);
+    });
+    setImgSrc(imageSrc);
+    updateDocument(imageSrc);
+    console.log(imageSrc);
+  }, [webcamRef, setImgSrc])
+
   const onFileChange = (event) => {
-    updateDocument(event.target.files[0]);
+    updateDocument(event.target.files[0]);;
   };
+
+
 
 
   const gettdtype = localStorage.getItem("uploadtype");
@@ -43,6 +56,7 @@ const UploadForm = ({ updateDocument }) => {
   return (
     <>
       <div className="uploadId-ctn">
+       
         <div className="u-title">Upload your ID</div><br/>
 
         <div className="input-file">
