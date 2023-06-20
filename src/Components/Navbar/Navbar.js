@@ -19,7 +19,7 @@ export default function Navbar() {
 
   const logout = () => {
     localStorage.clear();
-    window.location = "https://o-kyc-dev.onpassive.com/";
+    window.location = "/";
   };
 
   return (

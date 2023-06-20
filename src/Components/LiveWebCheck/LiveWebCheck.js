@@ -299,7 +299,7 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
           facedetect = true;
           // setTimer(8000);
           clearTimeout(tf);
-          tf = settimerfunction(18000);
+          tf = settimerfunction(30000);
           setFacecounter(true);
           setIsActionCompleted(false);
           setShowmessage(false);
@@ -330,7 +330,7 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
           clearTimeout(tf);
           if (facedetect === true) {
 
-            tf = settimerfunction(18000);
+            tf = settimerfunction(30000);
           }
 
           if (TOPZ > 0.05 && BOTTOMZ < -0.05) {
@@ -371,7 +371,7 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
           clearTimeout(tf);
           if (facedetect === true) {
 
-            tf = settimerfunction(18000);
+            tf = settimerfunction(30000);
           }
 
           if (Y > 0.1) {
@@ -409,7 +409,7 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
           clearTimeout(tf);
           if (facedetect === true) {
 
-            tf = settimerfunction(18000);
+            tf = settimerfunction(30000);
           }
 
           if (BOTTOMZ > 0.03 && TOPZ < -0.05) {
@@ -458,7 +458,7 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
           clearTimeout(tf);
           if (facedetect === true) {
 
-            tf = settimerfunction(18000);
+            tf = settimerfunction(30000);
           }
 
           if (RIGHTZ < 0.02 && LEFTZ > 0.2) {
@@ -508,7 +508,7 @@ const LiveWebCheck = ({ updateWebImage, onData }) => {
           clearTimeout(tf);
           if (facedetect === true) {
 
-            tf = settimerfunction(18000);
+            tf = settimerfunction(30000);
           }
 
           if (LEFTZ < 0.01 && RIGHTZ > 0.15) {
